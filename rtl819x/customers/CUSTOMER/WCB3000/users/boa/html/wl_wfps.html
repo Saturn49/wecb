@@ -57,8 +57,8 @@ function doLoad()
 			wpsstatus_table_certificated.style.display = "none";
 		}
 
-		pinshow_table.style.display = "none";
-		generatepin_table.style.display = "block";
+		pinshow_table.style.display = "block";
+		generatepin_table.style.display = "none";
 	}
 	else if((auth_level == 1) || (auth_level == 2))
 	{
@@ -99,8 +99,13 @@ function doLoad()
 
 function doGeneratePIN()
 {
-	id_command.value = "generatepin";
-	wfps_form.submit();	
+	var params = "&command=generatepin";	
+	ajaxPost("wlwfps.cgi", params, resGetAPPIN);
+}
+
+function resGetAPPIN(message)
+{
+	id_appin.value = message;
 }
 
 function doWlFreq()

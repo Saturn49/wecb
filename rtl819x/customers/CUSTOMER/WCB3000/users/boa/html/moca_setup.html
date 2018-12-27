@@ -24,7 +24,6 @@ var id_mocabeacon;
 var moca_beacon;
 //var id_taboobiton, id_taboobitoff;
 var moca_pwdshow;
-var isReadOnly = 1;
 
 function doLoad()
 {	
@@ -92,20 +91,6 @@ function doLoad()
 
 	doGetMoca();
 	doRefresh();
-
-	if (isReadOnly == 1){
-		document.getElementById("id_mocachannel").disabled = true;
-		document.getElementById("id_mocabeacon").disabled = true;
-		document.getElementById("id_controlleron").disabled = true;
-		document.getElementById("id_controlleroff").disabled = true;
-		document.getElementById("id_mocaprivacyon").disabled = true;
-
-		document.getElementById("id_mocaprivacyoff").disabled = true;
-		document.getElementById("id_mocapwd").disabled = true;
-		document.getElementById("id_mocashowpwd").disabled = true;
-
-		document.getElementById("table_apply").style.display = "none";
-	}
 }
 
 /*

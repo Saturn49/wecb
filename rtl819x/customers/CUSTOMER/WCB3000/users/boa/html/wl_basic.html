@@ -107,37 +107,30 @@ function doWl2ChanWidth()
 		id2_channel.options.length = 0;
 		id2_channel.options[0] = new Option("Automatic ", "0");		
 		
-		//for(var i = 1; i <= 11; i++)
-		//{
-			//id2_channel.options[i] = new Option(i, i);
-		//}
-		id2_channel.options[1] = new Option(1, 1);
-		id2_channel.options[2] = new Option(6, 6);
-		id2_channel.options[3] = new Option(11, 11);
+		for(var i = 1; i <= 11; i++)
+		{
+			id2_channel.options[i] = new Option(i, i);
+		}
 	}
 	else if(id2_chanwidth.value == "1")
 	{
 		id2_channel.options.length = 0;
 		id2_channel.options[0] = new Option("Automatic ", "0");	
 
-		//for(var i = 1; i <= 7; i++)
-		//{
-			//id2_channel.options[i] = new Option(i, i);
-		//}
-		id2_channel.options[1] = new Option(1, 1);
-		id2_channel.options[2] = new Option(6, 6);
+		for(var i = 1; i <= 7; i++)
+		{
+			id2_channel.options[i] = new Option(i, i);
+		}
 	}
 	else if(id2_chanwidth.value == "2")
 	{
 		id2_channel.options.length = 0;
 		id2_channel.options[0] = new Option("Automatic ", "0");		
 
-		//for(var i = 5; i <= 11; i++)
-		//{
-			//id2_channel.options[i-4] = new Option(i, i);
-		//}
-		id2_channel.options[1] = new Option(6, 6);
-		id2_channel.options[2] = new Option(11, 11);
+		for(var i = 5; i <= 11; i++)
+		{
+			id2_channel.options[i-4] = new Option(i, i);
+		}
 	}	
 
 	id2_channel.value = id2_channel_value;
@@ -610,30 +603,30 @@ function resGetValue(message)
 					is_aes_5 = false;
 			}
 
-			if (inhibit == 1){
-				document.getElementById("id2_on").disabled = true;
-				document.getElementById("id2_off").disabled = true;
-				document.getElementById("id5_on").disabled = true;
-				document.getElementById("id5_off").disabled = true;
-				document.getElementById("id2_rate").disabled = true;
-				document.getElementById("id2_transmit").disabled = true;
-				document.getElementById("id5_rate").disabled = true;
-				document.getElementById("id5_transmit").disabled = true;
-				document.getElementById("id5_band").disabled = true;
-				document.getElementById("id2_band").disabled = true;
-			}
-			else{
-				document.getElementById("id2_on").disabled = false;
-				document.getElementById("id2_off").disabled = false;
-				document.getElementById("id5_on").disabled = false;
-				document.getElementById("id5_off").disabled = false;
-				document.getElementById("id2_rate").disabled = false;
-				document.getElementById("id2_transmit").disabled = false;
-				document.getElementById("id5_rate").disabled = false;
-				document.getElementById("id5_transmit").disabled = false;
-				document.getElementById("id5_band").disabled = false;
-				document.getElementById("id2_band").disabled = false;
-			}
+			// if (inhibit == 1){
+			// 	document.getElementById("id2_on").disabled = true;
+			// 	document.getElementById("id2_off").disabled = true;
+			// 	document.getElementById("id5_on").disabled = true;
+			// 	document.getElementById("id5_off").disabled = true;
+			// 	document.getElementById("id2_rate").disabled = true;
+			// 	document.getElementById("id2_transmit").disabled = true;
+			// 	document.getElementById("id5_rate").disabled = true;
+			// 	document.getElementById("id5_transmit").disabled = true;
+			// 	document.getElementById("id5_band").disabled = true;
+			// 	document.getElementById("id2_band").disabled = true;
+			// }
+			// else{
+			// 	document.getElementById("id2_on").disabled = false;
+			// 	document.getElementById("id2_off").disabled = false;
+			// 	document.getElementById("id5_on").disabled = false;
+			// 	document.getElementById("id5_off").disabled = false;
+			// 	document.getElementById("id2_rate").disabled = false;
+			// 	document.getElementById("id2_transmit").disabled = false;
+			// 	document.getElementById("id5_rate").disabled = false;
+			// 	document.getElementById("id5_transmit").disabled = false;
+			// 	document.getElementById("id5_band").disabled = false;
+			// 	document.getElementById("id2_band").disabled = false;
+			// }
 
 			var non40deny_right= non40deny.replace(/(\s*$)/g,"");
 			var non40deny_right_len=non40deny_right.length;
@@ -842,7 +835,7 @@ function showOrHideAuthMode(wpa_auth,wlan_idx)
 						<tr>
 							<td colspan="2"><strong>Wireless Band: 2.4G<strong></td>							
 						</tr>
-						<tr style="display:none;">
+						<tr>
 							<td width="200"><label>Wireless Radio:</label></td>
 							<td>
 								<input name="wl2_enb" id="id2_on" type="radio" value="0" checked="checked"/>
@@ -966,7 +959,7 @@ function showOrHideAuthMode(wpa_auth,wlan_idx)
 						<tr>
 							<td colspan="2"><strong>Wireless Band: 5G<strong></td>							
 						</tr>
-						<tr style="display:none;">
+						<tr>
 							<td width="200"><label>Wireless Radio:</label></td>
 							<td>
 								<input name="wl5_enb" id="id5_on" type="radio" value="0" checked="checked"/>
