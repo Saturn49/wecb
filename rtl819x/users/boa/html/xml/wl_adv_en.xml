@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Advanced Wireless Setup</t>
+		<t>Wireless Operation Frequency</t>
+		<t>Multiple SSID</t>	
+		<t>Security</t>
+		<t>Protection</t>
+		<t>Enable</t>
+<!-- 6-10 -->	
+		<t>Disable</t>	
+		<t>Aggregation MSDU(A-MSDU)</t>
+		<t>Short GI</t>
+		<t>Beacon Interval</t>
+		<t>Apply</t>
+<!-- 0-5 -->	
+		<a>Beacon Interval is null</a>
+		<a>Beacon Interval is invalid</a>
+	</page>
+</pages>

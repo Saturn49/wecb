@@ -1,0 +1,89 @@
+#login_div {
+	margin-top: 80px;
+	margin-left: 50px;
+}
+
+#login_content_div {
+	width: 600px;
+	background: #FFFFFF;
+	padding: 10px 100px 10px 100px;
+	border: 1px;
+	border-style: solid;
+}
+
+td,INPUT,OPTION,SELECT {
+	font-size: 11px
+}
+
+td.GRID_3D {
+	border-left: 1px solid #ffffff;
+	border-top: 1px solid #ffffff;
+	border-right: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	color: #000000;
+}
+
+td.GRID_3D_NO_LEFT {
+	border-left: 0px;
+	border-top: 1px solid #ffffff;
+	border-right: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	color: #000000;
+}
+
+td.GRID_3D_NO_RIGHT {
+	border-left: 1px solid #ffffff;
+	border-top: 1px solid #ffffff;
+	border-right: 0px;
+	border-bottom: 1px solid #cccccc;
+	color: #000000;
+}
+
+td.GRID_3D_NO_MIDDLE {
+	border-left: 0px;
+	border-top: 1px solid #ffffff;
+	border-right: 0px;
+	border-bottom: 1px solid #cccccc;
+	color: #000000;
+}
+
+.PAGE_HEADER {
+	font-size: 14px;
+}
+
+.REMARK {
+	font-size: 9px
+}
+
+.BUTTON {
+	cursor: hand;
+}
+
+.DATA {
+	color: #000000;
+}
+
+tr.ODD {
+	background-color: #E0E5F1;
+}
+
+tr.EVEN {
+	background-color: #F1F3F9;
+}
+
+tr.HEAD {
+	background-color: #E0E7F7;
+}
+
+.actiontec_button {
+	background-color: #181C4C;
+	border-color: #E0E5FF;
+	border-style: solid;
+	border-width: 3;
+	border-top-width: 4;
+	border-right-width: 4;
+	border-left-width: 4;
+	color: #FFFFFF;
+	font-family: verdana, Arial, helvetica, sans-serif;
+	font-size: 11px;
+}

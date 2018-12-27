@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Advanced Setup - Factory Default</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var restore_btn;
+var default_form;
+
+function doLoad()
+{
+	restore_btn = document.getElementById("restore_btn");
+	default_form = document.getElementById("default_form");
+
+	restore_btn.onclick = doRestore;
+}
+
+function doRestore()
+{
+	pop_up('Do you really want to reset the current settings to default?', 1, formSubmit);	
+}
+
+function formSubmit()
+{
+	default_form.submit();
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_adv.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Factory Default</h1>
+
+				<form id="default_form" method="post" action="advdefault.cgi">      
+		        <input type="hidden" name="command" value="apply" />
+				<input type="hidden" name="mypage" value="/adv_default.html" />		      
+
+		        <br>
+				<table cellpadding="0" cellspacing="2" border="0">
+		        	<tr>
+		            	<td width="250">
+			      	  		<strong>Factory default setting:</strong>
+		              	</td>
+		              	<td><a href="###" class="restoredefaults_btn" id="restore_btn"></a></td>
+		            </tr>
+		        </table>
+		        </form>
+
+				<br><br><br>
+	        	<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

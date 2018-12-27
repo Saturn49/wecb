@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Fréquence de fonctionnement du réseau sans fil</t>
+		<t>Activer</t>
+		<t>Désactiver</t>	
+		<t>Sécurité</t>
+		<t>Chiffrement</t>
+		<t>WPS  Statut</t>
+<!-- 6-10 -->	
+		<t>Configuré</t>	
+		<t>Déconfiguré</t>
+		<t>Remettre à déconfiguré</t>
+		<t>NIP PA</t>
+		<t>GénérerNIP</t>
+<!-- 11-15 -->	
+		<t>Configuration du participant</t>	
+		<t>NIP du participant</t>
+		<t>NIPdébut-Méthode</t>
+		<t>Bouton logiciel</t>
+		<t>PCBdébut</t>
+<!--16-20-->
+		<t>Appliquer</t>
+
+<!-- 0-5 -->	
+		<a>Longueur du NIP PA invalide! Le NIP de l'appareil compte habituellement entre 4 et 8 caractères.</a>
+		<a>Longueur du NIP du participant invalide! Le NIP de l'appareil compte habituellement entre 4 et 8 caractères.</a>
+		<a>NIP PA invalide! Le NIP PA est composé de chiffres.</a>
+		<a>NIP du participant invalide! Le NIP du participant est composé de chiffres.</a>
+		<a>Échec du total de contrôle! Utiliser le NIP quand même?</a>
+		<a>Le champ du NIP du participant est vide</a>
+<!--6-10 -->
+		<a>Le champ du NIP PA est vide</a>
+	</page>
+</pages>
+

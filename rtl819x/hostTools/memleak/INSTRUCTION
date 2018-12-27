@@ -1,0 +1,18 @@
+[INSTRUCTIONS]
+
+1. Burn image and then disconnect with host PC
+
+2. Check networking configuration
+   Host PC ip MUST be: 192.168.1.80
+   
+3. Run memleak application
+   $ cd hostTools/memleak/mips_memleak_pc/debug
+   $ ./memleak
+
+4. Reboot DUT and connect with host PC at the same time
+   MUST use eth0 to connect host PC
+
+5. begin your testing
+   ...^-^...
+
+For more informations in hostTools/memleak/mips_memleak_pc

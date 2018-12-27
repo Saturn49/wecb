@@ -1,0 +1,18 @@
+#!/bin/sh
+
+while sleep 10
+do
+TR69CHECK=`ps -aux | grep tr69 | wc -l`
+#echo $TR69CHECK
+
+if  [ $TR69CHECK -le 1 ] ; then
+    echo "tr69 not running."  
+    tr69 &
+    sleep 1
+    msg -p    
+    sleep 3
+    msg -u
+fi
+done
+
+

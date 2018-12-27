@@ -1,0 +1,14 @@
+#!/bin/sh
+
+while sleep 10
+do
+XMPPCHECK=`ps -aux | grep xmppc | wc -l`
+#echo $XMPPCHECK
+
+if  [ $XMPPCHECK -le 1 ] ; then
+    echo "xmppc not running ..."  
+    xmppc &
+fi
+done
+
+

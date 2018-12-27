@@ -1,0 +1,10 @@
+[FAQ]
+1. Why CPE needs a long time to boot up?
+   Only Check whether host PC is connected with CPE through eth0.
+
+2. Why we need run memleak application in host pc before cpe reboot?
+   Because memleak application is a server, while cpe is a client.
+
+3. Why not see some application name when input b?
+   All application in memleak folder will be loaded automatically when the
+   testing case enter or invoke the application related.

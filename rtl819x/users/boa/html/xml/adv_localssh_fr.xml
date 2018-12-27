@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>SSH local</t>
+		<t>Activé</t>
+		<t>Désactivé</t>
+		<t>Nom d'utilisateur</t>
+		<t>Mot de passe</t>
+		<t>Port SSH</t>
+<!--6-10-->
+		<t>Inactif - Déconnecter après</t>
+		<t>Appliquer</t>
+		<t>Secondes</t>
+		<t>12 Heures</t>
+		<t>1 Jour</t>
+<!--11-15-->
+		<t>7 Jours</t>
+		<t>D'autres</t>
+
+<!-- 0-5 -->	
+		<a>Nom d'utilisateur invalide</a>
+		<a>Mot de passe invalide</a>
+		<a>Le port SSH doit être entre 1 et 65535</a>
+		<a>Le port SSH est utilisé</a>
+		<a>Délais IDLE invalide</a>
+	</page>
+</pages>

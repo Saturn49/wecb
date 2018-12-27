@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Paramètres de langues</t>
+		<t>Langue</t>
+		<t>Détection automatique</t>
+		<t>Anglais</t>
+		<t>Français</t>
+		<t>Appliquer</t>
+
+<!-- 0-5 -->	
+		<a>Username is invalid</a>
+	</page>
+</pages>

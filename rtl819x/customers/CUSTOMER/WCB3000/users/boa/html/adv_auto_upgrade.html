@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Advanced Auto Upgrade</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var auto_upgrade_form;
+var id_command;
+var apply_btn;
+var auto_upgrade, id_auto_upgrade;
+
+function doLoad()
+{
+    auto_upgrade_form = document.getElementById("auto_upgrade_form");
+    id_command = document.getElementById("id_command");
+
+    auto_upgrade = document.getElementById("auto_upgrade");
+    id_auto_upgrade = document.getElementById("id_auto_upgrade");
+    
+    apply_btn = document.getElementById("apply_btn");
+
+    apply_btn.onclick = doApply;
+
+    doGetIP();
+}
+
+function doGetIP()
+{
+    var params = "&command=getvalue"; 
+    ajaxPost("advautoupgrade.cgi", params, resGetValue);
+}
+
+function resGetValue(message)
+{
+    var messageArray = message.split("|");
+    
+    if(messageArray.length > 1)
+    {           
+        var autoconfig_value = messageArray[1];
+        if(autoconfig_value == "1")
+            id_auto_upgrade.checked = true;
+        else if(autoconfig_value == "0")
+            id_auto_upgrade.checked = false;   
+
+		var auto_url_addr = messageArray[2];
+		var hz_pos = auto_url_addr.indexOf("WCB3000.bin");
+        if(hz_pos>0)
+		    auto_url_addr = auto_url_addr.substring(0,hz_pos);
+		
+		document.getElementById("auto_upgrade_url").value = auto_url_addr;
+    }
+}
+
+function doApply()
+{
+    if(id_auto_upgrade.checked)
+        auto_upgrade.value = "1";
+    else
+        auto_upgrade.value = "0";
+
+    var upgrade_url = document.getElementById("auto_upgrade_url").value;
+    if(!isURL(upgrade_url))
+    {
+        alert("Check URL is invalid!");
+		return;
+	}
+
+    if(upgrade_url[upgrade_url.length-1]!="/")
+		upgrade_url = upgrade_url+"/";
+	
+	document.getElementById("auto_url_addr").value = upgrade_url+"WCB3000.bin";
+	document.getElementById("auto_ver_addr").value = upgrade_url+"WCB3000.ver";
+		
+
+    id_command.value = "apply";
+    auto_upgrade_form.submit();
+}
+
+</script>
+</head>
+
+<body>
+    <div id="wrapper">    
+        <%actInclude("top_nav.html")%>    
+        <%actInclude("left_adv.html")%>
+        
+        <div id="content_right">
+            <div id="content_right_header"></div>
+            <div id="content_right_contentarea">
+                <h1>Firmware Auto Upgrade</h1>
+
+                <form id="auto_upgrade_form" method="post" action="advautoupgrade.cgi">
+                <input type="hidden" name="command" id="id_command" value="apply" />
+                <input type="hidden" name="mypage" value="/adv_auto_upgrade.html" />
+                <input type="hidden" name="auto_upgrade" id="auto_upgrade" />
+                <input type="hidden" name="auto_url_addr" id="auto_url_addr" />
+                <input type="hidden" name="auto_ver_addr" id="auto_ver_addr" />                
+               
+                <table cellpadding="0" cellspacing="2" border="0">
+                    <tr>
+                        <td width="250"><label for="id_auto_upgrade"><span id="mng_at_conf">Firmware Auto Upgrade</span>:</label></td>
+                        <td>
+                            <input id="id_auto_upgrade" type="checkbox" /> 
+                        </td>                    
+                    </tr>
+					<tr>
+						<td width="250"><label for="id_ip">Check URL:</label></td>
+						<td>
+							<input name="auto_upgrade_url" id="auto_upgrade_url" type="text" size="25" maxlength="256" style="height: 16px"/> 
+						</td>
+					</tr>                    
+                </table>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="###" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+                
+                </form>
+                
+                <div class="clear_left"></div>
+            </div>
+            <div id="content_right_footer"></div>
+        </div>
+        <div class="clear_left"></div>
+        <%actInclude("wcb_footer.html")%>
+    </div>
+</body>
+</html>
+

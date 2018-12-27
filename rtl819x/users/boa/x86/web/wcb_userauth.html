@@ -1,0 +1,79 @@
+<script language="javascript">
+var auth_level = <% getIndex("auth_level"); %>;
+var username = "<% getInfo("username"); %>";
+
+var wlan_idx = <% getIndex("wlan_idx"); %>;
+var both_freq = <% getIndex("both_freq"); %>;
+var curr_ssid = <% getIndex("curr_ssid"); %>;
+
+var wifi_supported = <% getIndex("wifi_supported"); %>;
+var wifi_certificated = <% getIndex("wifi_certificated"); %>;
+var errorBuf = "<% getInfo("errorBuf"); %>";
+var jump_security = 0;
+
+window.onload = function(){
+	//alert(auth_level + "--" + username);
+
+	var location_url = window.location.href;
+	if(location_url.indexOf("wcb_main.html") != -1)
+		document.getElementById("top_status").className = "selected";
+	else if(location_url.indexOf("wl_") != -1)
+		document.getElementById("top_wireless").className = "selected";
+	else if(location_url.indexOf("moca_") != -1)
+		document.getElementById("top_moca").className = "selected";
+	else if(location_url.indexOf("adv_") != -1)
+		document.getElementById("top_advanced").className = "selected";	
+	
+	if(auth_level != 3)
+	{
+		var left_basicsettings = document.getElementById("left_basicsettings");
+		var left_ssid = document.getElementById("left_ssid");	
+		var left_advanced = document.getElementById("left_advanced");			
+
+		if(left_basicsettings != undefined)
+			left_basicsettings.style.display = "none";
+				
+		if(left_ssid != undefined)
+			left_ssid.style.display = "none";
+
+		if(left_advanced != undefined)
+			left_advanced.style.display = "none";
+	}
+
+	if(wifi_supported == 0)
+	{
+		var top_wireless_li = document.getElementById("top_wireless_li");
+
+		if(top_wireless_li != undefined)
+			top_wireless_li.style.display = "none";		
+	}
+
+	var urlArray = (window.location.href).split("?");
+	if(urlArray[1] != undefined)
+	{
+		if(urlArray[1] == "e=1")
+		{
+			pop_up(errorBuf);		
+		}
+		else
+		{
+			var parameters = urlArray[1].split("&");
+			if(parameters.length > 0)
+			{
+				for(var i = 0; i < parameters.length; i++)
+				{
+					var paramArray = parameters[i].split("=");
+					if(paramArray[0] == "wlan")
+						wlan_idx = paramArray[1];
+					else if(paramArray[0] == "vwlan")
+						curr_ssid = paramArray[1];
+
+					jump_security = 1;
+				}
+			}
+		}
+	}
+	
+	doLoad();	
+};
+</script>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Factory Default</t>
+		<t>Factory default setting</t>
+		<t>Restore Default Settings</t>
+
+<!-- 0-5 -->	
+		<a>Do you really want to reset the current settings to default?</a>
+	</page>
+</pages>

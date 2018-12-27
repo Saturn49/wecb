@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Réseau sans fil - Configuration avancée</t>
+		<t>Fréquence de fonctionnement du réseau sans fil</t>
+		<t>SSID multiples</t>	
+		<t>Security</t>
+		<t>Protection</t>
+		<t>Activé</t>
+<!-- 6-10 -->	
+		<t>Désactivé</t>	
+		<t>Agrégation MSDU (A-MSDU)</t>
+		<t>GI court</t>
+		<t>Intervalle balise</t>
+		<t>Appliquer</t>
+<!-- 0-5 -->	
+		<a>Le champ de l'intervalle balise est vide</a>
+		<a>L'intervalle balise est invalide</a>
+	</page>
+</pages>

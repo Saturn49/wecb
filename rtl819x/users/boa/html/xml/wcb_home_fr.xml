@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-4 -->	
+		<t>Ouvrir</t>
+		<t>Nom d'utilisateur</t>
+		<t>Mot de passe</t>	
+		<t>Ouvrir</t>
+		<t>Mot de passe oublié</t>
+<!-- 5-8 -->
+		<t>Langue</t>
+		<t>Détection automatique</t>	
+		<t>Anglais</t>
+		<t>Français</t>
+
+<!-- 0-4 -->	
+		<a>Le champ du nom d'utilisateur est vide</a>
+		<a>Le champ du mot de passe est vide</a>
+		<a>Nom d'utilisateur ou mot de passe incorrect</a> 
+		<a>Utiliser un autre compte pour accéder à cette page</a> 
+		<a>Le système n'est pas compatible avec le WiFi</a>
+	</page>
+</pages>

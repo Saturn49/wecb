@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Advanced Setup - Factory Default</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var swap_btn;
+var swap_form;
+
+function doLoad()
+{
+	swap_btn = document.getElementById("swap_btn");
+	swap_form = document.getElementById("swap_form");
+
+	swap_btn.onclick = doRestore;
+	doGetImageVersion();
+}
+
+
+
+function doGetImageVersion()
+{
+	var params = "&command=getvalue";		
+	ajaxPost("getimageversion.cgi", params, resGetImageVersion);
+}
+
+function resGetImageVersion(message)
+{	
+	if(message.length > 1)
+	{
+	document.getElementById("active_version").innerHTML = message.split('|')[0];
+	document.getElementById("inactive_version").innerHTML = message.split('|')[1];
+	}
+}
+
+function doRestore()
+{
+	pop_up('Do you really want to swap the current firmware', 1, formSubmit);	
+}
+
+function formSubmit()
+{
+	swap_form.submit();
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_adv.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Firmware Restore</h1>
+
+				<form id="swap_form" method="post" action="advswapimage.cgi">      
+		        <input type="hidden" name="command" value="apply" />
+				<input type="hidden" name="mypage" value="/adv_swap.html" />		      
+
+		        <br>
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><strong>Active Firmware Version:</strong></td>
+						<td>
+							<span id="active_version"></span>
+						</td>
+					</tr>
+					<tr>
+						<td width="250"><strong>Backup Firmware Version:</strong></td>
+						<td>
+							<span id="inactive_version"></span>
+						</td>
+					</tr>
+		        	<tr>
+		            	<td width="250">
+			      	  		<strong>Firmware swap setting:</strong>
+		              	</td>
+		              	<td><a href="###" class="button" id="swap_btn"><span>Swap Firmware</span></a></td>
+		            </tr>
+		        </table>
+		        </form>
+
+				<br><br><br>
+	        	<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

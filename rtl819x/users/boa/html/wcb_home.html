@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Login</title>
+<%actInclude("wcb_common.html")%>
+<link href="css/login_20121119.css" rel="stylesheet" type="text/css" />
+
+<script language="javascript">
+
+var login_username, login_password;
+var login_btn;
+var login_form;
+var refresh_times = 1;
+
+document.onkeydown = function(e){
+
+	var keycode;
+	
+	if(navigator.appName == "Microsoft Internet Explorer")
+	{
+		keycode = event.keyCode;
+	}
+	else
+	{
+		keycode = e.which;
+	}
+
+	switch (keycode)
+	{
+		case 13: 	// Enter
+			loginCheck();
+			break;
+		default:
+			break;
+	}
+}
+
+function doLoad() 
+{
+	login_username = document.getElementById("login_username");
+	login_password = document.getElementById("login_password");
+	login_btn = document.getElementById("login_btn");
+	login_form = document.getElementById("login_form");
+
+	login_btn.onclick = loginCheck;
+	login_username.focus();
+	
+	var urlArray = (window.location.href).split("?");
+	if(urlArray[1] == "k=1")
+	{
+		pop_up("Username or Password is not correct");	
+		login_username.focus();	
+		return;
+	}
+	else if(urlArray[1] == "k=3")
+	{
+		pop_up("Use another account to access this page");	
+		login_username.focus();	
+		return;
+	}
+	else if(urlArray[1] == "k=5")
+	{
+		pop_up("This system not support WiFi");	
+		login_username.focus();	
+		return;
+	}
+	/*
+	else if(urlArray[1] == "c=1")
+	{
+		login_username.disabled = true;
+		login_password.disabled = true;
+		login_btn.disabled = true;
+		
+		doRefresh();
+	}
+	*/
+}
+
+function resGetValue(message)
+{
+	if(message == "1")			
+		refresh_times++;	
+	else if(message == "0")
+		refresh_times = 1;
+
+	if(refresh_times >= 6)
+	{
+		login_username.disabled = false;
+		login_password.disabled = false;
+		login_btn.disabled = false;
+	
+		login_username.focus();			
+		window.clearTimeout("doRefresh()");
+		goThere("wcb_home.html");
+	}
+	else
+		window.setTimeout("doRefresh()", 3000);	
+}
+
+function doRefresh()
+{
+	ajaxPost("logincheck.cgi", "&t=1", resGetValue);
+}
+
+function loginCheck()
+{
+	if(login_username.value == "")
+	{
+		pop_up("User Name is null");
+		login_username.focus();
+		return;
+	}
+
+	if(login_password.value == "")
+	{
+		pop_up("Password is null");
+		login_password.focus();
+		return;
+	}
+	
+	login_form.submit();
+}
+
+</script>
+</head>
+
+<body>
+<div id="wrapper">
+    <div id="login_div">
+		<div id="login_content_div">
+			<table border=0 cellSpacing=0 cellPadding=0 width="100%">
+				<tr height="40">
+					<td align="center"><strong><span class=PAGE_HEADER>Login</span></strong></td>
+				</tr>
+				<tr height="30" id="tr_error" style="display:none;">
+					<td align="center" valign="middle"><font color="red"><span id="span_error_msg"></span></font></td>
+				</tr>
+			</table>
+			<BR>
+
+			<form method="post" name="login_form" id="login_form" action="userlogin.cgi">
+				<table border=0 cellSpacing=0 cellPadding=4 width="100%">
+					<tr class=ODD>
+						<td class=GRID_3D_NO_RIGHT width="50%"><strong>User Name</strong>:</td>
+						<td class=GRID_3D_NO_LEFT width="50%">
+							<INPUT style="WIDTH: 150px" maxLength=64 id="login_username" name="login_username" value=""/>
+						</td>
+					</tr>
+					<tr class=EVEN>
+						<td class=GRID_3D_NO_RIGHT width="50%"><strong>Password</strong>:</td>
+						<td class=GRID_3D_NO_LEFT width="50%">
+							<INPUT style="WIDTH: 150px;" maxLength=64 type=password id="login_password" name="login_password" value=""/>
+						</td>
+					</tr>
+				</table>
+					
+				<BR>
+				<table border=0 cellSpacing=0 cellPadding=0 width="100%">
+					<tr>
+						<td align="center"><INPUT class=actiontec_button
+							value="  OK  " id="login_btn" type=button  style="cursor:pointer"></INPUT></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>
+

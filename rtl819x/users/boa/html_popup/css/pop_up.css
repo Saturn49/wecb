@@ -1,0 +1,59 @@
+/*********************************************************************
+ * pop_up.css
+ * category   javascript
+ * package    jquery
+ * author     youyou   
+ **********************************************************************/
+ 
+.dialog-loading {background:#000 no-repeat center; width:100%; height:100%}
+.dialog-mask{border:0px; background:#000; margin:0px; padding:0px; position:absolute; top:0px; left:0px;background:url(../images/dialog_bg.png); _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/dialog_bg.png"); _background:none;}
+.dialog-button_new{clear: both;}
+.dialog-button_new input{overflow:visible; overflow-y:hidden;}
+.dialog-btn1,.dialog-btn2{margin-right:10px}
+.dialog-content{text-align:left; clear:both; overflow:auto;}
+
+.weedialog{width:60px; color:#444;}
+.weedialog a:link,weedialog a:visited {color: #005EAC; text-decoration:none;}
+.weedialog a:hover {color:#ff6600; text-decoration:underline;}
+.weedialog .dialog-header{height:110px;position:relative; cursor:move;}
+.weedialog .dialog-tc{margin-left:10px; margin-right:10px; width:auto; height:110px;font-weight:bold;}
+.weedialog .dialog-title{width:auto; height:20px; font-weight:normal; padding-top:10px; padding-left:10px; font:24px/24px Verdana, Arial, Helvetica, sans-serif;}
+.weedialog .dialog-tc2{position:absolute; height:100px; left:100px; clear:both;background:url(../images/dialog_tc2.png); text-align:left; padding-top:10px; padding-left:10px; padding-right:100px; color:#fff;}
+/*.weedialog .dialog-tc1{height:6px; overflow:hidden; background:url(img/dialog_tc1.png) repeat-x; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="img/dialog_tc1.png"); _background:none;}*/
+.weedialog .dialog-tl{position:absolute; left:0px; top:0px;width:100px; height:110px; background:url(../images/dialog_tl.png) no-repeat; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/dialog_tl.png"); _background:none; cursor:pointer;}
+.weedialog .dialog-tr{position:absolute; right:0px;top:0px;width:100px; height:110px; background:url(../images/dialog_tr.png) no-repeat; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/dialog_tr.png"); _background:none;}
+.weedialog .dialog-body{clear:both; line-height:20px; padding:5px; background:#1e71a1; height:100px;overflow-x:hidden;width:570px;font-size:18px; font-weight:bold; padding-left:20px;padding-top:10px;color:#fff;}
+.weedialog .dialog-content{clear:both; line-height:20px; padding:5px; text-align:center; overflow-y:auto; overflow-x:hidden;width:540px; padding-left:10px;padding-top:2px;color:#fff; font:14px/16px Verdana, Arial, Helvetica, sans-serif; font-weight:bold;}
+.weedialog .dialog-cr{width:6px;background:url(../images/dialog_con_rc.png); _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/dialog_con_rc.png"); _background:none;}
+.weedialog .dialog-mt{width:560px; height:8px; margin-top:0px; background:url(../images/content_header_bg.gif) no-repeat;overflow:hidden;}
+.weedialog .dialog-mm{width:560px; height:20px; background:url(../images/content_bg.gif) repeat-y; padding-bottom:30px; padding-top:10px;}
+.weedialog .dialog-mb{width:560px; height:8px; margin-bottom:10px; background:url(../images/content_footer_bg.gif) no-repeat;}
+.weedialog .dialog-button{clear:both; background:#1e71a1;width:593px; text-align:right; font-size:12px; padding-right:2px; _padding-right:2px;height:40px;}
+.weedialog .dialog-ok{background:url(../images/common_btn_pop.png) no-repeat; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/common_btn_pop.png"); _background:none; border-width:0px; cursor:pointer; margin-right:20px;width:80px; height:24px;font-size:12px; font-weight:bold; vertical-align:middle}
+.weedialog .dialog-cancel{background:url(../images/common_btn_pop.png) no-repeat; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/common_btn_pop.png"); _background:none; border-width:0px; width:80px; height:24px; cursor:pointer; margin:10px;font-size:14px; font-weight:bold; vertical-align:middle}
+.weedialog .dialog-hr{margin-left:11px; margin-right:11px; width:auto; height:40px;font-weight:bold;}
+.weedialog .dialog-bot{clear:both; height:58px; position:relative;}
+.weedialog .dialog-bl{position:absolute; left:0px; top:0px; width:100px; height:58px; background:url(../images/dialog_bl.png) no-repeat; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/dialog_bl.png"); _background:none;}
+.weedialog .dialog-bc{position:absolute;margin-left:40px; margin-right:60px; padding-top:20px; width:500px; height:40px; background:url(../images/dialog_bc.png) repeat-x;}
+.weedialog .dialog-br{position:absolute; right:0px; top:0px; width:100px; height:58px; background:url(../images/dialog_br.png) no-repeat; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/dialog_br.png"); _background:none;}
+
+.weealert .dialog-cancel{display:none;}
+
+.weeselect li{float:left; width:120px;}
+.weeselect .wsearch{width:100%;text-align:right;}
+
+.weesuggest{width:160px;background:#ccc;}
+.weesuggest .dialog-content{padding:5px;}
+.weesuggest li{padding:0px;margin:0px;line-height:20px;cursor:pointer;border-bottom:1px dotted #bbb;}
+
+.popuplink{ font-family:Arial, Helvetica, sans-serif; color:#FFFFFF; font-weight:bolder; font-size:11px;}
+a.popbtn:link{font-family:Arial, Helvetica, sans-serif; font-size:12px; font-weight:bolder; text-align:center; text-decoration:none; color:#000000;}
+a.popbtn:hover{font-family:Arial, Helvetica, sans-serif; font-size:12px; font-weight:bolder; text-align:center; text-decoration:none; color:#000000;}
+a.popbtn:visited{font-family:Arial, Helvetica, sans-serif; font-size:12px; font-weight:bolder; text-align:center; text-decoration:none; color:#000000;}
+.dialog-content{clear:both; line-height:20px; padding:5px; text-align:center; overflow-x:hidden; padding-left:10px;padding-top:2px;color:#fff; font:12px/14px Verdana, Arial, Helvetica, sans-serif; font-weight:bold;}
+.div_content{padding-top:0px;width:380px;height:40px; overflow:auto; background-color:#124769; color:#FFFFFF; font-family:Arial, Helvetica, sans-serif; font-size:12px; text-align:center;}
+.dialog-header_new{;position:relative; cursor:move;}
+.dialog-title_new{width:auto; height:16px; font-weight:normal; padding-top:10px; padding-left:10px; font:18px/18px Verdana, Arial, Helvetica, sans-serif; color:#FFFFFF;}
+.dialog-content_new{line-height:16px;padding-top:2px; padding-left:20px;font:12px/14px Verdana, Arial, Helvetica, sans-serif; font-weight:bold; color:#FFFFFF;}
+.dialog-ok_new{background:url(../images/common_btn_pop.png) no-repeat; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/common_btn_pop.png"); border-width:0px; cursor:pointer; margin-right:20px;width:80px; height:24px;font-size:12px; font-weight:bold; vertical-align:middle}
+.dialog-cancel_new{background:url(../images/common_btn_pop.png) no-repeat; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod="scale", src="../images/common_btn_pop.png"); border-width:0px; width:80px; height:24px; cursor:pointer; margin:10px;font-size:14px; font-weight:bold; vertical-align:middle}

@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.DBus.TestSuiteShellEchoServiceFail
+Exec=/home/quinticent/devel/git/dbus/test/test-shell-service "this should 'fail' because of an unterminated quote 
+

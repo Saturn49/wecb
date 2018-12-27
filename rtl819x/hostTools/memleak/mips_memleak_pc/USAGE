@@ -1,0 +1,17 @@
+Please Input Char
+	'q' means quit
+	'r' means clear
+	'a' means display all app_name
+	'p' means bind pid
+	'd' means display
+	'u' means display unfree
+	'b' means double free
+
+Commands:
+	the command of 'd' display all process related to memory release. 
+	the command of 'u' display the process of the memory don't release completely. 
+	the command of 'b' show that the release of the memory-related repeat. 
+	the command of 'p' means to bind which one of pid, and then use the command 'd', 'u' or 'p' to display the pid memory release. 
+the command of 'a' is to display all start-up process's pid and name. 
+	the command of 'r' will clear up the log file contents, and end of the track of all memory leaks, unless restart the board.
+	the command of 'a' show all application name loaded automatically by memleak application

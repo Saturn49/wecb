@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Wireless Security</t>
+		<t>Wireless Operation Frequency</t>
+		<t>Multiple SSID</t>	
+		<t>Wireless Band</t>
+		<t>Wireless Data Rate</t>
+		<t>SSID Broadcast</t>
+<!-- 6-10 -->	
+		<t>Enable</t>	
+		<t>Disable</t>
+		<t>Wireless Channel Width</t>
+		<t>Wireless Channel Number</t>
+		<t>Security Settings</t>
+<!-- 11-15 -->
+		<t>OPEN</t>
+		<t>No Security Applied</t>
+		<t>Simple WEP Security (64 or 128 bit hardware key)</t>
+		<t>Shared</t>
+		<t>Key 1</t>
+<!-- 16-20 -->
+		<t>Primary Key</t>
+		<t>Key 2</t>
+		<t>Key 3</t>
+		<t>Key 4</t>
+		<t>Enhanced Security for Personal/Enterprise</t>
+<!-- 21-25 -->
+		<t>CYPHER</t>
+		<t>Authentication Mode</t>
+		<t>Enterprise (RADIUS)</t>
+		<t>Personal Shared Key</t>
+		<t>RADIUS Server IP Address</t>
+<!-- 26-30 -->
+		<t>RADIUS Server Port</t>
+		<t>RADIUS Server Password</t>
+		<t>Wireless Network Name</t>
+		<t>Apply</t>
+		<t>Back</t>
+
+<!-- 0-5 -->	
+		<a>Primary Key </a>
+		<a> is null</a>
+		<a> is invalid</a>
+		<a>'s length should be 10 or 26</a>
+		<a>Wireless Network Name is null</a>
+		<a>if Wireless encryption is open, WPS2.0 will be disabled</a>
+<!-- 6-10 -->
+		<a>if WEP is turn on, WPS2.0 will be disabled</a>
+		<a>RADIUS Server IP Address is null</a>
+		<a>RADIUS Server IP Address is invalid</a>
+		<a>RADIUS Server Port is null</a>
+		<a>RADIUS Server Port is invalid</a>
+<!-- 11-15 -->	
+		<a>RADIUS Server Password is null</a>
+		<a>RADIUS Server Password is invalid</a>
+		<a>Personal Shared Key is null</a>
+		<a>Personal Shared Key is invalid</a>
+		<a>Personal Shared Key's length shouldn't be less than 8</a>
+<!--16-20-->
+		<a>under WPA only or TKIP only, WPS2.0 will be disabled</a>
+		<a>if disabled SSID Broadcast, WPS2.0 will be disabled</a>
+	</page>
+</pages>

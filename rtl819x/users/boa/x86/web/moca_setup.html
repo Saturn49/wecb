@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>MoCA Setting - Setup</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var refresh_times = 0;
+var lastMessage = "";
+
+var mocastatus_span;
+var id_mocachannel, id_mocaon, id_mocaoff, id_mocapwd;
+var mocaonoff;
+var view_btn, apply_btn;
+var setup_form;
+
+function doLoad()
+{	
+	mocaonoff = document.getElementsByName("mocaonoff");
+
+	mocastatus_span = document.getElementById("mocastatus_span");
+	id_mocachannel = document.getElementById("id_mocachannel");
+	id_mocaon = document.getElementById("id_mocaon");
+	id_mocaoff = document.getElementById("id_mocaoff");
+	id_mocapwd = document.getElementById("id_mocapwd");
+
+	setup_form = document.getElementById("setup_form");
+	view_btn = document.getElementById("view_btn");
+	apply_btn = document.getElementById("apply_btn");	
+
+	view_btn.onclick = doView;
+	apply_btn.onclick = doApply;
+		
+	for(var i = 0; i < mocaonoff.length; i++)
+	{
+		mocaonoff[i].onclick = doMocaOnoff;			
+	}
+
+	doGetMoca();
+	doRefresh();
+}
+
+function doGetMoca()
+{
+	var params = "&command=getvalue";		
+	ajaxPost("mocasetup.cgi", params, resGetValue);
+}
+
+function doMocaOnoff()
+{
+	if (id_mocaon.checked) 
+    	id_mocapwd.disabled = false;
+ 	else 
+    	id_mocapwd.disabled = true;  
+}
+
+function doView()
+{
+	window.location.href = "/moca_status.html";
+}
+
+function doApply()
+{
+	if(id_mocaon.checked)
+	{
+		if(trim(id_mocapwd.value) == "")
+		{
+			pop_up("Password is null");
+			id_mocapwd.focus();
+			return;
+		}
+		else if(trim(id_mocapwd.value).indexOf("|") != -1)
+		{
+			pop_up("Password is invalid");
+			id_mocapwd.focus();
+			return;
+		}
+	}
+  
+    setup_form.submit();
+}
+
+function doRefresh()
+{	
+	ajaxGet("ajax_mocastatus.html", handleRefresh);	
+}
+
+function resGetValue(message)
+{
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{
+			var index = 0;
+			var mocaArray = messageArray[i].split("|");
+			var moca_channel = changeString(mocaArray[index++]);
+			var moca_privacy = changeString(mocaArray[index++]);
+			var moca_password = changeString(mocaArray[index++]);
+
+			if(moca_privacy == "1") 
+			    id_mocaon.checked = true;		    
+			else 	    
+			    id_mocaoff.checked = true;	    
+			
+			id_mocapwd.value = moca_password;
+			id_mocachannel.value = moca_channel;
+
+			doMocaOnoff();
+		}
+	}
+}
+		
+function handleRefresh(message)
+{	
+	if(lastMessage != message)
+	{
+		lastMessage = message;
+
+		if(message != "0")			
+			mocastatus_span.innerHTML = message;			
+
+		refresh_times = 1;
+		window.setTimeout("doRefresh()", 2000);
+	}
+	else
+	{
+		if(refresh_times)
+			refresh_times++;
+				
+		if(refresh_times >= 5)
+			window.clearTimeout("doRefresh()");	
+		else
+			window.setTimeout("doRefresh()", 2000);	
+	}
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_moca.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>MoCA Setting - Setup</h1>
+
+				<form id="setup_form" method="POST" action="mocasetup.cgi">
+				<input type="hidden" name="command" value="apply" />
+		 	    <input type="hidden" name="mypage" value="/moca_setup.html" />
+		 	    
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250">Status:</td>
+						<td>
+							<span id="mocastatus_span"><%actValue("moca", "status")%></span>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_mocachannel">Channel:</label></td>
+						<td>
+							<select name="mocachannel" id="id_mocachannel">
+		                      <option selected="selected" value="0x0000000015554000">Automatic</option>
+		                      <option value="0x0000000000004000">1-1150MHz</option>
+		                      <option value="0x0000000000010000">2-1200MHz</option>
+		                      <option value="0x0000000000040000">3-1250MHz</option>
+		                      <option value="0x0000000000100000">4-1300MHz</option>
+		                      <option value="0x0000000000400000">5-1350MHz</option>
+		                      <option value="0x0000000001000000">6-1400MHz</option>
+		                      <option value="0x0000000004000000">7-1450MHz</option>
+		                      <option value="0x0000000010000000">8-1500MHz</option>                                        
+		                  </select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_mocaon">Privacy:</label></td>
+						<td>
+							<input name="mocaonoff" id="id_mocaon" type="radio" value="on" checked="checked"/>
+			                <label for="id_mocaon">Enable</label> 
+			                <input name="mocaonoff" id="id_mocaoff" type="radio" value="off" />
+			              	<label for="id_mocaoff">Disable</label>
+			            </td>
+					</tr>
+					<tr>
+						<td><label for="id_mocapwd">Password:</label></td>
+						<td>
+							<input name="mocapwd" id="id_mocapwd" type="text" size="25" maxlength="32" style="height: 16px"/>
+						</td>
+					</tr>
+					<tr>
+						<td>MoCA Link Status:</td>
+						<td>
+							<a href="#" class="view_btn" id="view_btn"></a>
+						</td>
+					</tr>
+				</table>
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="#" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+
+				<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>
+

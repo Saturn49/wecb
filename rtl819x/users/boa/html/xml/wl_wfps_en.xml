@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Wireless Operation Frequency</t>
+		<t>Enable</t>
+		<t>Disable</t>	
+		<t>Security</t>
+		<t>Encryption</t>
+		<t>WPS Status</t>
+<!-- 6-10 -->	
+		<t>Configured</t>	
+		<t>UnConfigured</t>
+		<t>Reset to UnConfigured</t>
+		<t>AP PIN</t>
+		<t>GeneratePIN</t>
+<!-- 11-15 -->	
+		<t>Enrollee Configuration</t>	
+		<t>Enrollee's PIN</t>
+		<t>StartPINMethod</t>
+		<t>Soft Push Button</t>
+		<t>StartPBC</t>
+<!--16-20-->
+		<t>Apply</t>
+
+<!-- 0-5 -->	
+		<a>Invalid AP PIN length! The device PIN is usually four or eight digits long.</a>
+		<a>Invalid Enrollee's PIN length! The device PIN is usually four or eight digits long.</a>
+		<a>Invalid AP PIN! AP PIN must be numeric digits.</a>
+		<a>Invalid Enrollee's PIN! Enrollee's PIN must be numeric digits.</a>
+		<a>Checksum failed! Use PIN anyway?</a>
+		<a>Enrollee's PIN is null</a>
+<!--6-10 -->
+		<a>AP PIN is null</a>
+	</page>
+</pages>

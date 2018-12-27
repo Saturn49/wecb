@@ -1,0 +1,486 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>WPS</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var wl_freq, wl_wpsen, wl_wpsconfig;
+var id_appin, id_appinshow, id_enrpin;
+var startpin_btn, startpbc_btn, apply_btn;
+var id_command;
+var wfps_form;
+var reset_unconfigured_btn;
+var id_security, id_encryption;
+var id_wpsstatus;
+var wpsstatus_table, wpsstatus_table_certificated;
+var generate_btn;
+var pinshow_table, generatepin_table;
+
+function doLoad()
+{
+	wl_freq = document.getElementsByName("wl_freq");
+	wl_wpsen = document.getElementsByName("wl_wpsen");
+	wl_wpsconfig = document.getElementsByName("wl_wpsconfig");
+
+	id_appin = document.getElementById("id_appin");	
+	id_enrpin = document.getElementById("id_enrpin");	
+	id_security = document.getElementById("id_security");	
+	id_encryption = document.getElementById("id_encryption");
+	id_wpsstatus = document.getElementById("id_wpsstatus");
+	id_appinshow = document.getElementById("id_appinshow");	 
+	
+	startpin_btn = document.getElementById("startpin_btn");
+	startpbc_btn = document.getElementById("startpbc_btn");
+	apply_btn = document.getElementById("apply_btn");
+	reset_unconfigured_btn = document.getElementById("reset_unconfigured_btn");
+	generate_btn = document.getElementById("generate_btn");
+
+	id_command = document.getElementById("id_command"); 
+	wfps_form = document.getElementById("wfps_form");
+	wpsstatus_table = document.getElementById("wpsstatus_table");
+	wpsstatus_table_certificated = document.getElementById("wpsstatus_table_certificated");
+	pinshow_table = document.getElementById("pinshow_table");
+	generatepin_table = document.getElementById("generatepin_table");
+
+	if(auth_level == 3)
+	{
+		if(wifi_certificated == 1)
+		{
+			wpsstatus_table.style.display = "none";
+			wpsstatus_table_certificated.style.display = "block";
+		}
+		else
+		{
+			wpsstatus_table.style.display = "block";
+			wpsstatus_table_certificated.style.display = "none";
+		}
+
+		pinshow_table.style.display = "block";
+		generatepin_table.style.display = "none";
+	}
+	else if((auth_level == 1) || (auth_level == 2))
+	{
+		wpsstatus_table.style.display = "none";
+		wpsstatus_table_certificated.style.display = "none";
+
+		if(auth_level == 1)
+		{
+			pinshow_table.style.display = "block";
+			generatepin_table.style.display = "none";
+		}
+		else if(auth_level == 2)
+		{
+			pinshow_table.style.display = "none";
+			generatepin_table.style.display = "block";
+		}
+	}
+	
+	startpin_btn.onclick = doStartPin;
+	startpbc_btn.onclick = doStartPbc;
+	apply_btn.onclick = doApply;	
+	reset_unconfigured_btn.onclick = doResetUnconfigured;
+	generate_btn.onclick = doGeneratePIN;
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		wl_freq[i].onclick = doWlFreq;
+
+		if( ((wl_freq[i].value == "10") && (wlan_idx == 1)) 
+			|| ((wl_freq[i].value == "11") && (wlan_idx == 0)))
+		{
+			wl_freq[i].checked = true;
+		}
+	}
+		
+	doWlFreq();
+}
+
+function doGeneratePIN()
+{
+	var params = "&command=generatepin";	
+	ajaxPost("wlwfps.cgi", params, resGetAPPIN);
+}
+
+function resGetAPPIN(message)
+{
+	id_appin.value = message;
+}
+
+function doWlFreq()
+{
+	var params = "";
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		if(wl_freq[i].checked)
+		{	
+			params += "&wl_freq=" + wl_freq[i].value; 				
+			break;
+		}
+	}		
+	params += "&command=getvalue";	
+	ajaxPost("wlwfps.cgi", params, resGetWfps);
+
+	params += "&wl_mssididx=1";
+	ajaxPost("wlsecurity.cgi", params, resGetSecurity);
+}
+
+function resGetWfps(message)
+{		
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{
+			var index = 0;	
+			var basicArray = messageArray[i].split("|");
+			var wpsen = basicArray[index++];
+			var wsc_configured = basicArray[index++];	
+			var appin = changeString(basicArray[index++]);					
+
+			for(var j = 0; j < wl_wpsen.length; j++)
+			{
+				if(wl_wpsen[j].value == wpsen)
+				{	
+					wl_wpsen[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_wpsconfig.length; j++)
+			{
+				if(wl_wpsconfig[j].value == wsc_configured)
+				{	
+					wl_wpsconfig[j].checked = true;
+				}
+			}
+			
+			id_appin.value = appin;	
+			id_appinshow.innerHTML = appin;
+
+			if(wsc_configured == "1")
+				id_wpsstatus.innerHTML = "Configured";
+			else if(wsc_configured == "0")
+				id_wpsstatus.innerHTML = "UnConfigured";
+		}
+	}
+}
+
+function resGetSecurity(message)
+{
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{		
+			var index = 0;	
+			var basicArray = messageArray[i].split("|");			
+			var encrypt = basicArray[index++];	
+			var wep_defaultkey = basicArray[index++];	
+			var wep_authtype = basicArray[index++];	
+			var wpa_cipher = basicArray[index++];	
+			var wpa2_cipher= basicArray[index++];	
+			var wpa_auth = basicArray[index++];	
+			var rs_port = basicArray[index++];	
+			var band = basicArray[index++];	
+			var chanwidth = basicArray[index++];
+			var coexist = basicArray[index++];
+			var sideband = basicArray[index++];
+			var channumber = basicArray[index++];	
+			var broadcast = basicArray[index++];
+			var wmm = basicArray[index++];	
+			var rate_enabled = basicArray[index++];
+			var rate = basicArray[index++];
+			var ssid = htmlDecodeStr(basicArray[index++]);
+			var wep_key = changeString(basicArray[index++]);			
+			var wpa_psk = changeString(basicArray[index++]);	
+			var rs_ip = changeString(basicArray[index++]);
+			var rs_password = changeString(basicArray[index++]);
+
+			var id_security_value = "";
+			var id_encryption_value = "";
+
+			if(encrypt == "0")
+			{
+				id_security_value = "Open";
+				id_encryption_value = "Disabled";
+			}
+			else if(encrypt == "1")
+			{
+				id_security_value = "WEP";
+
+				if(wep_key.length <= 10)
+					id_security_value += " 64bits";
+				else
+					id_security_value += " 128bits";
+
+				if(wep_authtype == "0")
+					id_encryption_value = "Open";
+				else if(wep_authtype == "1")
+					id_encryption_value = "Shared";
+				else if(wep_authtype == "2")
+					id_encryption_value = "Auto";
+			}
+			else if(encrypt == "2")
+			{
+				id_security_value = "WPA";
+					
+				if(wpa_cipher == "1")
+					id_encryption_value = "TKIP";
+				else if(wpa_cipher == "2")
+					id_encryption_value = "AES";
+				else if(wpa_cipher == "3")
+					id_encryption_value = "TKIP/AES";
+			}
+			else if(encrypt == "4")
+			{
+				id_security_value = "WPA2";	
+			}
+			else if(encrypt == "6")
+			{
+				id_security_value = "WPA-WPA2";
+			}
+
+			if(encrypt == "2" || encrypt == "4" || encrypt == "6")
+			{
+				if(wpa_auth == "1")
+					id_security_value += "-Enterprise";
+				else if(wpa_auth == "2")
+					id_security_value += "-Personal";
+			}
+
+			if(encrypt == "4" || encrypt == "6")
+			{
+				if(wpa2_cipher == "1")
+					id_encryption_value = "TKIP";
+				else if(wpa2_cipher == "2")
+					id_encryption_value = "AES";
+				else if(wpa2_cipher == "3")
+					id_encryption_value = "TKIP/AES";
+			}
+
+			id_security.innerHTML = id_security_value;
+			id_encryption.innerHTML = id_encryption_value;
+		}
+	}
+}
+
+function setPinClicked(pin_code)
+{	
+	var ret;	
+	var pin_str = "";
+	ret = check_pin_code(pin_code.value);
+	var flag = true;
+
+	if(pin_code.id == "id_enrpin")
+	{
+		pin_str = "Enrollee's PIN";
+	}
+	else if(pin_code.id == "id_appin")
+	{
+		pin_str = "AP PIN";
+	}
+	
+	if (ret == 1) {
+		pop_up('Invalid ' + pin_str + ' length! The device PIN is usually four or eight digits long.');
+		pin_code.focus();		
+		return false;
+	}
+	else if (ret == 2) {
+		pop_up('Invalid ' + pin_str + '! ' + pin_str + ' must be numeric digits.');
+		pin_code.focus();		
+		return false;
+	}
+	else if (ret == 3) {
+		pop_up('Checksum failed! Use PIN anyway?', 1, null, function(){
+			pin_code.focus();
+			flag = false;			
+		});		
+
+		if(!flag)
+			return false;
+	}		
+	return true;
+}
+
+
+function doStartPin()
+{		
+	if(trim(id_enrpin.value) == "")
+	{
+		pop_up("Enrollee's PIN is null");
+		id_enrpin.focus();
+		return;
+	}
+		
+	if(!setPinClicked(id_enrpin))
+		return;
+	
+	id_command.value = "startpin";
+	wfps_form.submit();		
+}
+
+function doStartPbc()
+{
+	id_command.value = "startpbc";
+	wfps_form.submit();		
+}
+
+function doApply()
+{	
+	if(trim(id_appin.value) == "")
+	{
+		pop_up("AP PIN is null");
+		id_appin.focus();
+		return;
+	}
+		
+	if(!setPinClicked(id_appin))
+		return;
+	
+	id_command.value = "apply";
+	wfps_form.submit();	
+}
+
+function doResetUnconfigured()
+{
+	id_command.value = "resetunconfigured";
+	wfps_form.submit();	
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_wl.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>WPS</h1>
+
+				<form id="wfps_form" method="POST" action="wlwfps.cgi">
+				<input type="hidden" name="command" id="id_command" value="apply" />
+		 	    <input type="hidden" name="mypage" value="/wl_wfps.html" />
+		 	    
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><label>Wireless Operation Frequency:</label></td>
+						<td>
+							<input name="wl_freq" id="id_freq2" type="radio" value="10" checked="checked"/> 
+				  			<label for="id_freq2">2.4GHz</label>             
+             				<input name="wl_freq" id="id_freq5" type="radio" value="11" />
+              	  			<label for="id_freq5">5GHz</label>               	  			
+              			</td>
+					</tr>					
+					<tr>
+						<td><label>WPS:</label></td>
+						<td>
+							<input name="wl_wpsen" id="id_wpson" type="radio" value="0"  checked="checked"/>
+             	 			<label for="id_wpson">Enable</label>
+             	 			<input name="wl_wpsen" id="id_wpsoff" type="radio" value="1" /> 
+				 			<label for="id_wpsoff">Disable</label>
+						</td>
+					</tr>					
+					<tr>
+						<td><label for="id_security">Security:</label></td>
+						<td><span id="id_security"></span></td>
+					</tr>
+					<tr>
+						<td><label for="id_encryption">Encryption:</label></td>
+						<td><span id="id_encryption"></span></td>
+					</tr>													
+				</table>
+
+				<table cellpadding="0" cellspacing="2" border="0" id="wpsstatus_table_certificated">
+					<tr>
+						<td width="250"><label>WPS Status:</label></td>
+						<td>
+							<input name="wl_wpsconfig" id="id_wpsconfigon" type="radio" value="1" checked="checked"/>
+             	 			<label for="id_wpsconfigon">Configured</label>
+             	 			<input name="wl_wpsconfig" id="id_wpsconfigoff" type="radio" value="0" /> 
+				 			<label for="id_wpsconfigoff">UnConfigured</label>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<div><a class="button" href="#" id="reset_unconfigured_btn"><span>Reset to UnConfigured</span></a></div>
+						</td>
+					</tr>					
+				</table>				
+
+				<table cellpadding="0" cellspacing="2" border="0" id="wpsstatus_table">
+					<tr>
+						<td width="250"><label for="id_wpsstatus">WPS Status:</label></td>
+						<td>
+							<span id="id_wpsstatus"></span>
+						</td>						
+					</tr>					
+				</table>
+
+				<table cellpadding="0" cellspacing="2" border="0" id="pinshow_table">
+					<tr>
+						<td width="250"><label for="id_appinshow">AP PIN:</label></td>
+						<td><span id="id_appinshow"></span></td>
+					</tr>
+				</table>
+				
+
+				<table cellpadding="0" cellspacing="2" border="0" id="generatepin_table">
+					<tr>
+						<td width="250"><label for="id_appin">AP PIN:</label></td>
+						<td>
+							<input name="wl_appin" id="id_appin" type="text" size="25" maxlength="32" style="height: 16px"/>
+						</td>						
+						<td>							
+							<div><a class="button" href="###" id="generate_btn"><span>GeneratePIN</span></a></div>
+						</td>
+					</tr>
+				</table>
+				
+				<table cellpadding="0" cellspacing="2" border="0">						
+					<tr>
+						<td colspan="3"><label for="id_enrpin"><strong>Enrollee Configuration:<strong></label></td>
+					</tr>
+					<tr>
+						<td width="250"><label for="id_enrpin">Enrollee's PIN:</label></td>
+						<td>
+							<input name="wl_enrpin" id="id_enrpin" type="text" size="25" maxlength="32" style="height: 16px"/>
+						</td>
+						<td>
+							<div><a class="button" href="###" id="startpin_btn"><span>StartPINMethod</span></a></div>
+						</td>
+					</tr>
+					<tr>
+						<td width="250"><label for="id_softpush">Soft Push Button:</label></td>
+						<td colspan="2">
+							<div><a class="button" href="###" id="startpbc_btn"><span>StartPBC</span></a></div>
+						</td>
+					</tr>
+				</table>				
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="###" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+
+				<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>
+

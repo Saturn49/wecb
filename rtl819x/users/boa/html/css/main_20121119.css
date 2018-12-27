@@ -1,0 +1,107 @@
+#content_right_header{width:290px; height:20px; background:url(../images/st_top.png) no-repeat; overflow:hidden;}
+#content_right_contentarea{width:290px; background:url(../images/st_mid.png); background-repeat: repeat-y;}
+#content_right_contentarea hr{margin:0 auto 20px auto; width:270px; color:#FFF; background-color:#FFF;}
+#content_right_footer{width:290px; height:20px; background: url(../images/st_btm.png) no-repeat;}
+
+#content_left{margin-top:20px; float:left; display:inline;}
+#content_left strong{font-weight:bold; font-size:12px;}
+#content_left h1{margin:0 auto; font:18px/18px Verdana, Arial, Helvetica, sans-serif; color:#001E4A; text-align:center; padding-bottom:25px; padding-top:25px; font-weight:bolder;}
+#content_left h2{margin:0 0 0 50px; padding:0 0 15px 0; font:13px/16px Verdana, Arial, Helvetica, sans-serif; font-weight:bold;}
+#content_left h2.inlineheader{height:21px; margin:0 0 5px 40px; padding:8px 0 2px 5px; background:url(../images/h_inlineheader.png) no-repeat; font:14px/16px;}
+#content_left h3{margin:0 auto; padding:8px 0 0 10px; width:490px; height:25px; font-size:11px; background:url(../images/h_inlineheader.png) no-repeat; overflow:hidden; font-weight:bold;}
+#content_left p, #content_left table{margin:0 0 0 50px; padding:0 0 15px 0; font:11px/16px Verdana, Arial, Helvetica, sans-serif;}
+#content_left table.defaultstyle{margin:10px auto 0 50px; padding:5px;}
+#content_left table.systemlog{margin:10px auto 0 50px; height:323px; overflow:auto; padding:5px;}
+#content_left table.defaultstyle th, #content_left table.systemlog th{background:none; font:11px/11px; font-weight:bold; padding:5px; text-transform:capitalize;}
+#content_left table.defaultstyle td{color:#000000; font:10px/10px Arial, Helvetica, sans-serif; padding:5px;  text-align:center; }
+#content_left table.systemlog td{color:#0FF; font:10px/10px Arial, Helvetica, sans-serif; padding:5px; background:#417BA2; text-align:left; border-bottom:1px solid #003770;}
+#content_left table.defaultstyle a, #content_left table.systemlog a{color:#003770; font-size:10px; font-weight:normal; text-decoration:none;}
+#content_left table.defaultstyle a:hover, #content_left table.systemlog a:hover{text-decoration:underline;}
+#content_left table.defaultstyle_disabled{margin:10px auto 0 50px; padding:5px;}
+#content_left table.defaultstyle_disabled th{color:#999; background:none; font:11px/11px; font-weight:bold; padding:5px; text-transform:capitalize;}
+#content_left table.defaultstyle_disabled td{color:#999; font:10px/10px Arial, Helvetica, sans-serif; padding:5px; text-align:center; border-bottom:1px solid #999;}
+#content_left table.defaultstyle_disabled a{color:#999; font-size:10px; font-weight:normal; text-decoration:none;}
+#content_left table.defaultstyle_disabled a:hover{color:#999;}
+#content_left table.status_style{margin:0px auto 0 auto; padding:5px;}
+#content_left table.status_style th, #content_left table.systemlog th{background:none; font:11px/11px; font-weight:bold; padding:5px; text-transform:capitalize;}
+#content_left table.status_style td{
+	color:#003770;
+	font:10px/10px Arial, Helvetica, sans-serif;
+	padding:5px;
+	background:#c5e3ff;
+	text-align:left;
+	border-bottom:1px solid #003770;
+}
+#content_left table.status_style a, #content_left table.systemlog a{color:#003770; font-size:10px; font-weight:normal; text-decoration:none;}
+#content_left table.status_style a:hover, #content_left table.systemlog a:hover{text-decoration:underline;}
+
+#content_left table td{padding:5px;}
+#content_left table tr.nattable{padding:20px 10px 20px 10px; text-align:center; background:#457EA4; color:#0FF; font-size:10px; border-bottom:1px solid #2C8FC2;}
+#content_left table tr.routingtable{padding:20px 10px 20px 10px; text-align:center; background:#457EA4; color:#0FF; font-size:10px; border-bottom:1px solid #2C8FC2;}
+#content_left table.activeuserlistdefinitions{margin:10px 25px 10px 25px; background:#417BA2;}
+#content_left table.activeuserlistdefinitions td{padding:5px 5px 5px 25px; font:11px/14px;}
+#content_left table.activeuserlist{margin:10px 25px 10px 25px; padding:5px;}
+#content_left table.activeuserlist th{background:none; font:11px/11px; font-weight:bold; padding:5px;}
+#content_left table.activeuserlist td{color:#0FF; font:10px/10px Arial, Helvetica, sans-serif; padding:5px; background:#417BA2; text-align:center; border-bottom:1px solid #3DBDD1;}
+#content_left table.activeuserlist a{color:#0FF; font-size:10px; font-weight:normal; text-decoration:none;}
+#content_left table.activeuserlist a:hover{text-decoration:underline;}
+#content_left table.firewallstatusdefinitions{margin:10px 25px 10px 25px; background:#417BA2;}
+#content_left table.firewallstatusdefinitions td{padding:5px 5px 5px 25px; font:11px/14px;}
+#content_left table.firewallstatus{margin:10px 25px 10px 25px; padding:5px;}
+#content_left table.firewallstatus th{background:none; font:11px/11px; font-weight:bold; padding:5px;}
+#content_left table.firewallstatus td{color:#0FF; font:10px/10px Arial, Helvetica, sans-serif; padding:5px; background:#417BA2; text-align:center; border-bottom:1px solid #3DBDD1;}
+#content_left table.modemutilization{margin:10px 25px 10px 25px; padding:5px;}
+#content_left table.modemutilization th{background:none; font:11px/11px; font-weight:bold; padding:5px;}
+#content_left table.modemutilization td{color:#0FF; font:10px/10px Arial, Helvetica, sans-serif; padding:5px; background:#417BA2; text-align:center; border-bottom:1px solid #3DBDD1;}
+#content_left table tr.nattable{padding:20px 10px 20px 10px; text-align:center; background:#457EA4; color:#0FF; font-size:10px; border-bottom:1px solid #2C8FC2;}
+#content_left .smallprint{color:#003770; font-size:10px;}
+#content_left .smallprint_green{color:#9BE8F8;font-size:10px;}
+#content_left p.macaddresslist{width:350px; padding:5px; margin:0 0 1px 40px; background:#457EA4; color:#0FF; font-size:10px;}
+#content_left p.wirelesssettings{width:350px; padding:5px; margin:0 0 0 50px; background:#457EA4; color:#0FF; font-size:10px;}
+#content_left p.forwardedports{width:350px; padding:5px; margin:0 0 1px 40px; background:#457EA4; color:#0FF; font-size:10px;}
+#content_left a{color:#FFF; font-weight:bold; font:11px/16px Verdana, Arial, Helvetica, sans-serif;}
+#content_left a:hover{text-decoration:none;}
+#content_left form p{margin:0 50px 0 50px; padding:0 0 15px 0; font:11px/16px Verdana, Arial, Helvetica, sans-serif;}
+#content_left form div.field_labels{float:left;}
+#content_left form div.fields{float:left;}
+#content_left form div.fields p{margin:0 0 0 15px; padding:0 0 11px 0;}
+#content_left form div.threecolumn_container{margin:0 50px 0 50px;}
+#content_left form div.threecolumn{float:left; margin:0 40px 0 0;}
+#content_left form div.threecolumn p{margin:0; padding:0;}
+#content_left form table#firewallsettings{margin:0 50px 0 50px; width:80%;}
+#content_left form table#firewallsettings th, #content_left form table#firewallsettings td{padding:2px; text-align:left; font:9px/11px Verdana, Arial, Helvetica, sans-serif; font-weight:bold; }
+#content_left form table#firewallsettings th{border-bottom:1px solid #FFF;}
+#content_left form table#firewallsettings th.checkbox, #content_left form table#firewallsettings td.checkbox{text-align:center;}
+#content_left form table#firewallsettings td{font-weight:normal;}
+#content_left div#utilities_timezoneoptions{margin:0 0 5px 50px; height:160px; width:370px; overflow:auto;}
+#content_left div#utilities_timezoneoptions p{width:330px; padding:10px; margin:0 0 1px 0; background:#457EA4; color:#0FF; font-size:10px;}
+#content_left div#utilities_timezoneoptions a{color:#0FF; text-decoration:none;}
+#content_left div#utilities_timezoneoptions a:hover{color:#FFF; text-decoration:underline;}
+#content_left div#advancedutilities_ipping_pingtestresults{width:470px; height:165px; margin:0 auto 0 auto; background:#457EA4; overflow:auto; display:block;}
+#content_left div#advancedutilities_ipping_pingtestresults p{margin:0 0 0 10px; padding:0; color:#0FF; font:11px/14px Arial, Helvetica, sans-serif;}
+#content_left div#advancedutilities_traceroute_tracerouteresults{width:470px; height:124px; margin:0 auto 0 auto; background:#457EA4; overflow:auto; display:block;}
+#content_left div#advancedutilities_traceroute_tracerouteresults p{margin:0 10px 0 10px; padding:0; color:#0FF; font:11px/14px Arial, Helvetica, sans-serif;}
+#content_left p.utilities_webactivitylog{width:460px; height:500px; overflow:auto; padding:10px; margin:0 0 1px 27px; background:#457EA4; color:#FFF; font-size:10px;}
+#content_left .textfield_inline{margin:0 15px 0 0;}
+
+#content_left_header{width:290px; height:20px; background:url(../images/st_top.png) no-repeat; overflow:hidden;}
+#content_left_contentarea{width:290px; background:url(../images/st_mid.png); background-repeat: repeat-y;}
+#content_left_contentarea hr{margin:0 auto 20px auto; width:270px; color:#FFF; background-color:#FFF;}
+#content_left_footer{width:290px; height:20px; background: url(../images/st_btm.png) no-repeat;}
+
+#tbl_clients {padding:0;margin:0;}
+#tbl_clients .left_cell{width:70px;height:60px; padding:3px 0 3px 0px; vertical-align:top; border: 0px solid #ccc;text-align:right;}
+#tbl_clients .mid_cell{width:110px;padding:3px 0 3px 15px; vertical-align:top; color:#000; border: 0px solid #ccc;}
+#tbl_clients .right_cell{width:110px;padding:3px 0 3px 0px; vertical-align:top; color:#000; border: 0px solid #ccc;}
+#tbl_clients #eth_on{background-image: url(../images/pc_icon_on.png);background-repeat: no-repeat; background-position: 2px 0;}
+#tbl_clients #eth_off{background-image: url(../images/pc_icon_off.png);background-repeat: no-repeat; background-position: 2px 0;}
+#tbl_clients #wrls_on{background-image: url(../images/wrls_icon_on.png);background-repeat: no-repeat; background-position: 2px 0;}
+#tbl_clients #wrls_off{background-image: url(../images/wrls_icon_off.png);background-repeat: no-repeat; background-position: 2px 0;}
+
+#tbl_clients #client_name_on{font-weight:bold; color:#000;}
+#tbl_clients #client_name_off{font-weight:bold; color:#919191;}
+#tbl_clients #client_connected{}
+#tbl_clients #client_disconnected{font-weight:bold; color:#ff0000;}
+#tbl_clients p.client_status_on {padding:0;margin:0;font-weight:bold; color:#6c3;}
+#tbl_clients p.client_ip {padding:0;margin:0; color:#000;}
+#tbl_clients p.client_data {padding:0;margin:0; color:#000;}

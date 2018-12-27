@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Sécurité sans fil</t>
+		<t>Fréquence de fonctionnement du réseau sans fil</t>
+		<t>SSID multiples</t>	
+		<t>Bande du réseau sans fil</t>
+		<t>Débit du réseau sans fil</t>
+		<t>Diffusion SSID</t>
+<!-- 6-10 -->	
+		<t>Activer</t>	
+		<t>Désactiver</t>
+		<t>Largeur de canal du réseau sans fil</t>
+		<t>Numéro du canal sans fil</t>
+		<t>Réglages de sécurité</t>
+<!-- 11-15 -->
+		<t>Ouvert</t>
+		<t>Aucune sécurité appliquée</t>
+		<t>Sécurité WEP simple (clé électronique de 64 ou 128 bits)</t>
+		<t>Partagé</t>
+		<t>Clé 1</t>
+<!-- 16-20 -->
+		<t>Clé primaire</t>
+		<t>Clé 2</t>
+		<t>Clé 3</t>
+		<t>Clé 4</t>
+		<t>Sécurité améliorée pour réseau personnel/d'entreprise</t>
+<!-- 21-25 -->
+		<t>CHIFFREMENT</t>
+		<t>Mode d'authentification</t>
+		<t>Entreprise (RADIUS)</t>
+		<t>Clé partagée</t>
+		<t>Serveur RADIUS - Adresse IP</t>
+<!-- 26-30 -->
+		<t>Serveur RADIUS - Port du serveur</t>
+		<t>Serveur RADIUS - Mot de passe du serveur</t>
+		<t>Nom du réseau sans fil</t>
+		<t>Appliquer</t>
+		<t>Retour</t>
+<!-- 0-5 -->	
+		<a>Clé primaire </a>
+		<a> est vide</a>
+		<a> is invalid</a>
+		<a> doit être comprise entre 10 et 26 caractères</a>
+		<a>Le champ du nom du réseau sans fil est vide</a>
+		<a>Si le chiffrement du réseau sans fil est activé, le WPS2.0 est désactivé</a>
+<!-- 6-10 -->
+		<a>Si le WEP est activé, le WPS2.0 est désactivé</a>
+		<a>Serveur RADIUS - Le champ de l'adresse IP est vide</a>
+		<a>Serveur RADIUS - L'adresse IP est invalide</a>
+		<a>Serveur RADIUS - Le champ du port est vide</a>
+		<a>Serveur RADIUS - Le port est invalide</a>
+<!-- 11-15 -->	
+		<a>Serveur RADIUS - Le champ du mot de passe est vide</a>
+		<a>Serveur RADIUS - Le mot de passe est invalide</a>
+		<a>Le champ de la clé partagée est vide</a>
+		<a>La clé partagée est invalide</a>
+		<a>La longueur de la clé partagée ne doit pas être inférieure à 8 caractères</a>
+<!--16-20-->
+		<a>Sous WPA seulement ou TKIP seulement, le WPS2.0 est désactivé</a>
+		<a>Si la diffusion du SSID est désactivée, WPS2.0 est désactivé</a>
+		<a>La longueur du champ clé primaire </a>
+	</page>
+</pages>

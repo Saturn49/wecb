@@ -1,0 +1,6 @@
+#!/bin/sh
+
+#run me and then make
+
+./configure --prefix=/ CC=mipsel-linux-gcc --host=mipsel-linux --target=mipsel-linux --oldincludedir=/home/uni/git/ctl_layer/dbus-1.0.3 --with-xml=expat LIBS=-lexpat CFLAGS=-I/usr/local/mipsel-toolchain/toolchain_mipsel/mipsel-linux/include/\ -I./\ -I/usr/local/mipsel-toolchain/toolchain_mipsel/include\ -I/home/uni/git/ctl_layer/expat LDFLAGS=-L/home/uni/git/ctl_layer/tr69fw/target/pk5000/lib/\ -L/home/uni/git/ctl_layer/expat/\ -L/home/uni/git/ctl_layer/lib\ -lm
+

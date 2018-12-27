@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wireless setting - multiple ssid</title>
+<%actInclude("wcb_common.html")%>
+  
+<script language="Javascript">
+
+var ssid="<% getVirtualInfo("ssid", "1"); %>";
+var mssid2=<%getVirtualIndex("wlanDisabled", "2"); %>;
+var ssid2="<% getVirtualInfo("ssid", "2"); %>";
+var mssid3=<%getVirtualIndex("wlanDisabled", "3"); %>;
+var ssid3="<% getVirtualInfo("ssid", "3"); %>";
+var mssid4=<%getVirtualIndex("wlanDisabled", "4"); %>;
+var ssid4="<% getVirtualInfo("ssid", "4"); %>";
+
+function doLoad()
+{
+  if (mssid2 == 0)
+    document.getElementById("id_mssid2on").checked=true;
+  else
+    document.getElementById("id_mssid2off").checked=true;
+
+ if (mssid3 == 0)
+    document.getElementById("id_mssid3on").checked=true;
+  else
+    document.getElementById("id_mssid3off").checked=true;
+
+ if (mssid4 == 0)
+    document.getElementById("id_mssid4on").checked=true;
+  else
+    document.getElementById("id_mssid4off").checked=true;
+
+  document.getElementById("id_ssid").value = ssid;
+  document.getElementById("id_ssid2").value = ssid2;
+  document.getElementById("id_ssid3").value = ssid3;
+  document.getElementById("id_ssid4").value = ssid4;
+}
+
+function doCheckSsid(idname,netname)
+{
+    var ssid ;
+    var vssid ;
+   
+    //check SSID
+    var rege=/[^a-zA-Z0-9]/;
+
+    ssid = document.getElementById(idname);
+    vssid = ssid.value;
+
+    if (vssid == "")
+    {
+        pop_up("The " + netname + " must contain letters and/or numbers only with no spaces.",0);
+        return 0; 
+    }
+
+    for (var i=0; i<vssid.length; i++) {
+        var mat = vssid.match(rege);
+        if (mat) {
+            if (mat.length > 0) {
+               pop_up("The " + netname + " must contain letters and/or numbers only with no spaces.",0);             
+	     	   return 0;
+            }
+        }
+    }
+    if (vssid.length > 32) {
+        pop_up("The max length of " + netname + " is 32.",0);         
+        return 0;
+    } 
+    return 1;
+}
+
+
+function doApply()
+{
+    var form= document.myform;
+
+	/*
+    if (doCheckSsid("id_ssid","SSID")==0)
+       return;
+
+   if (doCheckSsid("id_ssid2","SSID2")==0)
+       return;
+
+   if (doCheckSsid("id_ssid3","SSID3")==0)
+       return;
+
+   if (doCheckSsid("id_ssid4","SSID4")==0)
+       return;
+       */
+ 
+    with (form) {
+        command.disabled = false;
+        command.value = "apply";
+    }
+    form.submit();
+}
+</script>
+</head>
+
+<body>
+<div id="wrapper">
+    <!-- TOP NAV -->
+    <%actInclude("top_nav.html")%>
+    <!-- END TOP NAV -->
+    <!-- SIDE NAV -->
+    <%actInclude("left_wl.html")%>
+    <!-- END SIDE NAV -->
+
+    <!-- MAIN CONTENT AREA -->
+    <div id="content_right">
+      <div id="content_right_header"></div>
+      <div id="content_right_contentarea">
+      <h1>Wireless Multiple SSID</h1>
+       <form name="myform" method="POST" action="wlmultiplessid.cgi" onSubmit="return doApply();">
+        <!--0--><input type="hidden" name="command" value="" disabled />
+		<!--1--><input type="hidden" name="mypage" value="/wl_multiplessid.html" />
+        <!--2--><input type="hidden" name="wait"   value="1" /> 
+
+        <table>
+           <tr>
+             <td width="250">
+	     		<strong>SSID Network Name:</strong>
+             </td>
+             <td>
+             <input name="ssid" id="id_ssid" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" /> 
+             </td>
+           </tr>
+        </table>
+
+       <table>
+          <tr>
+            <td width="250">
+            	<strong>SSID2 State:</strong>
+            </td>
+            <td><input name="mssid2" id="id_mssid2on" type="radio" value="0" checked="checked"/>
+            	<label for="id_mssid2on">Enable</label>
+            </td>
+            <td><input name="mssid2" id="id_mssid2off" type="radio" value="1" />
+				<label for="id_mssid2off">Disable</label>            
+           	</td>
+          </tr>
+        </table>
+
+       <table>
+           <tr>
+             <td width="250">
+	     		<strong>SSID2 Network Name:</strong>
+             </td>
+             <td>
+             <input name="ssid2" id="id_ssid2" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" /> 
+             </td>
+           </tr>
+        </table>
+
+       <table>
+          <tr>
+            <td width="250">
+            	<strong>SSID3 State:</strong>
+            </td>
+            <td><input name="mssid3" id="id_mssid3on" type="radio" value="0" checked="checked"/>
+            	<label for="id_mssid3on">Enable</label> 
+            </td>
+            <td><input name="mssid3" id="id_mssid3off" type="radio" value="1" />
+            	<label for="id_mssid3off">Disable</label> 
+            </td>
+          </tr>
+        </table>
+
+       <table>
+           <tr>
+             <td width="250">
+	     		<strong>SSID3 Network Name:</strong>
+             </td>
+             <td>
+             <input name="ssid3" id="id_ssid3" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" /> 
+             </td>
+           </tr>
+        </table>
+
+       <table>
+          <tr>
+            <td width="250">
+            	<strong>SSID4 State:</strong>
+            </td>
+            <td><input name="mssid4" id="id_mssid4on" type="radio" value="0" checked="checked"/>
+            	<label for="id_mssid4on">Enable</label>
+            </td>
+            <td><input name="mssid4" id="id_mssid4off" type="radio" value="1" />
+            	<label for="id_mssid4off">Disable</label> 
+            </td>
+          </tr>
+        </table>
+
+       <table>
+           <tr>
+             <td width="250">
+	     		<strong>SSID4 Network Name:</strong>
+             </td>
+             <td>
+             <input name="ssid4" id="id_ssid4" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" /> 
+             </td>
+           </tr>
+        </table>
+
+        <table>
+           <tr>
+              <td>Multiple SSID only works on Wireless AP mode.
+              </td>
+           </tr>
+        </table>
+
+        <table>
+         <tr>
+            <td width="50">
+            <strong></strong>
+            </td>
+            <td>
+            <a href="#" class="btn" id="apply_btn" onClick="doApply();"></a>          
+            </td>
+         </tr>
+        </table>
+
+        </form>
+       <div class="clear_left"></div>
+     </div>
+     <div id="content_right_footer"></div>
+   </div>
+   <div class="clear_left"></div>
+   <%actInclude("wcb_footer.html")%>
+</div>
+</body>
+</html>

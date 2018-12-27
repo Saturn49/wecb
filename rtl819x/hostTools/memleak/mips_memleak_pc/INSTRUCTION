@@ -1,0 +1,19 @@
+[INSTRUCTIONS]
+
+1. burn image and then disconnect with host PC
+
+2. check networking configuration
+   1)CPE lan ip MUST be: 192.168.0.1
+   2)Host PC ip MUST be: 192.168.0.2
+   
+3. run memleak application
+   $ cd hostTools/memleak
+   $ ./memleak
+
+4. reboot cpe and connect with host PC at the same time
+   MUST use eth0 to connect host PC
+
+5. begin your testing
+   ...^-^...
+
+For more informations in hostTools/memleak.

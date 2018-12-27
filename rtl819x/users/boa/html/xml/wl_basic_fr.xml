@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Configuration générale</t>
+		<t>Fréquence de fonctionnement du réseau sans fil</t>
+		<t>Les deux</t>	
+		<t>Sans fil - Bande</t>
+		<t>Sans fil - Radio</t>
+		<t>Débit du réseau sans fil</t>
+<!-- 6-10 -->	
+		<t>Nom du réseau sans fil</t>	
+		<t>Largeur de canal du réseau sans fil</t>
+		<t>Numéro du canal sans fil</t>
+		<t>Puissance de transmission</t>
+		<t>Type de sécurité sans fil</t>
+<!-- 11-15 -->
+		<t>Phrase de chiffrement</t>
+		<t>Activer</t>
+		<t>Désactiver</t>
+		<t>Appliquer</t>
+
+
+<!-- 0-5 -->	
+		<a>Le champ du nom du réseau sans fil 2.4G est vide</a>
+		<a>Le nom du réseau sans fil 2.4G est trop long</a>
+		<a>Le champ de la phrase passe du réseau sans fil 2.4G est vide</a>
+		<a>La phrase passe du réseau sans fil 2.4G est invalide</a>
+		<a>La longueur de la phrase passe du réseau sans fil 2.4G doit être comprise entre 10 et 26 caractères</a>
+		<a>La longueur de la phrase passe du réseau sans fil 2.4G ne doit pas être inférieure à 8 caractères</a>
+<!-- 6-10 -->
+		<a>Le champ du nom du réseau sans fil 5G est vide</a>
+		<a>Le nom du réseau sans fil 5G est trop long</a>
+		<a>Le champ de la phrase de chiffrement du réseau sans fil 5G est vide</a>
+		<a>La phrase de chiffrement du réseau sans fil 5G est invalide</a>
+		<a>La longueur de la phrase de chiffrement du réseau sans fil 5G doit être comprise entre 10 et 26 caractères</a>
+<!-- 11-15 -->	
+		<a>La longueur de la phrase de chiffrement du réseau sans fil 5G ne doit pas être inférieure à 8 caractères</a>
+		<a>S'il n'y a aucun chiffrement pour le réseau sans fil 2.4G, le WPS2.0 est désactivé </a>
+		<a>S'il n'y a aucun chiffrement pour le réseau sans fil 5G, le WPS2.0 est désactivé </a>
+		<a>S'il n'y a aucun chiffrement pour le réseau sans fil 2.4G/5G, le WPS2.0 est désactivé</a>
+		<a>Si la fonction WEP du réseau sans fil 2.4G est activée, le WPS2.0 est désactivé</a>
+<!--16-20-->
+		<a>Si la fonction WEP du réseau sans fil 5G est activée, le WPS2.0 est désactivé</a>
+		<a>Si la fonction WEP du réseau sans fil 2.4G/5G est activée, le WPS2.0 est désactivé</a>
+		<a>Si le réseau sans fil 2.4G est sous WPA seulement ou TKIP seulement, le WPS2.0 est désactivé</a>
+		<a>Si le réseau sans fil 5G est sous WPA seulement ou TKIP seulement, le WPS2.0 est désactivé</a>
+		<a>Si le réseau sans fil 2.4G/5G est sous WPA seulement ou TKIP seulement, le WPS2.0 est désactivé</a>
+	</page>
+</pages>
+

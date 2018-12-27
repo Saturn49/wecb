@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Wireless Setup - Advanced Settings</title>
+  <%actInclude("wcb_common.html")%>
+  
+  <SCRIPT LANGUAGE="JavaScript">
+
+// Globle vars definition
+var apfilter=<% getIndex("wlanAcEnabled"); %>;
+var apfiltermac="<% getInfo("macAddress"); %>";
+var apbroadcast=<% getIndex("hiddenSSID"); %>;
+var apwmm=<% getIndex("wmmEnabled"); %>;
+var apgi=<% getIndex("shortGIEnabled"); %>;
+var apigmp=<% getIndex("igmpproxyDisabled"); %>;
+
+var wlanband=<% getIndex("band"); %>; 
+
+if (wlanband < 7)
+	wlanband = "0";
+else
+	wlanband = "";
+ 
+function doLoad()
+{
+  if (apfilter == 0) {
+    document.getElementById("id_mac_disable").checked = true;
+    document.getElementById("id_mac_allow").checked = false;
+    document.getElementById("id_mac_reject").checked = false;
+    document.getElementById("id_macaddr").disabled = true;
+  }
+  else if (apfilter == 1) {
+    document.getElementById("id_mac_disable").checked = false;
+    document.getElementById("id_mac_allow").checked = true;
+    document.getElementById("id_mac_reject").checked = false;
+    document.getElementById("id_macaddr").disabled = false;
+  } 
+  else if (apfilter == 2) {
+    document.getElementById("id_mac_disable").checked = false;
+    document.getElementById("id_mac_allow").checked = false;
+    document.getElementById("id_mac_reject").checked = true;
+    document.getElementById("id_macaddr").disabled = false;
+  } 
+
+  document.getElementById("id_macaddr").value = apfiltermac;
+
+  if (apbroadcast == 0) {
+    document.getElementById("id_bcon").checked = true;
+    document.getElementById("id_bcoff").checked = false;
+  }
+  else {
+    document.getElementById("id_bcon").checked = false;
+    document.getElementById("id_bcoff").checked = true;
+  }
+
+  //WMM
+  if (apwmm == 1) {
+    document.getElementById("id_wmmon").checked = true;
+    document.getElementById("id_wmmoff").checked = false;
+  }
+  else {
+    document.getElementById("id_wmmon").checked = false;
+    document.getElementById("id_wmmoff").checked = true;
+  }
+
+  if(wlanband == "0")
+  {
+	document.getElementById("id_wmmon").disabled = false;
+	document.getElementById("id_wmmoff").disabled = false;
+  }
+  else
+  {
+	document.getElementById("id_wmmon").disabled = true;
+	document.getElementById("id_wmmoff").disabled = true;
+  }
+
+  //short GI
+  if (apgi == 1) {
+    document.getElementById("id_gion").checked = true;
+    document.getElementById("id_gioff").checked = false;
+  }
+  else {
+    document.getElementById("id_gion").checked = false;
+    document.getElementById("id_gioff").checked = true;
+  }
+
+  //IGMP Snooping
+  if (apigmp == 0) {
+    document.getElementById("id_igmpon").checked = true;
+    document.getElementById("id_igmpoff").checked = false;
+  }
+  else {
+    document.getElementById("id_igmpon").checked = false;
+    document.getElementById("id_igmpoff").checked = true;
+  }
+}
+
+function onMacFilter()
+{
+ if ( document.getElementById("id_mac_disable").checked )
+     document.getElementById("id_macaddr").disabled = true;
+  else 
+   document.getElementById("id_macaddr").disabled = false;
+}
+
+function checkMACAddress()
+{
+  var mac = document.getElementById("id_macaddr").value;
+
+  mac = trim (mac);
+  if ((mac.length == 0) ||
+          (mac.match("^[fF]{2}\:[fF]{2}\:[fF]{2}\:[fF]{2}\:[fF]{2}\:[fF]{2}$") != null) ||
+	  (mac.match("00:00:00:00:00:00") != null) ||
+          (mac.match("^[0-9a-fA-F]{2}\:[0-9a-fA-F]{2}\:[0-9a-fA-F]{2}\:[0-9a-fA-F]{2}\:[0-9a-fA-F]{2}\:[0-9a-fA-F]{2}$")
+           == null)){
+    pop_up("The MAC address entered is not valid. Please enter a valid MAC address using the sample MAC address provided below the MAC address insertion box.", 0);
+	mac.focus();
+	return 0;
+  }
+   
+  return 1;
+}
+
+function do_apply()
+{
+    var form = document.myform;
+
+    if(document.getElementById("id_mac_disable").checked == false )
+    {
+      if(checkMACAddress()==0)
+         return;
+    }
+ 
+    with (form) {
+        command.disabled = false;
+        command.value = "apply";
+    }
+
+	var id_macaddr = document.getElementById("id_macaddr");
+	var macArray = (id_macaddr.value).split(":");
+	form.filtermac.value = macArray[0] + macArray[1] + macArray[2] + macArray[3] + macArray[4] + macArray[5];
+	
+    form.submit();
+}
+
+</SCRIPT>
+</head>
+
+<body>
+<div id="wrapper">
+  <!-- TOP NAV -->
+  <%actInclude("top_nav.html")%>
+  <!-- END TOP NAV -->
+  <!-- SIDE NAV -->
+  <%actInclude("left_wl.html")%>
+  <!-- END SIDE NAV -->
+
+  <!-- MAIN CONTENT AREA -->
+  <div id="content_right">
+    <div id="content_right_header"></div>
+    <div id="content_right_contentarea">
+      <h1>Wireless Advanced Settings</h1>    
+      <form name="myform" action="wladvanced.cgi" method="POST" onSubmit="return do_apply();">
+        <!--0--><input type="hidden" name="command" value="" disabled />
+		<!--1--><input type="hidden" name="mypage" value="/wl_advanced.html" />
+        <!--2--><input type="hidden" name="wait" value="1" />   
+        <!--3--><input type="hidden" name="filtermac" value="" />   
+                      
+        <table>
+           <tr>
+             <td width="250">
+             	<strong>MAC Filter:</strong>
+             </td>
+             <td><input name="filter" id="id_mac_disable" type="radio" value="0" onClick="onMacFilter();" checked="checked"/>
+				 <label for="id_mac_disable">Disable</label>             	 
+             </td>
+             <td><input name="filter" id="id_mac_allow" type="radio" value="1" onClick="onMacFilter();" />
+             	 <label for="id_mac_allow">Allow</label> 
+             </td>
+             <td><input name="filter" id="id_mac_reject" type="radio" value="2" onClick="onMacFilter();" />
+              	  <label for="id_mac_reject">Reject</label>  
+             </td>
+           </tr>
+        </table>
+
+       <table>
+           <tr>
+             <td width="250">
+	     		<strong>MAC address:</strong>
+             </td>
+             <td>
+             <input id="id_macaddr" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" /> 
+             </td>
+           </tr>
+        </table>
+     
+        <table>
+           <tr>
+              <td width="250">
+              	<strong>SSID Broadcast:</strong>
+              </td>
+              <td><input name="broadcast" id="id_bcon" type="radio" value="0" checked="checked"/> 
+              	  <label for="id_bcon">Enable</label>  
+              </td>
+              <td><input name="broadcast" id="id_bcoff" type="radio" value="1" /> 
+              	  <label for="id_bcoff">Disable</label>  
+              </td>
+           </tr>
+        </table>
+   
+        <table>
+           <tr>
+              <td width="250">
+              	<strong>WMM:</strong>
+              </td>
+              <td><input name="wmm" id="id_wmmon" type="radio" value="1"  checked="checked"/> 
+                  <label for="id_wmmon">Enable</label> 
+              </td>
+              <td><input name="wmm" id="id_wmmoff" type="radio" value="0" />
+              	  <label for="id_wmmoff">Disable</label> 
+               </td>
+           </tr>
+        </table>
+
+        <table>
+           <tr>
+              <td width="250">
+              	<strong>Short GI:</strong>
+              </td>
+              <td><input name="gi" id="id_gion" type="radio" value="1" checked="checked"/> 
+              	  <label for="id_gion">Enable</label>  
+              </td>
+              <td><input name="gi" id="id_gioff" type="radio" value="0" />
+              	  <label for="id_gioff">Disable</label> 
+              </td>
+           </tr>
+        </table>
+
+        <table>
+           <tr>
+              <td width="250">
+              	<strong>IGMP Snooping:</strong>
+              </td>
+              <td><input name="igmp" id="id_igmpon" type="radio" value="0"  checked="checked"/>
+              	  <label for="id_igmpon">Enable</label> 
+              </td>
+              <td><input name="igmp" id="id_igmpoff" type="radio" value="1" />
+              	  <label for="id_igmpoff">Disable</label> 
+              </td>
+           </tr>
+        </table>
+
+        <table>
+         <tr>
+            <td width="50">
+            	<strong></strong>
+            </td>
+            <td>
+            <p><a href="#" id="apply_btn" onclick="do_apply();" class="btn"></a></p>
+            </td>
+         </tr>
+        </table>      
+
+       <div class="stepWrapper_footer"></div>
+      </form>
+
+     <div class="clear_left"></div>
+     </div>
+     <div id="content_right_footer"></div>
+   </div>
+   <div class="clear_left"></div>
+   <%actInclude("wcb_footer.html")%>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Private WiFi Network</t>
+		<t>Public WiFi Network</t>
+		<t>Name</t>	
+		<t>Frequency</t>
+		<t>MAC Address</t>
+		<t>Band</t>
+<!-- 6-10 -->	
+		<t>Security Mode</t>	
+		<t>Action</t>
+		<t>Edit</t>
+		<t>Wireless Network List</t>
+
+
+
+<!-- 0-4 -->	
+		<a>User Name is null</a>
+	</page>
+</pages>

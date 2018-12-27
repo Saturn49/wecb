@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Thank You!</t>
+		<t>Please wait while we apply the new settings to your device.</t>
+		<t>After new settings are applied successfully, we'll take you back to the page where the selection was made.</t>
+
+<!-- 0-5 -->	
+		<a>Username is invalid</a>
+	</page>
+</pages>

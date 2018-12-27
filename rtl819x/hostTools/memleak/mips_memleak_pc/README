@@ -1,0 +1,111 @@
+Memory Leak Toolkit
+
+1. Introduction
+The unfreed, double freed or overflowed memory cannot easily be found by a programmer with normal manual checking. It will cost too much time of a programmer even such memory leak bug has been found. You can easily detective memory leak problems with the help of Memory Leak Toolkit.
+
+2. Features
+1)The Memory Leak Toolkit can report all memory usage status, unfreed memory status and misfreed memory status.  
+
+2)The Memory Leak Toolkit is intently developed for MIPS platform, which can correctly show the full debug information including the full function caller frame stack, function name, file name and line number.
+
+3)The Memory Leak Toolkit will automatically load the new created process’s ELF file and its depended library file such as libcms_core.so... As a result, the Memory Leak Toolkit will monitor all new created process’s memory usage status of target machine after its’ booting on.
+
+4)The Memory Leak Toolkit will allocated memory status  structures for every new created process, so the status of memory usage will not make a conflict between each other
+
+5)The Memory Leak Toolkit adopts Server-Client Model, so the Memory Leak Toolkit’s module that runs on MIPS machine does not allocate any memory at all, so it will do no harm to MIPS machines when running the Memory Leak Toolkit on it.
+
+3. System Design
+Memory ref interface implementation
+Add the memory usage ref
+act_memleak_mem_ref_add();
+
+Del the memory usage ref
+act_memleak_mem_ref_del();
+
+Modify the memory usage ref
+act_memleak_mem_ref_mod();
+Cleanup the memory usage ref
+act_memleak_mem_ref_cleanup();
+
+
+Memory Statics ref interface implementation
+Add the memory statics usage ref
+act_memleak_mem_statics_ref_add();
+
+Del the memory statics usage ref
+act_memleak_mem_statics_ref_del();
+
+Cleanup the memory statics usage ref
+act_memleak_mem_statics_ref_cleanup();
+
+Display the entire memory statics usage ref
+act_memleak_mem_statics_ref_all_display();
+
+Display one memory statics usage ref
+act_memleak_mem_statics_ref_show();
+
+Debug information of Function symbol ref interface implementation
+Add the debug information of function symbol ref
+act_memleak_func_ref_add();
+
+Find the debug information of function symbol ref
+act_memleak_func_ref_find();
+
+Cleanup the debug information of function symbol ref
+act_memleak_func_ref_cleanup();
+
+Debug information of File and Line ref structure and interface
+Add the Debug information of file and line ref
+act_memleak_line_ref_add();
+
+Find the debug information of file and line ref
+act_memleak_line_ref_find();
+
+Cleanup the debug information of file and line ref
+act_memleak_line_ref_cleanup();
+
+Debug information of Function frame ref structure and interface
+Add the debug information of function frame ref
+act_memleak_func_frame_ref_add();
+
+Find the debug information of function frame ref
+act_memleak_func_frame_ref_find()
+
+Root ref structure and interface
+Find the root structure with a pid parameter
+act_memleak_ref_root_find();
+
+Cleanup the root structure 
+act_memleak_ref_root_cleanup();
+
+
+Message Queue structure and interface
+Send the Message Queue OP including OP_QUIT, OP_DISPAY, OP_ADD, OP_DEL…
+act_memleak_send_mq_op();
+
+A thread function handles the Message Queue
+act_memleak_recv_mq_thread();
+
+Parse ELF interface
+Parse a ELF file to obtain the debug information of it
+parse_elf();
+
+For detailed please see the file of Software Design Specification Memory Leak Toolkit R0.2.doc
+
+4. Application in BCM SDK
+1)Modify the profile file
+Modify the BCM_ROOT/customers/VDSL/TELUS/filesystem/etc/profile
+Modify the BCM_ROOT/customers/VDSL/QWEST/filesystem/etc/profile
+add "ifconfig eth0 192.168.0.1 netmask 255.255.255.0 up" before smd line.
+There is a sample profile in src directory, please read carefully. 
+
+2)Replace the memory.c
+Replace ./userspace/public/libs/cms_util/memory.c with src/memory.c
+
+3)modify the SRC and DST of bcm_copy.sh and then sh the bcm_copy.sh
+
+5. Usage
+see USAGE
+
+6. TODO
+TBD

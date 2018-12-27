@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Advanced - Firmware Upgrade</title>
+ 	<%actInclude("wcb_common.html")%>
+ 	
+	<script language=JavaScript>
+		var count = <% getInfo("countDownTime"); %>*1;
+		var pocketRouter_Mode="<% getInfo("pocketRouter_Mode_countdown"); %>"*1; /* 1:client 2:AP */
+		var waitcount = <% getInfo("countDownTime_wait"); %>*1;
+		var seconds_word=" seconds ";
+		var is_ulinker="<% getInfo("is_ulinker"); %>"*1;
+		
+		var xmlhttp = createXMLHTTPRequest();	
+		var redirect_ip = "<% getInfo("redirect_ip"); %>";	
+		var lastUrl = "<% getInfo("lastUrl"); %>";
+		var domainName = "<% getInfo("domainName"); %>";
+		var count_times = 0;
+		
+		if(is_ulinker == 1)
+		{
+			if(count<40)
+			{
+				count = count+20;				
+			}
+		}
+		else
+		{
+			if(waitcount == 1 && (pocketRouter_Mode==1 || pocketRouter_Mode==2) ){
+				count = 90;
+			}
+			else if(waitcount == 2 && (pocketRouter_Mode==1 || pocketRouter_Mode==2) ){
+				count=120;
+			}
+		}
+
+		function doLoad()
+		{
+			change_state('normal');
+			do_count_down();			
+		}
+			
+		function get_by_id(id)
+		{
+			with(document)
+			{
+				return getElementById(id);
+			}
+		}
+		
+		function change_state(istate)
+		{		
+			if(pocketRouter_Mode == 1){
+				if (is_ulinker == 0)
+					get_by_id("show_msg").innerHTML = "Please wait awhile and re-open browser to configure Pocket Router. ";
+				else
+					get_by_id("show_msg").innerHTML = "Please wait awhile and re-open browser to configure Universal Linker. ";
+				
+			}
+		}
+		
+		function closeBrowser()
+		{
+			window.close();			
+		}
+		
+		function do_count_down()
+		{
+			show_div(false, "close_button");			
+		
+			get_by_id("show_sec").innerHTML = count;			
+			
+			if(count == 0) 
+			{
+				var browser=eval ( '"' + top.location + '"' );				
+				var connect_url;				
+				
+				change_state('normal');
+				
+				if(pocketRouter_Mode != 0)
+				{
+					if (is_ulinker == 0) 
+					{
+					if((pocketRouter_Mode == 2) || (pocketRouter_Mode == 3))
+						domainName = domainName+"ap";
+					else
+						domainName = domainName+"cl";
+					}
+						
+					//alert("browser="+browser);
+					domainName = domainName.toLowerCase();
+					//alert("domainName="+domainName);
+
+					if (is_ulinker == 0) {
+						if (browser.indexOf(redirect_ip) > -1 )
+						{
+							connect_url=redirect_ip;
+							
+						}
+						else if (browser.indexOf("www."+domainName+".net") > -1 )
+						{
+							connect_url = "www."+domainName+".com";
+						}
+						else if(browser.indexOf("www."+domainName+".com") > -1 )
+						{
+							connect_url = "www."+domainName+".net";
+						}
+						else if (browser.indexOf(domainName+".net") > -1 )
+						{
+							connect_url = domainName+".com";
+						}
+						else if(browser.indexOf(domainName+".com") > -1 )
+						{
+							connect_url = domainName+".net";
+						}
+						else if (browser.indexOf(domainName) > -1 )
+						{
+							connect_url = domainName+".com";
+						}
+						else
+						{
+							connect_url = domainName+".com";
+						}
+					}
+					else {
+						if (browser.indexOf(redirect_ip) > -1 )
+						{
+							connect_url=redirect_ip;
+							
+						}
+						else if (browser.indexOf("www."+domainName+".com.tw") > -1 )
+						{
+							connect_url = "www."+domainName+".com";
+						}
+						else if(browser.indexOf("www."+domainName+".com") > -1 )
+						{
+							connect_url = "www."+domainName+".com.tw";
+						}
+						else if (browser.indexOf(domainName+".com.tw") > -1 )
+						{
+							connect_url = domainName+".com";
+						}
+						else if(browser.indexOf(domainName+".com") > -1 )
+						{
+							connect_url = domainName+".com.tw";
+						}
+						else if (browser.indexOf(domainName) > -1 )
+						{
+							connect_url = domainName+".com";
+						}
+						else
+						{
+							connect_url = domainName+".com";
+						}
+					}
+					
+				}
+				else
+				{
+					connect_url=redirect_ip;
+				}
+								
+				if(lastUrl == "/wizard.htm")
+				{
+					location.href = 'http://'+connect_url;
+				}
+				else
+				{						
+					var location_href = 'http://' + connect_url + lastUrl + '?t=' + new Date().getTime();		
+								
+					//location.href = 'http://'+connect_url;		
+
+					if( (lastUrl.indexOf("adv_default.html") != -1) 
+						|| (lastUrl.indexOf("adv_manage.html") != -1)
+					    || (lastUrl.indexOf("wcb_home.html") != -1) )
+					{
+						location_href = 'http://' + connect_url + "/wcb_home.html?c=1";
+					}
+					
+					location.href = location_href;
+				}
+				
+				return false;
+			}
+			
+			if (count > 0) 
+			{				
+				count--;
+				setTimeout('do_count_down()',1000);		
+
+				count_times++;
+			}
+
+			if(count == 10)
+			{				
+				doRefresh();
+			}
+
+			if((lastUrl.indexOf("adv_default.html") != -1) 
+				|| (lastUrl.indexOf("adv_manage.html") != -1))
+			{
+				document.getElementById("thankyou_span").innerHTML = "<% getInfo("countDownTitle") %>";
+
+				if(lastUrl.indexOf("adv_default.html") != -1)
+					document.getElementById("show_msg").innerHTML = "The Device is restoring to default setting.";
+				
+				if(lastUrl.indexOf("adv_manage.html") != -1)
+					document.getElementById("show_msg").innerHTML = "The Device is rebooting.";
+				
+				if(count_times == 1)
+					ajaxReboot();
+			}	
+			else if(lastUrl.indexOf("wcb_home.html") != -1)
+			{
+				document.getElementById("thankyou_span").innerHTML = "Update successfully!";
+				document.getElementById("show_msg").innerHTML = "The Device is writing the image into flash.";
+			}
+		}
+
+		function doRefresh()
+		{
+			if(xmlhttp != null)
+			{
+				xmlhttp.open("GET","ajax_redirectip.html",true);
+				xmlhttp.onreadystatechange = function()
+				{
+				    if(xmlhttp.readyState == 4)
+				    {
+				   		if(xmlhttp.responseText != "")
+				   		{						
+							redirect_ip = xmlhttp.responseText;
+						}
+					}
+				}
+				xmlhttp.send(null);			 
+			}
+			
+			if(count >= 2 && count <= 10)
+		  		window.setTimeout("doRefresh()", 2000);
+		    else
+		    	window.clearTimeout("doRefresh()");
+		}
+
+		function ajaxReboot()
+		{
+			if(xmlhttp != null)
+			{				 					
+				xmlhttp.open("post", "advreboot.cgi", false);				
+				xmlhttp.setRequestHeader("cache-control","nocache"); 
+				xmlhttp.setRequestHeader("Content-Type","text/plain"); 								 
+			    xmlhttp.send("");
+			}	 
+		}
+	</script>
+</head>
+<body>	
+	<div id="wrapper">
+	<%actInclude("top_nav.html")%>
+  	<!-- END SIDE NAV -->
+
+	<div id="content_right">
+		<div id="content_right_header"></div>
+		<div id="content_right_contentarea">
+			<h1 id="thankyou_span" class="thankyou">Change setting successfully!</h1>
+
+			<p><span id="show_msg">Do not turn off or reboot the Device during this time.</span></p>
+			
+			<p><span id="please_wait">Please wait </span><B><span id="show_sec"></span></B>&nbsp;<span id="show_seconds">seconds ...</span></p>
+			
+			<span id = "close_button" class = "off" >
+				<input type="button" value="  OK  " name="cancel" onClick='closeBrowser();'>
+			</span>
+		</div>
+		<div id="content_right_footer"></div>
+	</div>
+	<div class="clear_left"></div>
+	<%actInclude("wcb_footer.html")%>
+</div>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Wireless Setup - Configuration</title>
+  <%actInclude("wcb_common.html")%>
+  
+  <SCRIPT LANGUAGE="JavaScript">
+// Client Scan Information
+
+var clientSelectID = <% getIndex("clientSelectID"); %>;
+var clientSSID = "<% getInfo("clientSSID"); %>";
+var clientChannel = <% getIndex("clientChannel"); %>;
+var clientEncrypt = <% getIndex("clientEncrypt"); %>;
+var clientWpaTkipAes = <% getIndex("clientWpaTkipAes"); %>;
+var clientWpa2TkipAes = <% getIndex("clientWpa2TkipAes"); %>;
+
+// Globle vars definition
+var apmode="";
+var apssid0="<% getVirtualInfo("ssid", "0"); %>";
+var apssid1="<% getVirtualInfo("ssid", "1"); %>";
+var apssid2="<% getVirtualInfo("ssid", "2"); %>";
+var apssid3="<% getVirtualInfo("ssid", "3"); %>";
+var apssid4="<% getVirtualInfo("ssid", "4"); %>";
+var mssididx=<% getIndex("mssid_idx"); %>;
+
+var mode = "";
+var apsecmode="";
+var apwepmode=0;
+var apwepvalue="";
+var apwpamode="1";
+var apwpacypher=0;
+var wpa_cipher = 0;
+var	wpa2_cipher = 0;
+var appsk = "";
+var appsk2 = "";
+var wepDefaultKey = 0;
+
+var wlan_num = <% getIndex("wlan_num"); %>;
+var isNewMeshUI =  <% getIndex("isNewMeshUI"); %>;
+var wlanMode = new Array();
+var wlanDisabled = new Array();
+var networkType = new Array();
+var wep = new Array();
+var wdsEncrypt = new Array();
+var meshEncrypt = new Array();
+
+if (wlan_num > 0)
+{
+	wlanMode[0] = <%getIndex("wlanMode");%>;
+	wlanDisabled[0] = <%getIndex("wlanDisabled");%>;
+	networkType[0] = <%getIndex("networkType");%>;
+	wep[0] ='<%getInfo("wep");%>';
+	wdsEncrypt[0] ='<%getInfo("wdsEncrypt");%>';
+	
+	if (<%getIndex("isMeshDefined");%> == 1)
+		meshEncrypt[0] ='<%getInfo("meshEncrypt");%>';
+	else
+		meshEncrypt[0] ='';
+}
+
+if (wlan_num > 1)
+{
+	wlanMode[1] = <%getIndex("wlanMode");%>;
+	wlanDisabled[1] = <%getIndex("wlanDisabled");%>;
+	networkType[1] = <%getIndex("networkType");%>;
+	wep[1] ='<%getInfo("wep");%>';
+	wdsEncrypt[1] ='<%getInfo("wdsEncrypt");%>';
+
+	if (<%getIndex("isMeshDefined");%> == 1)
+		meshEncrypt[1] ='<%getInfo("meshEncrypt");%>';
+	else
+		meshEncrypt[1] ='';
+}
+
+for(var i = 0; i < wlan_num; i++)
+{
+	/*
+	if(wlanDisabled[i] == 1)
+		continue;
+	*/
+		
+	/* Wireless Mode */
+	if(wlanMode[i] == 0)
+		apmode = "AP";
+		
+	if (wlanMode[i] == 1) 
+	{
+		if (networkType[0] == 0)
+			apmode = "Infrastructure Client";
+		else
+			apmode = "Ad-hoc Client";
+	}
+
+	if ( wlanMode[i] == 2)
+		apmode = "WDS";
+	if ( wlanMode[i] == 3)
+		apmode = "AP+WDS";
+
+	/*#ifdef CONFIG_NEW_MESH_UI*/
+	if( isNewMeshUI == 1)
+	{
+		if ( wlanMode[i] == 4)
+			apmode = "AP+MESH";  	
+		if ( wlanMode[i] == 5)
+			apmode = "MESH";
+	}
+	else
+	{
+		if ( wlanMode[i] == 4)
+			apmode = "AP+MPP";  	
+		if ( wlanMode[i] == 5)
+			apmode = "MPP";
+		if ( wlanMode[i] == 6)
+			apmode = "MAP";	
+		if ( wlanMode[i] == 7)
+			apmode = "MP";  
+	} 		
+
+	/* Wireless Security */ 
+   	if (wlanMode[i] == 0 || wlanMode[i] == 1)
+    	apsecmode = wep[i];
+	else if (wlanMode[i] == 2)
+    	apsecmode = wdsEncrypt[i];
+	else if (wlanMode[i] == 3)
+    	apsecmode = wep[i] + '(AP),  ' + wdsEncrypt[i] + '(WDS)';
+	else if (wlanMode[i] == 4 || wlanMode[i] == 6)
+    	apsecmode = wep[i] + '(AP),  ' + meshEncrypt[i] + '(Mesh)';    	
+    else if (wlanMode[i] == 5|| wlanMode[i] == 7)
+    	apsecmode = meshEncrypt[i] + '(Mesh)';
+
+}
+
+
+function doLoad()
+{
+	var urlArray = (window.location.href).split("?");
+	if(urlArray[1] != "k=1")
+	{	
+	  if (apmode == "AP") 
+	  {
+	      document.getElementById("id_mode").selectedIndex = 0;
+		  document.getElementById("id_mssidtable").style.display = "block";
+	      document.getElementById("id_mssididx").selectedIndex = mssididx;  
+		  document.getElementById("scan_btn").style.display = "none";
+
+		  if(mssididx == 0)
+		  {
+		  	  document.getElementById("id_ssid").value = apssid0;
+			  mode = <% getVirtualIndex("encrypt", "0") %>;
+			  apwepmode = <% getVirtualIndex("authType", "0") %>;
+			  apwepvalue = "<% getVirtualInfo("wps_key", "0") %>";
+			  wpa_cipher = <% getVirtualIndex("wpaCipher", "0") %>;
+			  wpa2_cipher = <% getVirtualIndex("wpa2Cipher", "0") %>;
+			  appsk = "<% getVirtualInfo("pskValue", "0") %>";
+			  appsk2 = "<% getVirtualInfo("wapiPskValue", "0") %>";	
+			  wepDefaultKey = <% getVirtualIndex("wepDefaultKey", "0") %>;
+		  }
+		  else if(mssididx == 1)
+		  {
+		  	  document.getElementById("id_ssid").value = apssid1;
+			  mode = <% getVirtualIndex("encrypt", "1") %>;
+			  apwepmode = <% getVirtualIndex("authType", "1") %>;
+			  apwepvalue = "<% getVirtualInfo("wps_key", "1") %>";
+			  wpa_cipher = <% getVirtualIndex("wpaCipher", "1") %>;
+			  wpa2_cipher = <% getVirtualIndex("wpa2Cipher", "1") %>;
+			  appsk = "<% getVirtualInfo("pskValue", "1") %>";
+			  appsk2 = "<% getVirtualInfo("wapiPskValue", "1") %>";	
+			  wepDefaultKey = <% getVirtualIndex("wepDefaultKey", "1") %>;
+		  }
+		  else if(mssididx == 2)
+		  {
+		  	  document.getElementById("id_ssid").value = apssid2;
+			  mode = <% getVirtualIndex("encrypt", "2") %>;
+			  apwepmode = <% getVirtualIndex("authType", "2") %>;
+			  apwepvalue = "<% getVirtualInfo("wps_key", "2") %>";
+			  wpa_cipher = <% getVirtualIndex("wpaCipher", "2") %>;
+			  wpa2_cipher = <% getVirtualIndex("wpa2Cipher", "2") %>;
+			  appsk = "<% getVirtualInfo("pskValue", "2") %>";
+			  appsk2 = "<% getVirtualInfo("wapiPskValue", "2") %>";	
+			  wepDefaultKey = <% getVirtualIndex("wepDefaultKey", "2") %>;
+		  }
+		  else if(mssididx == 3)
+		  {
+		  	  document.getElementById("id_ssid").value = apssid3;
+			  mode = <% getVirtualIndex("encrypt", "3") %>;
+			  apwepmode = <% getVirtualIndex("authType", "3") %>;
+			  apwepvalue = "<% getVirtualInfo("wps_key", "3") %>";
+			  wpa_cipher = <% getVirtualIndex("wpaCipher", "3") %>;
+			  wpa2_cipher = <% getVirtualIndex("wpa2Cipher", "3") %>;
+			  appsk = "<% getVirtualInfo("pskValue", "3") %>";
+			  appsk2 = "<% getVirtualInfo("wapiPskValue", "3") %>";	
+			  wepDefaultKey = <% getVirtualIndex("wepDefaultKey", "3") %>;
+		  }
+		  else if(mssididx == 4)
+		  {
+		  	  document.getElementById("id_ssid").value = apssid4;
+			  mode = <% getVirtualIndex("encrypt", "4") %>;
+			  apwepmode = <% getVirtualIndex("authType", "4") %>;
+			  apwepvalue = "<% getVirtualInfo("wps_key", "4") %>";
+			  wpa_cipher = <% getVirtualIndex("wpaCipher", "4") %>;
+			  wpa2_cipher = <% getVirtualIndex("wpa2Cipher", "4") %>;
+			  appsk = "<% getVirtualInfo("pskValue", "4") %>";
+			  appsk2 = "<% getVirtualInfo("wapiPskValue", "4") %>";	
+			  wepDefaultKey = <% getVirtualIndex("wepDefaultKey", "4") %>;
+		  }
+	  } 
+	  else 
+	  {
+	    	document.getElementById("id_mode").selectedIndex = 1;
+			document.getElementById("id_mssidtable").style.display = "none";
+			document.getElementById("scan_btn").style.display = "block";
+
+			document.getElementById("id_ssid").value = apssid0;
+			mode = <% getVirtualIndex("encrypt", "0") %>;
+			apwepmode = <% getVirtualIndex("authType", "0") %>;
+			apwepvalue = "<% getVirtualInfo("wps_key", "0") %>";
+			wpa_cipher = <% getVirtualIndex("wpaCipher", "0") %>;
+			wpa2_cipher = <% getVirtualIndex("wpa2Cipher", "0") %>;
+			appsk = "<% getVirtualInfo("pskValue", "0") %>";
+			appsk2 = "<% getVirtualInfo("wapiPskValue", "0") %>";	
+			wepDefaultKey = <% getVirtualIndex("wepDefaultKey", "0") %>;
+	  }  
+
+	  if (mode == 0) 
+	  {
+		 document.getElementById("id_secopen").checked = true; 
+	  } 
+	  else if (mode == 1) 
+	  {
+		 document.getElementById("id_secwep").checked = true;
+		  
+		 if (apwepmode == 0) {
+		    document.getElementById("id_wep1").checked = true;		     
+		 }
+		 else if (apwepmode == 1) {		      
+		    document.getElementById("id_wep2").checked = true;		      
+		 }
+		 else if (apwepmode == 2) {		     
+		    document.getElementById("id_wep4").checked = true;
+		 }
+
+		 if (wepDefaultKey==0) {
+		    document.getElementById("WEP_RADIO_NUM0_KEY_1").value = apwepvalue;
+		    document.getElementById("id_wepkey1").checked = true;
+		 }
+		 else if (wepDefaultKey==1) {
+		    document.getElementById("WEP_RADIO_NUM0_KEY_2").value = apwepvalue;
+		    document.getElementById("id_wepkey2").checked = true;
+		 }
+		 else if (wepDefaultKey==2) {
+		    document.getElementById("WEP_RADIO_NUM0_KEY_3").value = apwepvalue;
+		    document.getElementById("id_wepkey3").checked = true;
+		 }
+		 else if (wepDefaultKey==3) {
+		    document.getElementById("WEP_RADIO_NUM0_KEY_4").value = apwepvalue;
+		    document.getElementById("id_wepkey4").checked = true;
+		 }
+	  }
+	  else if(mode >= 2)
+	  {
+		 document.getElementById("id_secwpa").checked = true;
+
+		 apwpacypher = wpa_cipher;
+		 document.getElementById("PSK_KEY").value = appsk;
+
+		 if(apsecmode.indexOf("WPA2 Mixed") != -1)
+		 {
+			apwpamode = "3";
+			apwpacypher = 3;
+		 }
+		 else if(apsecmode.indexOf("WPA2") != -1)
+		 {
+			apwpamode = "2";
+			apwpacypher = wpa2_cipher;		
+		 }
+			
+		 if (apwpamode=="1") 
+		      document.getElementById("id_wpamode1").checked = true;
+		 else if (apwpamode=="2") 
+		      document.getElementById("id_wpamode2").checked = true;
+		 else if (apwpamode=="3") 
+		      document.getElementById("id_wpamode3").checked = true;
+		    
+		 if (apwpacypher==1)
+		      document.getElementById("id_cypher1").checked = true;
+		 else if (apwpacypher==2)
+		      document.getElementById("id_cypher2").checked = true;
+		 else if (apwpacypher==3)
+		      document.getElementById("id_cypher3").checked = true;    
+	   }
+	}
+	else
+	{
+		document.getElementById("id_mode").selectedIndex = 1;
+		document.getElementById("id_mssidtable").style.display = "none";
+		document.getElementById("scan_btn").style.display = "block";
+		
+		document.getElementById("id_ssid").value = clientSSID;
+		document.getElementById("id_ssid").readOnly = true;
+
+		if(clientEncrypt == 0)
+		{
+			document.getElementById("id_secopen").checked = true; 
+			document.getElementById("id_secwep").disabled = true;
+			document.getElementById("id_secwpa").disabled = true;
+		}
+		else if(clientEncrypt == 1)
+		{
+			document.getElementById("id_secwep").checked = true;			
+			document.getElementById("id_wep4").checked = true;			
+			document.getElementById("id_wepkey1").checked = true;
+
+			document.getElementById("id_secopen").disabled = true;		
+			document.getElementById("id_secwpa").disabled = true;
+		}
+		else if(clientEncrypt >= 2 && clientEncrypt <= 4)
+		{
+			document.getElementById("id_secwpa").checked = true;
+
+			if (clientEncrypt == 2) 
+			{
+		      	document.getElementById("id_wpamode1").checked = true;
+				
+				if (clientWpaTkipAes == 1)
+			      	document.getElementById("id_cypher1").checked = true;
+			    else if (clientWpaTkipAes == 2)
+			      	document.getElementById("id_cypher2").checked = true;
+			    else if (clientWpaTkipAes == 3)
+			      	document.getElementById("id_cypher3").checked = true;  
+			}
+			else if (clientEncrypt == 3) 
+			{	
+			  	document.getElementById("id_wpamode2").checked = true;
+
+				if (clientWpa2TkipAes == 1)
+			      	document.getElementById("id_cypher1").checked = true;
+			    else if (clientWpa2TkipAes == 2)
+			      	document.getElementById("id_cypher2").checked = true;
+			    else if (clientWpa2TkipAes == 3)
+			      	document.getElementById("id_cypher3").checked = true;
+		    }
+			else if (clientEncrypt == 4) 
+			{
+		      	document.getElementById("id_wpamode3").checked = true;
+				document.getElementById("id_cypher3").checked = true;
+			}			
+
+			document.getElementById("id_secopen").disabled = true; 
+			document.getElementById("id_secwep").disabled = true;			
+		}
+		
+		disabledEncrypt(clientEncrypt);
+	}	
+}
+
+function disabledEncrypt(encrypt)
+{
+	if(encrypt == 0)
+	{
+		disabledWEP(true);
+		disabledWPA(true);
+	}
+	else if(encrypt == 1)
+	{
+		disabledWPA(true);
+	}
+	else if(encrypt >= 2 && encrypt <= 4)
+	{
+		disabledWEP(true);
+	}
+}
+
+function disabledWEP(flag)
+{
+	document.getElementById("id_wep1").disabled = flag;	
+	document.getElementById("id_wep2").disabled = flag;	
+	document.getElementById("id_wep4").disabled = flag;	
+
+	document.getElementById("id_wepkey1").disabled = flag;
+	document.getElementById("id_wepkey2").disabled = flag;
+	document.getElementById("id_wepkey3").disabled = flag;
+	document.getElementById("id_wepkey4").disabled = flag;
+
+	document.getElementById("WEP_RADIO_NUM0_KEY_1").disabled = flag;
+	document.getElementById("WEP_RADIO_NUM0_KEY_2").disabled = flag;
+	document.getElementById("WEP_RADIO_NUM0_KEY_3").disabled = flag;
+	document.getElementById("WEP_RADIO_NUM0_KEY_4").disabled = flag;
+}
+
+function disabledWPA(flag)
+{
+	document.getElementById("id_wpamode1").disabled = flag;
+	document.getElementById("id_wpamode2").disabled = flag;
+	document.getElementById("id_wpamode3").disabled = flag;
+
+	document.getElementById("id_cypher1").disabled = flag;
+	document.getElementById("id_cypher2").disabled = flag;
+	document.getElementById("id_cypher3").disabled = flag;
+
+	document.getElementById("PSK_KEY").disabled = flag;
+}
+
+function onClickAPEnable()
+{
+     if (document.getElementById("id_wl_on").checked) {
+           gv_apEnabled = "1";
+      } else if (document.getElementById("id_wl_off").checked) {
+           gv_apEnabled = "0";
+      }
+      uiset_section_all();
+}
+
+function onChangeMode()
+{
+  if (document.getElementById("id_mode").selectedIndex == 0) {
+    document.getElementById("id_mssidtable").style.display="block";	
+  }
+  else { 
+    document.getElementById("id_mssidtable").style.display="none";
+  }
+
+  onChangeSsid();
+}
+
+function onChangeSsid()
+{
+    var form= document.myform;
+ 
+    with (form) {
+        command.disabled = false;
+        command.value = "changeSSID";
+        wait.value = "0";
+    }
+    form.submit();
+}
+
+function onInputKeyUp(Idx, Flag)
+{
+    var i_maxlen;
+    var i_key = document.getElementById("WEP_RADIO_NUM0_KEY_" + Idx);
+   
+    //check key value
+    var rege=/[^a-fA-F0-9]/;
+    var i_keyvalue = i_key.value;
+    var chk_flag=false;
+    var wep_key="";
+
+    document.getElementById("id_wepkey"+ Idx).checked=true;
+ 
+    for (var i=0; i<i_key.value.length; i++) {
+    
+	if (i_keyvalue.charAt(i).match(rege))
+     	 chk_flag=true;
+	else
+	 wep_key+=i_keyvalue.charAt(i);
+    }
+
+    if (chk_flag)
+    {
+		pop_up("The WEP Key can only contain letters between A-F and numbers between 0-9 with no spaces.");
+      	document.getElementById("WEP_RADIO_NUM0_KEY_" + Idx).value=wep_key;
+      	return false;
+    }
+
+    return true;
+}
+
+function doCheck()
+{
+	/*
+   if ( mssididx >0 && document.getElementById("id_secwep").checked) {
+      pop_up("WEP setting is only allowed in SSID1.", 0);
+      return 0;
+   }
+   */
+
+  //WEP
+  if (document.getElementById("id_secwep").checked) {
+     var index=0;
+     var i_key;
+ 
+     if (document.getElementById("id_wepkey1").checked)
+       index=1;
+     else if (document.getElementById("id_wepkey2").checked)
+       index=2;
+     else if (document.getElementById("id_wepkey3").checked)
+       index=3;
+     else if (document.getElementById("id_wepkey4").checked)
+       index=4;
+     else  
+       index=1;
+
+     i_key = document.getElementById("WEP_RADIO_NUM0_KEY_" + index);
+     if (i_key.value.length != 10 && i_key.value.length != 26 ) 
+     {
+       pop_up("WEP" + index + " key length should be 10 for 64 bit, or 26 for 128 bit.", 0);      
+       return 0;
+     }
+  }
+
+  if (document.getElementById("id_secwpa").checked) {
+    var psk = document.getElementById("PSK_KEY");
+     if (psk.value.length < 8  || psk.value.length > 64 ) 
+     {
+       pop_up("PSK key length should be between 8 to 64.", 0);
+       return 0;
+     }
+  }
+  return 1;
+}
+
+function doClickwep()
+{
+  if ((!document.getElementById("id_wep1").checked) && (!document.getElementById("id_wep2").checked) && (!document.getElementById("id_wep4").checked))
+    document.getElementById("id_wep1").checked = true;
+
+	
+		
+  if((!document.getElementById("id_wepkey1").checked) && (!document.getElementById("id_wepkey2").checked) 
+  		&& (!document.getElementById("id_wepkey3").checked) && (!document.getElementById("id_wepkey4").checked))
+  {
+	document.getElementById("id_wepkey1").checked = true;
+  }
+}
+
+function doClickwpa()
+{
+  if ( (!document.getElementById("id_wpamode1").checked) && (!document.getElementById("id_wpamode2").checked) && (!document.getElementById("id_wpamode3").checked))
+    document.getElementById("id_wpamode1").checked = true;
+
+  if ((!document.getElementById("id_cypher1").checked) && (!document.getElementById("id_cypher2").checked) && (!document.getElementById("id_cypher3").checked) )
+    document.getElementById("id_cypher3").checked = true;
+}
+
+
+function doCheckSsid(idname)
+{
+    var ssid ;
+    var vssid ;
+   
+    //check SSID
+    var rege=/[^a-zA-Z0-9]/;
+
+    ssid = document.getElementById(idname);
+    vssid = ssid.value;
+
+    if (vssid == "")
+    {
+        pop_up("The Wireless Network Name must contain letters and/or numbers only with no spaces.",0);      
+        return 0; 
+    }
+
+    for (var i=0; i<vssid.length; i++) {
+        var mat = vssid.match(rege);
+        if (mat) {
+            if (mat.length > 0) {
+                pop_up("The Wireless Network Name must contain letters and/or numbers only with no spaces.",0);             
+	      		return 0;
+            }
+        }
+    }
+    if (vssid.length > 32) {
+        pop_up("The max length of Wireless Network Name is 32.",0);         
+        return 0;
+    } 
+    return 1;
+}
+
+
+
+
+function doApply()
+{
+  var form = document.myform;
+
+  /*
+  if (doCheckSsid("id_ssid")==0)
+       return;
+  */
+
+  var id_ssid = document.getElementById("id_ssid");
+
+  if(trim(id_ssid.value) == "")
+  {
+	 pop_up("The Wireless Network Name can not be null", 0);
+	 id_ssid.focus();
+	 return false;
+  }
+  
+  
+  if (doCheck()==0)
+     return false;
+ 
+    with (form) {
+
+		command.disabled = false;
+		
+		if(wl_mode.value == "0")
+		{
+        	command.value = "apply";
+		}
+		else if(wl_mode.value == "1")
+		{
+			command.value = "client_connect";
+		}
+    }
+    form.submit();
+}
+
+function doScan()
+{
+	var form = document.myform;
+
+	with (form) {
+        command.disabled = false;
+        command.value = "scan";
+		mypage.value = "/wl_list.html";
+    }
+    form.submit();
+}
+
+</SCRIPT>
+</head>
+
+<body>
+<div id="wrapper">
+  <!-- TOP NAV -->
+  <%actInclude("top_nav.html")%>
+  <!-- END TOP NAV -->
+  <!-- SIDE NAV -->
+  <%actInclude("left_wl.html")%>
+  <!-- END SIDE NAV -->
+
+  <!-- MAIN CONTENT AREA -->
+  <div id="content_right">
+    <div id="content_right_header"></div>
+    <div id="content_right_contentarea">
+      <h1>Wireless Security Settings</h1>
+      <form name="myform" action="wlconfig.cgi" method="POST">
+        <!--0--><input type="hidden" name="command" value="" disabled />
+		<!--1--><input type="hidden" name="mypage" value="/wl_config.html" />
+        <!--2--><input type="hidden" name="wait" value="1" />      
+  
+        <table>
+          <tr>
+           <td width="180">
+           	<strong>Startup Mode:</strong>	    
+           </td>
+           <td>
+            <select name="wl_mode" id="id_mode" onchange="onChangeMode();">
+            <option value="0">Wireless AP</option>
+            <option value="1">Wireless Client</option>
+            </select>
+          </td>
+          </tr>
+        </table>
+
+        <table id="id_mssidtable">
+          <tr>
+           <td width="180">
+           	<strong>Multiple SSID:</strong>	    
+           </td>
+           <td>
+            <select name="wl_mssididx" id="id_mssididx" onchange="onChangeSsid();">	    
+            	<option value="0">Root SSID&nbsp;</option>
+	            <option value="1">SSID1&nbsp;</option>
+	            <option value="2">SSID2&nbsp;</option>
+	            <option value="3">SSID3&nbsp;</option>
+	            <option value="4">SSID4&nbsp;</option>
+            </select>
+          </td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+           <td width="180">
+	   		<strong>Wireless Network Name:</strong>
+           </td>
+           <td>
+           <input name="wl_ssid" id="id_ssid" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" />
+           </td>
+          </tr>
+        </table>
+ 
+        <table>
+          <tr>
+           <td width="180">
+           	<strong>Security Settings:</strong>
+           </td>
+           <td>
+           </td>
+          </tr>
+        </table>
+        
+	 <table>
+	 <tbody>
+	 <tr>
+		 <td class="header" align="TOP">
+		   <input name="AP_SECMODE" id="id_secopen" checked="checked" value="0" type="radio">
+		   <strong><label for="id_secopen">OPEN</label></strong>
+		 </td>
+		 <td class="headerBLK" colspan="2"><hr> No Security Applied</td>
+	 </tr>
+
+	 <tr>
+	 	<td></td>
+	 </tr>
+	 
+	 <tr>
+		 <td class="header" align="TOP">
+		 	<input name="AP_SECMODE" id="id_secwep" value="1" type="radio"  onClick="doClickwep();">
+		 	<strong><label for="id_secwep">WEP</label></strong>
+		 </td>
+		 <td class="headerBLK" colspan="2"><hr>Simple WEP Security (64 or 128 bit hardware key)
+		 </td>
+	 </tr>
+	 
+	 <tr>
+		 <td></td>
+		 <td class="headind"> MODE:</td>
+		 <td class="headind">
+		  <input name="AP_WEP_MODE_0" id="id_wep1" value="0" type="radio" /><label for="id_wep1">Open</label>
+		  <input name="AP_WEP_MODE_0" id="id_wep2" value="1" type="radio" /><label for="id_wep2">Shared</label>
+		  <input name="AP_WEP_MODE_0" id="id_wep4" value="2" type="radio" /><label for="id_wep4">Auto</label>
+		 </td>
+	 </tr>
+	 
+	 <tr>
+	 	<td></td>
+		<td class="headind">Key 1</td>
+		<td class="headind">
+		  <input id="WEP_RADIO_NUM0_KEY_1" name="WEP_RADIO_NUM0_KEY_1" class="text2" size="30" maxlength="26" type="text" onkeyup="javascript:if (event.keyCode < 37 || event.keyCode > 40) onInputKeyUp(1, 1);" />
+		  <input name="AP_PRIMARY_KEY_0" id="id_wepkey1" value="1" type="radio"/> <label for="id_wepkey1">Primary Key</label>
+		</td>
+	 </tr>
+	 
+	 <tr>
+	 	<td></td>
+		<td class="headind">Key 2</td>
+		<td class="headind">
+		  <input id="WEP_RADIO_NUM0_KEY_2" name="WEP_RADIO_NUM0_KEY_2" class="text2" size="30" maxlength="26" type="text" onkeyup="javascript:if (event.keyCode < 37 || event.keyCode > 40) onInputKeyUp(2, 1);" />
+		  <input name="AP_PRIMARY_KEY_0" id="id_wepkey2" value="2" type="radio" /> <label for="id_wepkey2">Primary Key</label>
+		</td>
+	 </tr>
+	 
+	 <tr>
+	 	<td></td>
+		<td class="headind">Key 3</td>
+		<td class="headind">
+		  <input id="WEP_RADIO_NUM0_KEY_3" name="WEP_RADIO_NUM0_KEY_3" class="text2" size="30" maxlength="26" type="text" onkeyup="javascript:if (event.keyCode < 37 || event.keyCode > 40) onInputKeyUp(3, 1);" />
+		  <input name="AP_PRIMARY_KEY_0" id="id_wepkey3" value="3" type="radio" /> <label for="id_wepkey3">Primary Key</label>
+		</td>
+	 </tr>
+	 
+	 <tr>
+	 	<td></td>
+		<td class="headind">Key 4</td>
+		<td class="headind">
+		  <input id="WEP_RADIO_NUM0_KEY_4" name="WEP_RADIO_NUM0_KEY_4" class="text2" size="30" maxlength="26" type="text" onkeyup="javascript:if (event.keyCode < 37 || event.keyCode > 40) onInputKeyUp(4, 1);" />
+		  <input name="AP_PRIMARY_KEY_0" id="id_wepkey4" value="4" type="radio" /> <label for="id_wepkey4">Primary Key</label>
+		</td>
+	 </tr>
+	 
+	 <tr>
+	  <td class="header" align="TOP">
+	  	<input name="AP_SECMODE" id="id_secwpa" value="2" type="radio" onClick="doClickwpa();">
+	  	<strong><label for="id_secwpa">WPA</label></strong>
+	  </td>
+	  <td class="headerBLK" colspan="2"><hr>Enhanced Security for Personal/Enterprise</td>
+	 </tr>
+	 
+	 <tr>
+	 	<td></td>
+		<td class="headind"> MODE:</td>
+		<td class="headind">
+		  <input name="AP_WPA" id="id_wpamode1" value="1" type="radio"><label for="id_wpamode1">WPA&nbsp;</label>
+		  <input name="AP_WPA" id="id_wpamode2" value="2" type="radio"><label for="id_wpamode2">WPA 2&nbsp;</label>
+		  <input name="AP_WPA" id="id_wpamode3" value="3" type="radio"><label for="id_wpamode3">Auto&nbsp;</label>
+		</td>
+	 </tr>
+	 
+	 <tr>
+	 	<td></td>
+		<td class="headind"> CYPHER:</td>
+		<td class="headind">
+		  <input name="AP_CYPHER" id="id_cypher1" value="1" type="radio"><label for="id_cypher1">TKIP</label>
+		  <input name="AP_CYPHER" id="id_cypher2" value="2" type="radio"><label for="id_cypher2">AES</label>
+		  <input name="AP_CYPHER" id="id_cypher3" value="3" type="radio"><label for="id_cypher3">Auto&nbsp;</label>
+		</td>
+	 </tr>
+
+	 <tr>
+	 	<td></td>
+	 	<td class="headind">Personal Shared Key</td>
+	 </tr>
+	 
+	 <tr>
+	 	<td></td>
+		 <td class="headind">PSK KEY</td>
+		 <td> 
+		  <input id="PSK_KEY" name="PSK_KEY" size="70" maxlength="64" type="text" style="height: 16px"/>
+		 </td>
+	</tr>
+	</tbody>
+	</table>
+
+       <table>
+         <tr>
+	       <td width="50">
+	       </td>
+	       <td width="250">
+	       	<a href="#" id="apply_btn" onclick="doApply();" class="btn"></a>
+	       </td>
+	       <td>
+	       	<a href="#" id="scan_btn" onclick="doScan();" class="btn"></a>
+	       </td>
+         </tr>
+       </table>
+
+      </form>
+
+     <div class="clear_left"></div>
+     </div>
+     <div id="content_right_footer"></div>
+   </div>
+   <div class="clear_left"></div>
+   <%actInclude("wcb_footer.html")%>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,1003 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wireless Security Settings</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var id_mssididx, id_ssid;
+var wl_freq, wl_secmode, wl_wepmode, wl_primarykey, wl_wpamode, wl_cypher;
+var id_secopen, id_secwep, id_secwpa;
+var id_wepkey1, id_wepkey2, id_wepkey3, id_wepkey4;
+var id_wpamode1, id_wpamode2, id_wpamode3;
+var id_wep1, id_primarykey1, id_cypher1, id_cypher2, id_cypher3, id_psk;
+var apply_btn;
+var security_form;
+var wl_authentication;
+var id_auth1, id_auth2;
+var psk_table, server_table;
+var id_serverip, id_serverport, id_serverpassword;
+var band_value;
+var id_freq2, id_freq5;
+var back_btn;
+var id_broadcastoff, wl_broadcast, wl_wmm;
+var mso_table, cusa_table;
+var id_band, id_channel;
+
+function doLoad()
+{
+	wl_freq = document.getElementsByName("wl_freq");	
+	wl_secmode = document.getElementsByName("wl_secmode");
+	wl_wepmode = document.getElementsByName("wl_wepmode");
+	wl_primarykey = document.getElementsByName("wl_primarykey");	
+	wl_wpamode = document.getElementsByName("wl_wpamode");
+	wl_cypher = document.getElementsByName("wl_cypher");	
+	wl_authentication = document.getElementsByName("wl_authentication");
+	wl_broadcast = document.getElementsByName("wl_broadcast");
+	wl_wmm = document.getElementsByName("wl_wmm");
+
+	id_secopen = document.getElementById("id_secopen");
+	id_secwep = document.getElementById("id_secwep");
+	id_secwpa = document.getElementById("id_secwpa");
+	id_mssididx = document.getElementById("id_mssididx");
+	id_ssid = document.getElementById("id_ssid");
+	id_wep1 = document.getElementById("id_wep1");
+	id_primarykey1 = document.getElementById("id_primarykey1");
+	id_wepkey1 = document.getElementById("id_wepkey1");
+	id_wepkey2 = document.getElementById("id_wepkey2");
+	id_wepkey3 = document.getElementById("id_wepkey3");
+	id_wepkey4 = document.getElementById("id_wepkey4");
+	id_wpamode1 = document.getElementById("id_wpamode1");
+	id_wpamode2 = document.getElementById("id_wpamode2");
+	id_wpamode3 = document.getElementById("id_wpamode3");
+	id_cypher1 = document.getElementById("id_cypher1");
+	id_cypher2 = document.getElementById("id_cypher2");
+	id_cypher3 = document.getElementById("id_cypher3");
+	id_auth1 = document.getElementById("id_auth1");
+	id_auth2 = document.getElementById("id_auth2");
+	id_psk = document.getElementById("id_psk");
+	id_broadcastoff = document.getElementById("id_broadcastoff");
+
+	id_serverip = document.getElementById("id_serverip");
+	id_serverport = document.getElementById("id_serverport");
+	id_serverpassword = document.getElementById("id_serverpassword");
+
+	id_freq2 = document.getElementById("id_freq2");
+	id_freq5 = document.getElementById("id_freq5");
+	id_band = document.getElementById("id_band");
+	id_channel = document.getElementById("id_channel");
+	
+	apply_btn = document.getElementById("apply_btn");
+	security_form = document.getElementById("security_form");
+	back_btn = document.getElementById("back_btn");
+
+	psk_table = document.getElementById("psk_table");
+	server_table = document.getElementById("server_table");
+	mso_table = document.getElementById("mso_table");
+	cusa_table = document.getElementById("cusa_table");
+
+	apply_btn.onclick = doApply;
+	back_btn.onclick = doBack;
+
+	if(auth_level == 3)
+	{
+		mso_table.style.display = "block";
+		cusa_table.style.display = "none";
+	}
+	else 
+	{
+		mso_table.style.display = "none";
+		cusa_table.style.display = "block";
+	}
+
+	if(jump_security)
+		back_btn.style.display = "block";
+	else 
+		back_btn.style.display = "none";
+		
+	for(var i = 0; i < wl_secmode.length; i++)
+	{
+		wl_secmode[i].onclick = doWlSecmode;
+	}
+
+	for(var i = 0; i < wl_authentication.length; i++)
+	{
+		wl_authentication[i].onclick = doWlAuthentication;
+	}
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		wl_freq[i].onclick = doWlFreq;
+
+		if( ((wl_freq[i].value == "10") && (wlan_idx == 1)) 
+			|| ((wl_freq[i].value == "11") && (wlan_idx == 0)))
+		{
+			changeBand(wl_freq[i].value);
+			changeChannel(wl_freq[i].value);
+			wl_freq[i].checked = true;
+		}
+	}
+
+	for(var i = 0; i < wl_wpamode.length; i++)
+	{
+		wl_wpamode[i].onclick = doWlWpamode;
+	}
+
+	if(wifi_certificated)
+	{
+		for(var i = 0; i < wl_cypher.length; i++)
+		{
+			wl_cypher[i].onclick = doWlCypher;
+		}
+	}
+
+	id_mssididx.onchange = doWlFreq;
+	id_mssididx.value = curr_ssid;	
+
+	id_band.onchange = doWlBand;
+
+	doWlFreq();
+}
+
+function doWlBand()
+{
+	if(id_secopen.checked)
+	{
+		setWepDisabled(true);
+		setWpaDisabled(true);
+	}
+	else if(id_secwep.checked)
+	{
+		setWepDisabled(false);
+		setWpaDisabled(true);
+	}
+	else if(id_secwpa.checked)
+	{
+		setWepDisabled(true);
+		setWpaDisabled(false);
+	}
+
+	if(id_band.value == "7" || id_band.value == "9" || id_band.value == "10" || id_band.value == "11")
+	{
+		id_secwep.disabled = true;
+
+		id_cypher1.disabled = true;	
+
+		if(wifi_certificated)
+			id_wpamode1.disabled = true;	
+	}
+	else
+	{
+		id_secwep.disabled = false;
+
+		id_cypher1.disabled = false;
+
+		if(wifi_certificated)
+			id_wpamode1.disabled = false;
+	}
+}
+
+function changeBand(wlan)
+{
+	if(wlan == "10")
+	{
+		id_band.options.length = 0;	
+		id_band.options[0] = new Option("2.4 GHz (B) ", "0");
+		id_band.options[1] = new Option("2.4 GHz (G) ", "1");
+		id_band.options[2] = new Option("2.4 GHz (N) ", "7");
+		id_band.options[3] = new Option("2.4 GHz (B+G) ", "2");
+		id_band.options[4] = new Option("2.4 GHz (G+N) ", "9");
+		id_band.options[5] = new Option("2.4 GHz (B+G+N) ", "10");	
+	}
+	else if(wlan == "11")
+	{
+		id_band.options.length = 0;	
+		id_band.options[0] = new Option("5 GHz (A) ", "3");
+		id_band.options[1] = new Option("5 GHz (N) ", "7");
+		id_band.options[2] = new Option("5 GHz (A+N) ", "11");
+	}
+	id_band.value = band_value;
+}
+
+function changeBandBySecmode()
+{
+	if(id_secwep.checked 
+		|| (id_secwpa.checked && id_wpamode1.checked && id_cypher1.checked))
+	{
+		if(id_freq2.checked)
+		{
+			id_band.options.length = 0;	
+			id_band.options[0] = new Option("2.4 GHz (B) ", "0");
+			id_band.options[1] = new Option("2.4 GHz (G) ", "1");			
+			id_band.options[2] = new Option("2.4 GHz (B+G) ", "2");			
+		}
+		else if(id_freq5.checked)
+		{
+			id_band.options.length = 0;	
+			id_band.options[0] = new Option("5 GHz (A) ", "3");			
+		}
+	}
+	else
+	{
+		if(id_freq2.checked)
+		{
+			id_band.options.length = 0;	
+			id_band.options[0] = new Option("2.4 GHz (B) ", "0");
+			id_band.options[1] = new Option("2.4 GHz (G) ", "1");
+			id_band.options[2] = new Option("2.4 GHz (N) ", "7");
+			id_band.options[3] = new Option("2.4 GHz (B+G) ", "2");
+			id_band.options[4] = new Option("2.4 GHz (G+N) ", "9");
+			id_band.options[5] = new Option("2.4 GHz (B+G+N) ", "10");	
+		}
+		else if(id_freq5.checked)
+		{
+			id_band.options.length = 0;	
+			id_band.options[0] = new Option("5 GHz (A) ", "3");
+			id_band.options[1] = new Option("5 GHz (N) ", "7");
+			id_band.options[2] = new Option("5 GHz (A+N) ", "11");
+		}
+	}
+
+	id_band.value = band_value;
+}
+
+function changeChannel(wlan)
+{
+	var begin = 32;
+	
+	if(wlan == "10")
+	{
+		id_channel.options.length = 0;	
+
+		id_channel.options[0] = new Option("Automatic ", "0");
+		for(var i = 1; i <= 11; i++)
+		{
+			id_channel.options[i] = new Option(i, i);
+		}
+	}
+	else if(wlan == "11")
+	{
+		id_channel.options.length = 0;	
+
+		id_channel.options[0] = new Option("Automatic ", "0");
+		for(var i = 1; i <= 8; i++)
+		{			
+			id_channel.options[i] = new Option(begin + (4 * i), begin + (4 * i));
+		}
+
+		begin = 96;
+		for(var i = 9; i <= 19; i++)
+		{			
+			id_channel.options[i] = new Option(begin + (4 * (i-8)), begin + (4 * (i-8)));
+		}
+		id_channel.options[20] = new Option("149", "149");
+	}
+}
+
+function doBack()
+{
+	window.location.href = "/wl_network.html";
+}
+
+function doWlCypher()
+{
+	if(id_cypher1.checked)
+		id_wpamode1.checked = true;
+	else if(id_cypher2.checked)
+		id_wpamode2.checked = true;
+	else if(id_cypher3.checked)
+		id_wpamode3.checked = true;
+
+	changeBandBySecmode();
+}
+
+function doWlAuthentication()
+{
+	if(id_auth1.checked)
+	{
+		psk_table.style.display = "none";
+		server_table.style.display = "block";
+	}
+	else
+	{
+		psk_table.style.display = "block";
+		server_table.style.display = "none";
+	}
+}
+
+function doWlWpamode()
+{
+	if(id_wpamode1.checked)
+	{
+		if(id_cypher1.disabled)
+			id_cypher2.checked = true;
+		else
+			id_cypher1.checked = true;
+	}
+	else if(id_wpamode2.checked)
+	{		
+		id_cypher2.checked = true;		
+	}
+	else if(id_wpamode3.checked)
+	{		
+		id_cypher3.checked = true;		
+	}
+
+	changeBandBySecmode();
+}
+
+function checkWepKey(default_key, key_id)
+{
+	if(trim(key_id.value) == "")
+	{
+		pop_up("Primary Key " + default_key + " is null");
+		key_id.focus();
+		return false;
+	}
+	else if(!isHexNumber(key_id.value))
+	{
+		pop_up("Primary Key " + default_key + " is invalid");
+		key_id.focus();
+		return;
+	}
+	else if(trim(key_id.value).length != 10 && trim(key_id.value).length != 26)
+	{
+		pop_up("Primary Key " + default_key + "'s length should be 10 or 26");
+		key_id.focus();
+		return;
+	}
+
+	return true;
+}
+
+function doApply()
+{	
+	var default_key = 0;
+
+	if(trim(id_ssid.value) == "")
+	{
+		pop_up("Wireless Network Name is null");
+		id_ssid.focus();
+		return;
+	}	
+	/*
+	else if(trim(id_ssid.value).indexOf("|") != -1)
+	{
+		pop_up("Wireless Network Name is invalid");
+		id_ssid.focus();
+		return;
+	}
+	*/
+	id_ssid.value = trim(id_ssid.value);		
+
+	if(id_secopen.checked)
+	{
+		pop_up("Wireless encryption is none now", 1, formSubmit);	
+		return;
+	}
+	else if(id_secwep.checked)
+	{		
+		for(var i = 0; i < wl_primarykey.length; i++)
+		{
+			if(wl_primarykey[i].checked)
+			{	
+				default_key = i + 1;				
+				break;
+			}
+		}
+
+		if(default_key == 1)
+		{
+			if(!checkWepKey(1, id_wepkey1))
+				return;			
+		}
+		else if(default_key == 2)
+		{
+			if(!checkWepKey(2, id_wepkey2))
+				return;			
+		}
+		else if(default_key == 3)
+		{
+			if(!checkWepKey(3, id_wepkey3))
+				return;			
+		}
+		else if(default_key == 4)
+		{
+			if(!checkWepKey(4, id_wepkey4))
+				return;			
+		}
+
+		pop_up("if WEP is turn on, WPS2.0 will be disabled", 1, formSubmit);
+		return;
+	}
+	else if(id_secwpa.checked)
+	{
+		if(id_auth1.checked)
+		{
+			if(trim(id_serverip.value) == "")
+			{
+				pop_up("RADIUS Server IP Address is null");
+				id_serverip.focus();
+				return;
+			}
+			else
+			{
+				if(!isValidIpAddress(id_serverip.value))
+				{
+					pop_up("RADIUS Server IP Address is invalid");
+					id_serverip.focus();
+					return;
+				}
+			}
+
+			if(trim(id_serverport.value) == "")
+			{
+				pop_up("RADIUS Server Port is null");
+				id_serverport.focus();
+				return;
+			}
+			else 
+			{
+				if(!isValidPort(id_serverport.value))
+				{
+					pop_up("RADIUS Server Port is invalid");
+					id_serverport.focus();
+					return;
+				}
+			}
+
+			if(trim(id_serverpassword.value) == "")
+			{
+				pop_up("RADIUS Server Password is null");
+				id_serverpassword.focus();
+				return;
+			}
+			else if(trim(id_serverpassword.value).indexOf("|") != -1)
+			{
+				pop_up("RADIUS Server Password is invalid");
+				id_serverpassword.focus();
+				return;
+			}
+		}
+		else 
+		{
+			if(trim(id_psk.value) == "")
+			{
+				pop_up("Personal Shared Key is null");
+				id_psk.focus();
+				return;
+			}	
+			else if(trim(id_psk.value).indexOf("|") != -1)
+			{
+				pop_up("Personal Shared Key is invalid");
+				id_psk.focus();
+				return;
+			}
+		}		
+
+		if(id_wpamode1.checked || id_cypher1.checked)
+		{
+			pop_up("under WPA only or TKIP only, WPS2 daemon will be disabled", 1, formSubmit);	
+			return;
+		}			
+	}		
+
+	if(id_broadcastoff.checked)
+	{
+		pop_up("if turn on hiddenSSID; WPS2.0 will be disabled", 1, formSubmit);		
+		return;
+	}
+	else
+	{
+		formSubmit();
+	}
+}
+
+function formSubmit()
+{
+	security_form.submit();
+}
+
+function setWepDisabled(flag)
+{
+	for(var i = 0; i < wl_wepmode.length; i++)
+	{
+		wl_wepmode[i].disabled = flag;
+	}
+
+	for(var i = 0; i < wl_primarykey.length; i++)
+	{
+		wl_primarykey[i].disabled = flag;	
+	}
+
+	id_wepkey1.disabled = flag;	
+	id_wepkey2.disabled = flag;	
+	id_wepkey3.disabled = flag;	
+	id_wepkey4.disabled = flag;		
+}
+
+function setWpaDisabled(flag)
+{	
+	for(var i = 0; i < wl_wpamode.length; i++)
+	{
+		wl_wpamode[i].disabled = flag;	
+	}
+
+	for(var i = 0; i < wl_cypher.length; i++)
+	{
+		wl_cypher[i].disabled = flag;	
+	}
+
+	for(var i = 0; i < wl_authentication.length; i++)
+	{
+		wl_authentication[i].disabled = flag;	
+	}
+	
+	id_psk.disabled = flag;
+	id_serverip.disabled = flag;
+	id_serverport.disabled = flag;
+	id_serverpassword.disabled = flag;	
+}
+
+function doWlSecmode()
+{
+	if(id_secopen.checked)
+	{
+		setWepDisabled(true);
+		setWpaDisabled(true);
+	}
+	else if(id_secwep.checked)
+	{
+		setWepDisabled(false);
+		setWpaDisabled(true);
+	}
+	else if(id_secwpa.checked)
+	{
+		setWepDisabled(true);
+		setWpaDisabled(false);
+
+		if(band_value == "7" || band_value == "9" || band_value == "10" || band_value == "11")
+		{
+			id_cypher1.disabled = true;	
+
+			if(wifi_certificated)
+				id_wpamode1.disabled = true;			
+		}
+		else
+		{
+			id_cypher1.disabled = false;
+
+			if(wifi_certificated)
+				id_wpamode1.disabled = false;
+		}
+	}
+
+	changeBandBySecmode();
+}
+
+function doWlFreq()
+{
+	var params = "";
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		if(wl_freq[i].checked)
+		{	
+			params += "&wl_freq=" + wl_freq[i].value; 
+
+			changeBand(wl_freq[i].value);
+			changeChannel(wl_freq[i].value);
+			break;
+		}
+	}	
+
+	params += "&wl_mssididx=" + id_mssididx.value;
+	params += "&command=getvalue";	
+
+	
+	ajaxPost("wlsecurity.cgi", params, resGetValue);
+}
+
+function changeSecurity(band)
+{
+	if(band == "7" || band == "9" || band == "10" || band == "11")
+	{					
+		id_secwep.disabled = true;		
+		setWepDisabled(true);
+		id_cypher1.disabled = true;
+		id_cypher2.checked = true;	
+	}
+	else
+	{
+		id_secwep.disabled = false;				
+		setWepDisabled(false);			
+		id_cypher1.disabled = false;
+		id_cypher1.checked = true;				
+	}	
+
+	doWlSecmode();
+}
+
+function resGetValue(message)
+{	
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{		
+			var index = 0;	
+			var basicArray = messageArray[i].split("|");			
+			var encrypt = basicArray[index++];	
+			var wep_defaultkey = basicArray[index++];	
+			var wep_authtype = basicArray[index++];	
+			var wpa_cipher = basicArray[index++];	
+			var wpa2_cipher= basicArray[index++];	
+			var wpa_auth = basicArray[index++];	
+			var rs_port = basicArray[index++];	
+			var band = basicArray[index++];	
+			var channumber = basicArray[index++];	
+			var broadcast = basicArray[index++];
+			var wmm = basicArray[index++];	
+			var ssid = htmlDecodeStr(basicArray[index++]);
+			var wep_key = changeString(basicArray[index++]);			
+			var wpa_psk = changeString(basicArray[index++]);	
+			var rs_ip = changeString(basicArray[index++]);
+			var rs_password = changeString(basicArray[index++]);
+			
+			id_ssid.value = ssid;
+			id_band.value = band;
+			band_value = band;	
+			id_channel.value = channumber;
+
+			for(var j = 0; j < wl_broadcast.length; j++)
+			{
+				if(wl_broadcast[j].value == broadcast)
+				{	
+					wl_broadcast[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_wmm.length; j++)
+			{
+				if(wl_wmm[j].value == wmm)
+				{	
+					wl_wmm[j].checked = true;
+				}
+			}
+
+			if(encrypt == "0")
+			{
+				id_secopen.checked = true;	
+				id_wpamode1.checked = true;				
+			}
+			else if(encrypt == "1")		
+			{
+				id_secwep.checked = true;			
+				id_wpamode1.checked = true;				
+				id_wep1.checked = true;
+			}
+			else if(encrypt == "2")
+			{
+				id_secwpa.checked = true;
+				id_wpamode1.checked = true;									
+			}
+			else if(encrypt == "4")
+			{
+				id_secwpa.checked = true;
+				id_wpamode2.checked = true;				
+				id_cypher2.checked = true;				
+			}
+			else if(encrypt == "6")
+			{
+				id_secwpa.checked = true;
+				id_wpamode3.checked = true;
+				id_cypher3.checked = true;				
+			}				
+
+			changeSecurity(band);
+			
+			for(var j = 0; j < wl_authentication.length; j++)
+			{
+				if(wl_authentication[j].value == wpa_auth)
+				{
+					wl_authentication[j].checked = true;
+					break;
+				}
+			}
+			doWlAuthentication();
+
+			for(var j = 0; j < wl_wepmode.length; j++)
+			{
+				if(wl_wepmode[j].value == wep_authtype)
+				{
+					wl_wepmode[j].checked = true;
+					break;
+				}
+			}
+
+			for(var j = 0; j < wl_primarykey.length; j++)
+			{
+				if(wl_primarykey[j].value == wep_defaultkey)
+				{
+					wl_primarykey[j].checked = true;
+					break;
+				}
+			}
+
+			if(wep_defaultkey == "0")
+				id_wepkey1.value = wep_key;
+			else if(wep_defaultkey == "1")
+				id_wepkey2.value = wep_key;
+			else if(wep_defaultkey == "2")
+				id_wepkey3.value = wep_key;
+			else if(wep_defaultkey == "3")
+				id_wepkey4.value = wep_key;
+			
+			for(var j = 0; j < wl_cypher.length; j++)
+			{				
+				if( ((wl_cypher[j].value == wpa_cipher) && (encrypt == "2"))
+					|| ((wl_cypher[j].value == wpa2_cipher) && (encrypt == "4")) 
+					|| ((wl_cypher[j].value == wpa2_cipher) && (encrypt == "6")) ) 
+				{
+					wl_cypher[j].checked = true;
+					break;
+				}					
+			}	
+
+			if(wpa_cipher == "0" && wpa2_cipher == "0")
+				id_cypher1.checked = true;
+
+			id_psk.value = wpa_psk;
+
+			id_serverip.value = rs_ip;
+			id_serverport.value = rs_port;
+			id_serverpassword.value = rs_password;				
+		}
+	}
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_wl.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Wireless Security Settings</h1>
+
+	        	<form id="security_form" method="POST" action="wlsecurity.cgi">
+				<input type="hidden" name="command" value="apply" />
+		 	    <input type="hidden" name="mypage" value="/wl_security.html" />
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><label for="id_freq2">Wireless Operation Frequency:</label></td>
+						<td>
+							<input name="wl_freq" id="id_freq2" type="radio" value="10" checked="checked"/> 
+				  			<label for="id_freq2">2.4GHz</label>             
+             				<input name="wl_freq" id="id_freq5" type="radio" value="11" />
+              	  			<label for="id_freq5">5GHz</label>               	  			
+              			</td>
+					</tr>
+					<tr>
+						<td><label for="id_mssididx">Multiple SSID:</label></td>
+						<td>
+							<select name="wl_mssididx" id="id_mssididx">								
+					            <option value="1" selected>SSID1&nbsp;</option>
+					            <option value="2">SSID2&nbsp;</option>
+					            <option value="3">SSID3&nbsp;</option>
+					            <option value="4">SSID4&nbsp;</option>
+					        </select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid">Wireless Network Name:</label></td>
+						<td>
+							<input name="wl_ssid" id="id_ssid" type="text" size="25" maxlength="32" style="height: 16px"/>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_broadcaston">SSID Broadcast:</label></td>
+						<td>
+							<input name="wl_broadcast" id="id_broadcaston" type="radio" value="0"  checked="checked"/>
+             	 			<label for="id_broadcaston">Enable</label>
+             	 			<input name="wl_broadcast" id="id_broadcastoff" type="radio" value="1" /> 
+				 			<label for="id_broadcastoff">Disable</label>
+						</td>
+					</tr>					
+				</table>
+
+				<table cellpadding="0" cellspacing="2" border="0" id="mso_table">
+					<tr>
+						<td width="250"><label for="id_wmmon">WMM:</label></td>
+						<td>
+							<input name="wl_wmm" id="id_wmmon" type="radio" value="1"  checked="checked"/>
+             	 			<label for="id_wmmon">Enable</label>
+             	 			<input name="wl_wmm" id="id_wmmoff" type="radio" value="0" /> 
+				 			<label for="id_wmmoff">Disable</label>
+						</td>
+					</tr>
+				</table>
+
+				<table cellpadding="0" cellspacing="2" border="0" id="cusa_table">
+					<tr>
+						<td width="250"><label for="id_band">Wireless Band:</label></td>
+						<td>
+							<select name="wl_band" id="id_band">				            				                 
+				            </select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_channel">Wireless Channel Number:</label></td>
+						<td>
+							<select name="wl_channel" id="id_channel">				                
+				            </select>
+						</td>
+					</tr>
+				</table>
+				
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td colspan="3"><strong>Security Settings:<strong></td>							
+					</tr>
+				 	<tr>
+						<td align="top" width="80">
+					   		<input name="wl_secmode" id="id_secopen" checked="checked" value="0" type="radio" />
+					   		<label for="id_secopen">OPEN</label>
+					 	</td>
+					 	<td colspan="2"><hr><label for="id_secopen">No Security Applied</label></td>
+				 	</tr>
+					<tr>
+						<td></td>
+					</tr>				 
+				 	<tr>
+					 	<td align="top">
+					 		<input name="wl_secmode" id="id_secwep" value="1" type="radio" />
+					 		<label for="id_secwep">WEP</label>
+					 	</td>
+					 	<td colspan="2"><hr><label for="id_secwep">Simple WEP Security (64 or 128 bit hardware key)</label></td>
+				 	</tr>				 
+					<tr>
+						<td></td>
+						<td><label for="id_wep1">MODE:</label></td>
+						<td>
+							<input name="wl_wepmode" id="id_wep1" value="0" type="radio" />
+							<label for="id_wep1">Open</label>
+							<input name="wl_wepmode" id="id_wep2" value="1" type="radio" />
+							<label for="id_wep2">Shared</label>
+							<input name="wl_wepmode" id="id_wep4" value="2" type="radio" />
+							<label for="id_wep4">Auto</label>
+						</td>
+					</tr>				 
+					<tr>
+						<td></td>
+						<td><label for="id_wepkey1">Key 1</label></td>
+						<td>
+						  	<input name="wl_wepkey1" id="id_wepkey1" size="30" maxlength="26" type="text" style="height: 16px"/>
+						  	<input name="wl_primarykey" id="id_primarykey1" value="0" type="radio"/>
+						  	<label for="id_primarykey1">Primary Key</label>
+						</td>
+					</tr>					 
+					<tr>
+					 	<td></td>
+						<td><label for="id_wepkey2">Key 2</label></td>
+						<td>
+						  	<input name="wl_wepkey2" id="id_wepkey2" size="30" maxlength="26" type="text" style="height: 16px"/>
+						 	<input name="wl_primarykey" id="id_primarykey2" value="1" type="radio" />
+						  	<label for="id_primarykey2">Primary Key</label>
+						</td>
+					 </tr>					 
+					 <tr>
+					 	<td></td>
+						<td><label for="id_wepkey3">Key 3</label></td>
+						<td>
+						  	<input name="wl_wepkey3" id="id_wepkey3" size="30" maxlength="26" type="text" style="height: 16px"/>
+						  	<input name="wl_primarykey" id="id_primarykey3" value="2" type="radio" />
+						  	<label for="id_primarykey3">Primary Key</label>
+						</td>
+					 </tr>					 
+					 <tr>
+					 	<td></td>
+						<td><label for="id_wepkey4">Key 4</label></td>
+						<td>
+						  	<input name="wl_wepkey4" id="id_wepkey4" size="30" maxlength="26" type="text" style="height: 16px"/>
+						  	<input name="wl_primarykey" id="id_primarykey4" value="3" type="radio" />
+						  	<label for="id_primarykey4">Primary Key</label>
+						</td>
+					 </tr>			 
+					 <tr>
+					  	<td align="top">
+					  		<input name="wl_secmode" id="id_secwpa" value="2" type="radio" />
+					  		<label for="id_secwpa">WPA</label>
+					  	</td>
+					 	<td colspan="2"><hr><label for="id_secwpa">Enhanced Security for Personal/Enterprise</label></td>
+					 </tr>				 
+					 <tr>
+					 	<td></td>
+						<td><label for="id_wpamode1">MODE:</label></td>
+						<td>
+						  <input name="wl_wpamode" id="id_wpamode1" value="1" type="radio"><label for="id_wpamode1">WPA&nbsp;</label>
+						  <input name="wl_wpamode" id="id_wpamode2" value="2" type="radio"><label for="id_wpamode2">WPA 2&nbsp;</label>
+						  <input name="wl_wpamode" id="id_wpamode3" value="3" type="radio"><label for="id_wpamode3">Auto&nbsp;</label>
+						</td>
+					 </tr>				 
+					 <tr>
+					 	<td></td>
+						<td><label for="id_cypher1">CYPHER:</label></td>
+						<td>
+						  <input name="wl_cypher" id="id_cypher1" value="1" type="radio"><label for="id_cypher1">TKIP</label>
+						  <input name="wl_cypher" id="id_cypher2" value="2" type="radio"><label for="id_cypher2">AES</label>
+						  <input name="wl_cypher" id="id_cypher3" value="3" type="radio"><label for="id_cypher3">Auto&nbsp;</label>
+						</td>
+					 </tr>	
+					 <tr>
+					 	<td></td>
+						<td><label for="id_auth1">Authentication Mode:</label></td>
+						<td>
+						  <input name="wl_authentication" id="id_auth1" value="1" type="radio"><label for="id_auth1">Enterprise (RADIUS)</label>
+						  <input name="wl_authentication" id="id_auth2" value="2" type="radio"><label for="id_auth2">Personal Shared Key</label>						  
+						</td>
+					 </tr>
+				</table>
+
+				<table cellpadding="0" cellspacing="2" border="0" id="psk_table">									 
+					<tr>
+					 	<td width="80"></td>
+						<td><label for="id_psk">PSK KEY</label></td>
+						<td> 
+							<input name="wl_psk" id="id_psk" size="70" maxlength="64" type="text" style="height: 16px"/>
+						</td>
+					</tr>	
+				</table>
+
+				<table cellpadding="0" cellspacing="2" border="0" id="server_table">
+					<tr>
+					 	<td width="80"></td>
+					 	<td><label for="id_serverip">RADIUS Server IP Address</label></td>
+						<td> 
+							<input name="wl_serverip" id="id_serverip" size="20" maxlength="20" type="text" style="height: 16px"/>
+						</td>
+					</tr>
+					<tr>
+					 	<td></td>
+					 	<td><label for="id_serverport">RADIUS Server Port</label></td>
+						<td> 
+							<input name="wl_serverport" id="id_serverport" size="10" maxlength="8" type="text" style="height: 16px"/>
+						</td>
+					</tr>
+					<tr>
+					 	<td></td>
+					 	<td><label for="id_serverpassword">RADIUS Server Password</label></td>
+						<td> 
+							<input name="wl_serverpassword" id="id_serverpassword" size="30" maxlength="64" type="text" style="height: 16px"/>
+						</td>
+					</tr>
+				</table>
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="#" class="btn" id="apply_btn"></a> 							
+						</td>
+						<td>
+							<a href="#" class="btn" id="back_btn"></a>
+						</td>
+					</tr>
+				</table>
+				
+				<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+diff --git a/dbus-1.4.0/dbus/dbus-sysdeps-unix.c b/dbus-1.4.0/dbus/dbus-sysdeps-unix.c
+index 014cbdd..59d730d 100755
+--- a/dbus-1.4.0/dbus/dbus-sysdeps-unix.c
++++ b/dbus-1.4.0/dbus/dbus-sysdeps-unix.c
+@@ -2010,19 +2010,37 @@ fill_user_info (DBusUserInfo       *info,
+ #else /* ! HAVE_GETPWNAM_R */
+   {
+     /* I guess we're screwed on thread safety here */
+-    struct passwd *p;
++	struct passwd passwdtmp;
++    struct passwd *p = &passwdtmp;	
++	int uid_type = 0;
+ 
+     if (uid != DBUS_UID_UNSET)
+-      p = getpwuid (uid);
++      //p = getpwuid (uid);
++      	uid_type = 1;
+     else
+-      p = getpwnam (username_c);
++      //p = getpwnam (username_c);
++	      uid_type = 2;
+ 
+     if (p != NULL)
+       {
+-        if (!fill_user_info_from_passwd (p, info, error))
+-          {
+-            return FALSE;
+-          }
++        //if (!fill_user_info_from_passwd (p, info, error))
++          //{
++          //  return FALSE;
++          //}
++			if (1 == uid_type)
++			{
++				info->uid = 0;
++				info->primary_gid = 0;
++				info->username = _dbus_strdup ("admin");
++				info->homedir = _dbus_strdup ("/etc/dbus");
++			}
++			else if (2 == uid_type)
++			{
++				info->uid = 500;
++				info->primary_gid = 500;
++				info->username = _dbus_strdup ("messagebus");
++				info->homedir = _dbus_strdup ("/bin/messagebus");
++			}
+       }
+     else
+       {

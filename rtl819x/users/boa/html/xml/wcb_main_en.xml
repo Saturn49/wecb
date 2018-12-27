@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Wireless Status</t>
+		<t>Wireless Band</t>
+		<t>Wireless Radio</t>	
+		<t>Wireless SSID</t>
+		<t>Wireless Security</t>
+		<t>Wireless Channel</t>
+<!-- 6-10 -->	
+		<t>Wireless MAC</t>	
+		<t>Associated Clients</t>
+		<t>MoCA Coax Status</t>
+		<t>MoCA Channel</t>
+		<t>MoCA Privacy</t>
+<!-- 11-15 -->	
+		<t>MoCA MAC</t>	
+		<t>Network Stations</t>
+		<t>Product Information</t>
+		<t>Model Number</t>
+		<t>Firmware Version</t>
+<!-- 16-20 -->	
+		<t>System Time</t>	
+		<t>IP Address</t>
+		<t>Subnet Mask</t>
+		<t>Default Gateway</t>
+
+<!-- 0-4 -->	
+		<a>User Name is null</a>
+		<a>Password is null</a>
+		<a>Username or Password is not correct</a> 
+		<a>Use another account to access this page</a> 
+		<a>This system not support WiFi</a>
+	</page>
+</pages>

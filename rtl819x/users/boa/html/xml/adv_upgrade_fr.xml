@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Mise à niveau du micrologiciel</t>
+		<t>Version actuelle du micrologiciel</t>
+		<t>Mise à niveau du micrologiciel : veuillez sélectionner un dossier pour mettre à niveau le micrologiciel</t>
+		<t>Commencer la mise à niveau</t>
+		<t>Veuillez attendre</t>
+<!-- 0-5 -->	
+		<a>Le nom du fichier ne peut pas être vide!</a>
+	</page>
+</pages>

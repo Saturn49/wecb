@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>MoCA Coax Setup</t>
+		<t>Status</t>
+		<t>Channel</t>	
+		<t>Beacon Power Reduction(dB)</t>
+		<t>Network Controller</t>
+		<t>Enable</t>
+<!-- 6-10 -->	
+		<t>Disable</t>	
+		<t>MoCA Privacy</t>
+		<t>Network Password</t>
+		<t>12 Digits Min, 17 Digits Max</t>
+		<t>Show Network Password</t>
+<!-- 11-15 -->	
+		<t>Network Controller MAC</t>	
+		<t>MoCA Link Status</t>
+		<t>View</t>
+		<t>Apply</t>
+
+<!-- 0-5 -->	
+		<a>Password is null</a>
+		<a>Password's length should be 12 Digits Min, 17 Digits Max</a>
+		<a>Password should be numeric</a>
+		<a>Password is invalid</a>
+	</page>
+</pages>

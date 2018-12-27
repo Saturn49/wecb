@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Multiple SSID</t>
+		<t>Wireless Operation Frequency</t>
+		<t>SSID1 State</t>	
+		<t>Enable</t>
+		<t>Disable</t>
+		<t>SSID1 Network Name</t>
+<!-- 6-10 -->	
+		<t>SSID2 State</t>	
+		<t>SSID2 Network Name</t>
+		<t>Apply</t>
+
+<!-- 0-5 -->	
+		<a>SSID1 Network Name is null </a>
+		<a>SSID2 Network Name is null</a>
+		<a>SSID1 Network Name is invalid</a>
+		<a>SSID2 Network Name is invalid</a>
+	</page>
+</pages>

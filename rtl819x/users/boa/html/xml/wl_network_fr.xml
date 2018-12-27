@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Réseau WiFi privé</t>
+		<t>Réseau WiFi public</t>
+		<t>Nom</t>	
+		<t>Fréquence</t>
+		<t>Adresse MAC</t>
+		<t>Bande</t>
+<!-- 6-10 -->	
+		<t>Mode sécurité</t>	
+		<t>Action</t>
+		<t>Modifier</t>
+		<t>Réseau sans fil - Liste</t>
+
+
+<!-- 0-4 -->	
+		<a>frUser Name is null</a>
+	</page>
+</pages>

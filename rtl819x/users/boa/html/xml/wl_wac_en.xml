@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Wireless Access Control</t>
+		<t>Wireless Operation Frequency</t>
+		<t>Both</t>	
+		<t>Multiple SSID</t>
+		<t>Wireless Access Control Mode</t>
+		<t>Disable</t>
+<!-- 6-10 -->	
+		<t>Allow Listed</t>	
+		<t>Deny Listed</t>
+		<t>MAC Address</t>
+		<t>Comment</t>
+		<t>Select</t>
+<!-- 11-15 -->	
+		<t>Delete Selected</t>	
+		<t>Delete All</t>
+		<t>Current Access Control List</t>
+		<t>Frequency</t>
+		<t>Apply</t>
+
+<!-- 0-5 -->	
+		<a>MAC Address is invalid</a>
+		<a>Comment is invalid</a>
+		<a>Comment's length is too long</a>
+		<a>Please select mac entry to delete!</a>
+		<a>Do you really want to delete the selected entry?</a>
+		<a>Do you really want to delete the all entries?</a>
+<!--6-10-->
+		<a>Are you really want to remove all the allowed ssid1 devices,all wireless clients will unable to associate with this ssid!</a>
+		<a>Are you really want to remove all the allowed ssid2 devices,all wireless clients will unable to associate with this ssid!</a>
+		<a>Are you really want to remove all the allowed ssid1 devices,all wireless clients will unable to associate with ssid1!</a>
+		<a>Are you really want to remove all the allowed ssid2 devices,all wireless clients will unable to associate with this ssid2!</a>
+	</page>
+</pages>

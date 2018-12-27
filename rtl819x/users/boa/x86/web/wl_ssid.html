@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wireless Multiple SSID</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var wl_freq, wl_ssid1, wl_ssid2, wl_ssid3, wl_ssid4;
+var id_ssid1name, id_ssid2name, id_ssid3name, id_ssid4name;
+var apply_btn;
+var ssid_form;
+
+function doLoad()
+{
+	wl_freq = document.getElementsByName("wl_freq");
+	wl_ssid1 = document.getElementsByName("wl_ssid1");
+	wl_ssid2 = document.getElementsByName("wl_ssid2");
+	wl_ssid3 = document.getElementsByName("wl_ssid3");
+	wl_ssid4 = document.getElementsByName("wl_ssid4");
+
+	id_ssid1name = document.getElementById("id_ssid1name");
+	id_ssid2name = document.getElementById("id_ssid2name");
+	id_ssid3name = document.getElementById("id_ssid3name");
+	id_ssid4name = document.getElementById("id_ssid4name");
+
+	apply_btn = document.getElementById("apply_btn");
+	ssid_form = document.getElementById("ssid_form");
+
+	apply_btn.onclick = doApply;
+
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		wl_freq[i].onclick = doWlFreq;
+
+		if( ((wl_freq[i].value == "10") && (wlan_idx == 1)) 
+			|| ((wl_freq[i].value == "11") && (wlan_idx == 0)))
+		{
+			wl_freq[i].checked = true;
+		}
+	}
+
+	doWlFreq();
+}
+
+function doApply()
+{
+	if(trim(id_ssid1name.value) == "")
+	{
+		pop_up("SSID1 Network Name is null");
+		id_ssid1name.focus();
+		return;
+	}
+	/*
+	else if(trim(id_ssid1name.value).indexOf("|") != -1)
+	{
+		pop_up("SSID1 Network Name is invalid");
+		id_ssid1name.focus();
+		return;
+	}
+	*/
+
+	id_ssid1name.value = trim(id_ssid1name.value);
+	
+	if(trim(id_ssid2name.value) == "")
+	{
+		pop_up("SSID2 Network Name is null");
+		id_ssid2name.focus();
+		return;
+	}
+	/*
+	else if(trim(id_ssid2name.value).indexOf("|") != -1)
+	{
+		pop_up("SSID2 Network Name is invalid");
+		id_ssid2name.focus();
+		return;
+	}
+	*/
+	id_ssid2name.value = trim(id_ssid2name.value);
+	
+	if(trim(id_ssid3name.value) == "")
+	{
+		pop_up("SSID3 Network Name is null");
+		id_ssid3name.focus();
+		return;
+	}
+	/*
+	else if(trim(id_ssid3name.value).indexOf("|") != -1)
+	{
+		pop_up("SSID3 Network Name is invalid");
+		id_ssid3name.focus();
+		return;
+	}
+	*/
+
+	id_ssid3name.value = trim(id_ssid3name.value);
+	
+	if(trim(id_ssid4name.value) == "")
+	{
+		pop_up("SSID4 Network Name is null");
+		id_ssid4name.focus();
+		return;
+	}
+	/*
+	else if(trim(id_ssid4name.value).indexOf("|") != -1)
+	{
+		pop_up("SSID4 Network Name is invalid");
+		id_ssid4name.focus();
+		return;
+	}
+	*/
+
+	id_ssid4name.value = trim(id_ssid4name.value);
+	
+	ssid_form.submit();
+}
+
+function doWlFreq()
+{
+	var params = "";
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		if(wl_freq[i].checked)
+		{	
+			params += "&wl_freq=" + wl_freq[i].value; 				
+			break;
+		}
+	}	
+	params += "&command=getvalue";	
+
+	ajaxPost("wlssid.cgi", params, resGetValue);
+}
+
+function resGetValue(message)
+{		
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{
+			var index = 0;	
+			var basicArray = messageArray[i].split("|");
+			var ssid1 = basicArray[index++];
+			var ssid2 = basicArray[index++];
+			var ssid3 = basicArray[index++];
+			var ssid4 = basicArray[index++];
+			var ssid1name = htmlDecodeStr(basicArray[index++]);
+			var ssid2name = htmlDecodeStr(basicArray[index++]);
+			var ssid3name = htmlDecodeStr(basicArray[index++]);
+			var ssid4name = htmlDecodeStr(basicArray[index++]);
+
+			for(var j = 0; j < wl_ssid1.length; j++)
+			{
+				if(wl_ssid1[j].value == ssid1)
+				{	
+					wl_ssid1[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_ssid2.length; j++)
+			{
+				if(wl_ssid2[j].value == ssid2)
+				{	
+					wl_ssid2[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_ssid3.length; j++)
+			{
+				if(wl_ssid3[j].value == ssid3)
+				{	
+					wl_ssid3[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_ssid4.length; j++)
+			{
+				if(wl_ssid4[j].value == ssid4)
+				{	
+					wl_ssid4[j].checked = true;
+				}
+			}
+
+			id_ssid1name.value = ssid1name;
+			id_ssid2name.value = ssid2name;
+			id_ssid3name.value = ssid3name;
+			id_ssid4name.value = ssid4name;
+		}
+	}
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_wl.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Wireless Multiple SSID</h1>
+
+				<form id="ssid_form" method="POST" action="wlssid.cgi">
+				<input type="hidden" name="command" value="apply" />
+		 	    <input type="hidden" name="mypage" value="/wl_ssid.html" />
+		 	    
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><label for="id_freq2">Wireless Operation Frequency:</label></td>
+						<td>
+							<input name="wl_freq" id="id_freq2" type="radio" value="10" checked="checked"/> 
+				  			<label for="id_freq2">2.4GHz</label>             
+             				<input name="wl_freq" id="id_freq5" type="radio" value="11" />
+              	  			<label for="id_freq5">5GHz</label>               	  			
+              			</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid1on">SSID1 State:</label></td>
+						<td>
+							<input name="wl_ssid1" id="id_ssid1on" type="radio" value="0" checked="checked"/>
+            				<label for="id_ssid1on">Enable</label>
+            				<input name="wl_ssid1" id="id_ssid1off" type="radio" value="1" />
+							<label for="id_ssid1off">Disable</label>     
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid1name">SSID1 Network Name:</label></td>
+						<td>
+							<input name="wl_ssid1name" id="id_ssid1name" type="text" size="25" maxlength="32" style="height: 16px"/>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid2on">SSID2 State:</label></td>
+						<td>
+							<input name="wl_ssid2" id="id_ssid2on" type="radio" value="0" checked="checked"/>
+            				<label for="id_ssid2on">Enable</label>
+            				<input name="wl_ssid2" id="id_ssid2off" type="radio" value="1" />
+							<label for="id_ssid2off">Disable</label>     
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid2name">SSID2 Network Name:</label></td>
+						<td>
+							<input name="wl_ssid2name" id="id_ssid2name" type="text" size="25" maxlength="32" style="height: 16px"/>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid3on">SSID3 State:</label></td>
+						<td>
+							<input name="wl_ssid3" id="id_ssid3on" type="radio" value="0" checked="checked"/>
+            				<label for="id_ssid3on">Enable</label>
+            				<input name="wl_ssid3" id="id_ssid3off" type="radio" value="1" />
+							<label for="id_ssid3off">Disable</label>     
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid3name">SSID3 Network Name:</label></td>
+						<td>
+							<input name="wl_ssid3name" id="id_ssid3name" type="text" size="25" maxlength="32" style="height: 16px"/>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid4on">SSID4 State:</label></td>
+						<td>
+							<input name="wl_ssid4" id="id_ssid4on" type="radio" value="0" checked="checked"/>
+            				<label for="id_ssid4on">Enable</label>
+            				<input name="wl_ssid4" id="id_ssid4off" type="radio" value="1" />
+							<label for="id_ssid4off">Disable</label>     
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_ssid4name">SSID4 Network Name:</label></td>
+						<td>
+							<input name="wl_ssid4name" id="id_ssid4name" type="text" size="25" maxlength="32" style="height: 16px"/>
+						</td>
+					</tr>					
+				</table>
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="#" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+
+				<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

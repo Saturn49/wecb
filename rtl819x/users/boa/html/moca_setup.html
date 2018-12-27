@@ -1,0 +1,539 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>MoCA Coax Setup</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var refresh_times = 0;
+var lastMessage = "";
+
+var mocastatus_span;
+var id_mocachannel, id_mocaprivacyon, id_mocaprivacyoff, id_mocapwd;
+var moca_privacy;
+var view_btn, apply_btn;
+var setup_form;
+//var id_taboofre, id_taboofre1, id_taboofre2, id_taboofre3, id_taboofre4;
+var id_taboofre5, id_taboofre6, id_taboofre7, id_taboofre8;
+var moca_taboobit, moca_controller;
+var id_mocashowpwd;
+var mocachannel_span, mocacontroller_span;
+var moca_operate_table, moca_view_table;
+var id_mocabeacon;
+var moca_beacon;
+//var id_taboobiton, id_taboobitoff;
+var moca_pwdshow;
+
+function doLoad()
+{	
+	moca_privacy = document.getElementsByName("moca_privacy");
+	moca_taboobit = document.getElementsByName("moca_taboobit");
+	moca_controller = document.getElementsByName("moca_controller");
+	moca_beacon = document.getElementsByName("moca_beacon");
+	
+	mocastatus_span = document.getElementById("mocastatus_span");
+	id_mocachannel = document.getElementById("id_mocachannel");
+	id_mocaprivacyon = document.getElementById("id_mocaprivacyon");
+	id_mocaprivacyoff = document.getElementById("id_mocaprivacyoff");
+	id_mocapwd = document.getElementById("id_mocapwd");
+	id_mocashowpwd = document.getElementById("id_mocashowpwd"); 
+	mocachannel_span = document.getElementById("mocachannel_span");  
+	mocacontroller_span = document.getElementById("mocacontroller_span"); 
+	id_mocabeacon = document.getElementById("id_mocabeacon"); 
+	//id_taboobiton = document.getElementById("id_taboobiton"); 
+	//id_taboobitoff = document.getElementById("id_taboobitoff"); 
+
+	moca_operate_table = document.getElementById("moca_operate_table"); 
+	moca_view_table = document.getElementById("moca_view_table");
+
+	moca_pwdshow = document.getElementById("moca_pwdshow");
+
+	setup_form = document.getElementById("setup_form");
+	view_btn = document.getElementById("view_btn");
+	apply_btn = document.getElementById("apply_btn");	
+
+	/*
+	id_taboofre = document.getElementById("id_taboofre");
+	id_taboofre1 = document.getElementById("id_taboofre1");
+	id_taboofre2 = document.getElementById("id_taboofre2");
+	id_taboofre3 = document.getElementById("id_taboofre3");
+	id_taboofre4 = document.getElementById("id_taboofre4");
+	id_taboofre5 = document.getElementById("id_taboofre5");
+	id_taboofre6 = document.getElementById("id_taboofre6");
+	id_taboofre7 = document.getElementById("id_taboofre7");
+	id_taboofre8 = document.getElementById("id_taboofre8");
+	*/
+
+	view_btn.onclick = doView;
+	apply_btn.onclick = doApply;
+		
+	for(var i = 0; i < moca_privacy.length; i++)
+	{
+		moca_privacy[i].onclick = doMocaOnoff;			
+	}
+
+	id_mocashowpwd.onclick = doShowPwd;
+
+	//id_taboobiton.onclick = doTabooBit;
+	//id_taboobitoff.onclick = doTabooBit;
+
+	if(auth_level == 1)
+	{
+		moca_operate_table.style.display = "none";
+		moca_view_table.style.display = "block";
+	}
+	else if((auth_level == 2) || (auth_level == 3))
+	{
+		moca_operate_table.style.display = "block";
+		moca_view_table.style.display = "none";
+	}
+
+	doGetMoca();
+	doRefresh();
+}
+
+/*
+function doTabooBit()
+{
+	var id_taboofre;
+	if(id_taboobiton.checked)
+	{
+		for(var i = 1; i <= 8; i++)
+		{
+			id_taboofre = document.getElementById("id_taboofre" + i);
+			id_taboofre.disabled = false;
+		}
+	}
+	else
+	{
+		for(var i = 1; i <= 8; i++)
+		{
+			id_taboofre = document.getElementById("id_taboofre" + i);
+			id_taboofre.disabled = true;
+		}
+	}
+}
+*/
+	
+function doShowPwd()
+{
+	if(id_mocashowpwd.checked)
+	{
+		id_mocapwd.type = "text";
+	}
+	else
+	{
+		id_mocapwd.type = "password";
+	}
+}
+
+function doGetMoca()
+{
+	var params = "&command=getvalue";		
+	ajaxPost("mocasetup.cgi", params, resGetValue);
+}
+
+function doMocaOnoff()
+{
+	if (id_mocaprivacyon.checked) 
+    	id_mocapwd.disabled = false;
+ 	else 
+    	id_mocapwd.disabled = true;  
+}
+
+function doView()
+{
+	goThere('moca_status.html');	
+}
+
+function doApply()
+{
+	if(id_mocaprivacyon.checked)
+	{
+		if(trim(id_mocapwd.value) == "")
+		{
+			pop_up("Password is null");
+			id_mocapwd.focus();
+			return;
+		}
+		else if((trim(id_mocapwd.value).length < 12) || (trim(id_mocapwd.value).length > 17))
+		{
+			pop_up("Password's length should be 12 Digits Min, 17 Digits Max");
+			id_mocapwd.focus();
+			return;
+		}
+		else if(!isNumber(id_mocapwd.value))
+		{
+			pop_up("Password should be numeric");
+			id_mocapwd.focus();
+			return;
+		}
+		else if(trim(id_mocapwd.value).indexOf("|") != -1)
+		{
+			pop_up("Password is invalid");
+			id_mocapwd.focus();
+			return;
+		}
+	}
+
+	/*
+	var moca_taboofre = 0;
+	if(id_taboofre1.checked)
+		moca_taboofre += 4000;
+	if(id_taboofre2.checked)
+		moca_taboofre += 10000;
+	if(id_taboofre3.checked)
+		moca_taboofre += 40000;
+	if(id_taboofre4.checked)
+		moca_taboofre += 100000;
+	if(id_taboofre5.checked)
+		moca_taboofre += 400000;
+	if(id_taboofre6.checked)
+		moca_taboofre += 1000000;
+	if(id_taboofre7.checked)
+		moca_taboofre += 4000000;
+	if(id_taboofre8.checked)
+		moca_taboofre += 10000000;
+
+	var id_taboofre_value = moca_taboofre.toString(10);	
+	
+	while(id_taboofre_value.length < 16)
+	{
+		id_taboofre_value = "0" + id_taboofre_value;
+	}
+
+  	id_taboofre.value = "0x" + id_taboofre_value;	
+	*/
+
+	if(id_mocashowpwd.checked)
+		moca_pwdshow.value = "1";
+	else
+		moca_pwdshow.value = "0";
+	
+    setup_form.submit();
+}
+
+function doRefresh()
+{	
+	ajaxGet("ajax_mocastatus.html", handleRefresh);	
+}
+
+function resGetValue(message)
+{
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{
+			var index = 0;
+			var mocaArray = messageArray[i].split("|");			
+			var taboofre = changeString(mocaArray[index++]);
+			var controller = changeString(mocaArray[index++]); 
+			var beacon = changeString(mocaArray[index++]); 
+			var channel = changeString(mocaArray[index++]);
+			var privacy = changeString(mocaArray[index++]);
+			var password = changeString(mocaArray[index++]);
+			var pwdshow = mocaArray[index++];
+
+			if(pwdshow == "1")
+				id_mocashowpwd.checked = true;
+			else if(pwdshow == "0")
+				id_mocashowpwd.checked = false;
+
+			doShowPwd();
+			
+			if(privacy == "1") 
+			    id_mocaprivacyon.checked = true;		    
+			else 	    
+			    id_mocaprivacyoff.checked = true;	    
+			
+			id_mocapwd.value = password;
+			id_mocachannel.value = channel;
+			id_mocabeacon.value = beacon;
+
+			doMocaOnoff();
+
+			/*
+			if(taboofre == "0")
+				id_taboobitoff.checked = true;
+			else
+			{
+				id_taboobiton.checked = true;
+				var new_taboofre = taboofre.substring(10, 18);
+
+				if(new_taboofre.substring(0, 1) == "1")
+					id_taboofre8.checked = true;
+
+				for(var i = 1; i < 4; i++)
+				{			
+					var fre = document.getElementById("id_taboofre" + (8 - i * 2));
+					var fre2 = document.getElementById("id_taboofre" + (9 - i * 2));
+					
+					if(new_taboofre.substring(i, i+1) == "1")
+					{
+						fre.checked = true;
+					}
+					else if(new_taboofre.substring(i, i+1) == "4")
+					{
+						fre2.checked = true;
+					}
+					else if(new_taboofre.substring(i, i+1) == "5")
+					{
+						fre.checked = true;
+						fre2.checked = true;
+					}
+				}
+
+				if(new_taboofre.substring(4, 5) == "4")
+					id_taboofre1.checked = true;
+			}
+			*/
+
+
+			for(var j = 0; j < moca_controller.length; j++)
+			{
+				if(moca_controller[j].value == controller)
+				{	
+					moca_controller[j].checked = true;
+				}
+			}
+			
+			//doTabooBit();			
+
+			if(channel == "0x0000000015554000")
+			{
+			    mocachannel_span.innerHTML = "Automatic";
+			}
+			else if(channel == "0x0000000000004000")
+			{
+				mocachannel_span.innerHTML = "D1(1150 MHz)";
+			}
+			else if(channel == "0x0000000000010000")
+			{
+				mocachannel_span.innerHTML = "D2(1200 MHz)";
+			}
+			else if(channel == "0x0000000000040000")
+			{
+				mocachannel_span.innerHTML = "D3(1250 MHz)";
+			}
+			else if(channel == "0x0000000000100000")
+			{
+				mocachannel_span.innerHTML = "D4(1300 MHz)";
+			}
+			else if(channel == "0x0000000000400000")
+			{
+				mocachannel_span.innerHTML = "D5(1350 MHz)";
+			}
+			else if(channel == "0x0000000001000000")
+			{
+				mocachannel_span.innerHTML = "D6(1400 MHz)";
+			}
+			else if(channel == "0x0000000004000000")
+			{
+				mocachannel_span.innerHTML = "D7(1450 MHz)";
+			}
+			else if(channel == "0x0000000010000000")
+			{
+				mocachannel_span.innerHTML = "D8(1500 MHz)"; 
+			}
+
+			if(controller == "1")
+				mocacontroller_span.innerHTML = "Yes";
+			else if(controller == "0")
+				mocacontroller_span.innerHTML = "No";
+		}
+	}
+}
+		
+function handleRefresh(message)
+{	
+	if(lastMessage != message)
+	{
+		lastMessage = message;
+
+		if(message != "0")			
+			mocastatus_span.innerHTML = message;			
+
+		refresh_times = 1;
+		window.setTimeout("doRefresh()", 2000);
+	}
+	else
+	{
+		if(refresh_times)
+			refresh_times++;
+				
+		if(refresh_times >= 5)
+			window.clearTimeout("doRefresh()");	
+		else
+			window.setTimeout("doRefresh()", 2000);	
+	}
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_moca.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>MoCA Coax Setup</h1>
+
+				<form id="setup_form" method="POST" action="mocasetup.cgi">
+				<input type="hidden" name="command" value="apply" />
+		 	    <input type="hidden" name="mypage" value="/moca_setup.html" />
+		 	    <!--<input type="hidden" name="moca_taboofre" id="id_taboofre" />-->
+		 	    <input type="hidden" name="moca_pwdshow" id="moca_pwdshow" />
+		 	    
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250">Status:</td>
+						<td>
+							<span id="mocastatus_span"><%actValue("moca", "status")%></span>
+						</td>
+					</tr>
+				</tabel>
+
+				<table cellpadding="0" cellspacing="2" border="0" id="moca_operate_table">
+					<tr>
+						<td width="250"><label for="id_mocachannel">Channel:</label></td>
+						<td>
+							<select name="moca_channel" id="id_mocachannel">
+		                      <option selected="selected" value="0x0000000015554000">&nbsp;Automatic&nbsp;</option>
+		                      <option value="0x0000000000004000">&nbsp;D1(1150 MHz)&nbsp;</option>
+		                      <option value="0x0000000000010000">&nbsp;D2(1200 MHz)&nbsp;</option>
+		                      <option value="0x0000000000040000">&nbsp;D3(1250 MHz)&nbsp;</option>
+		                      <option value="0x0000000000100000">&nbsp;D4(1300 MHz)&nbsp;</option>
+		                      <option value="0x0000000000400000">&nbsp;D5(1350 MHz)&nbsp;</option>
+		                      <option value="0x0000000001000000">&nbsp;D6(1400 MHz)&nbsp;</option>
+		                      <option value="0x0000000004000000">&nbsp;D7(1450 MHz)&nbsp;</option>
+		                      <option value="0x0000000010000000">&nbsp;D8(1500 MHz)&nbsp;</option>                                        
+		                  </select>
+						</td>
+					</tr>
+					<tr>						
+						<td><label for="id_mocabeacon">Beacon Power Reduction(dB):</label></td>
+						<td>
+							<select name="moca_beacon" id="id_mocabeacon">
+		                      <option selected="selected" value="10">&nbsp;0&nbsp;</option>
+		                      <option value="9">&nbsp;3&nbsp;</option>
+		                      <option value="8">&nbsp;6&nbsp;</option>
+		                      <option value="7">&nbsp;9&nbsp;</option>
+		                      <option value="6">&nbsp;12&nbsp;</option>
+		                      <option value="5">&nbsp;15&nbsp;</option>
+		                      <option value="4">&nbsp;18&nbsp;</option>
+		                      <option value="3">&nbsp;21&nbsp;</option>
+		                      <option value="2">&nbsp;24&nbsp;</option>
+		                      <option value="1">&nbsp;27&nbsp;</option>		                      
+		                  </select>
+						</td>
+					</tr>
+					<!--<tr>
+						<td><label>Taboo Bit:</label></td>
+						<td>
+							<input name="moca_taboobit" id="id_taboobiton" type="radio" value="1" checked="checked"/>
+			                <label for="id_taboobiton">Enable</label> 
+			                <input name="moca_taboobit" id="id_taboobitoff" type="radio" value="0" />
+			              	<label for="id_taboobitoff">Disable</label>
+			            </td>
+					</tr>
+					<tr>
+						<td valign="top"><label for="id_taboofre1">Taboo Frequency:</label></td>
+						<td>
+							<input type="checkbox" id="id_taboofre1"><label for="id_taboofre1">&nbsp;D1(1150 MHz)</label></input>
+							<input type="checkbox" id="id_taboofre2"><label for="id_taboofre2">&nbsp;D2(1200 MHz)</label></input>
+							<input type="checkbox" id="id_taboofre3"><label for="id_taboofre3">&nbsp;D3(1250 MHz)</label></input><br/>
+							<input type="checkbox" id="id_taboofre4"><label for="id_taboofre4">&nbsp;D4(1300 MHz)</label></input>
+							<input type="checkbox" id="id_taboofre5"><label for="id_taboofre5">&nbsp;D5(1350 MHz)</label></input>
+							<input type="checkbox" id="id_taboofre6"><label for="id_taboofre6">&nbsp;D6(1400 MHz)</label></input><br/>
+							<input type="checkbox" id="id_taboofre7"><label for="id_taboofre7">&nbsp;D7(1450 MHz)</label></input>
+							<input type="checkbox" id="id_taboofre8"><label for="id_taboofre8">&nbsp;D8(1500 MHz)</label></input>												
+			            </td>
+					</tr>-->
+					<tr>
+						<td><label>Network Controller:</label></td>
+						<td>
+							<input name="moca_controller" id="id_controlleron" type="radio" value="1" checked="checked"/>
+			                <label for="id_controlleron">Enable</label> 
+			                <input name="moca_controller" id="id_controlleroff" type="radio" value="0" />
+			              	<label for="id_controlleroff">Disable</label>
+			            </td>
+					</tr>
+				</table>
+
+				<table cellpadding="0" cellspacing="2" border="0" id="moca_view_table">
+					<tr>
+						<td width="250">Channel:</td>
+						<td>
+							<span id="mocachannel_span"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>Network Controller:</td>
+						<td>
+							<span id="mocacontroller_span"></span>
+						</td>
+					</tr>
+				</table>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><label>MoCA Privacy:</label></td>
+						<td>
+							<input name="moca_privacy" id="id_mocaprivacyon" type="radio" value="on" checked="checked"/>
+			                <label for="id_mocaprivacyon">Enable</label> 
+			                <input name="moca_privacy" id="id_mocaprivacyoff" type="radio" value="off" />
+			              	<label for="id_mocaprivacyoff">Disable</label>
+			            </td>
+					</tr>
+					<tr>
+						<td><label for="id_mocapwd">Network Password:</label></td>
+						<td>
+							<input name="moca_pwd" id="id_mocapwd" type="password" size="28" minlength="12" maxlength="17" style="height: 16px"/>
+							12 Digits Min, 17 Digits Max
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_mocashowpwd">Show Network Password:</label></td>
+						<td>
+							<input id="id_mocashowpwd" type="checkbox" />
+						</td>
+					</tr>
+					<tr>
+						<td>Network Controller MAC:</td>
+						<td>
+							<% actValue("status", "mocamac"); %>
+						</td>
+					</tr>
+					<tr>
+						<td>MoCA Link Status:</td>
+						<td>
+							<a href="###" class="view_btn" id="view_btn"></a>
+						</td>
+					</tr>					
+				</table>
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="###" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+
+				<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>
+

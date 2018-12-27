@@ -1,0 +1,11 @@
+DQi:    10/08/2014 Brighthouse WCB3000 release 0.16.6.4f
+        Based on the latest GIT branch hotfix/wcb3000_201405_bh_tr69
+        Fix bugs or implement tasks :
+        --SW-Bug #192635: [TWC reported] can not establish a connection with XMPP Server
+        Tag TAG-BHN-WCB3000-0-16-6-4F
+
+DQi:    10/01/2014 Brighthouse WCB3000 release 0.16.6.4e
+        Based on the latest GIT branch hotfix/wcb3000_201405_bh_tr69
+        Fix bugs or implement tasks :
+        --QA-Bug #191906  [TR69] Not accepting SPV for RootCertificate Certificate and Enabled
+        Tag TAG-BHN-WCB3000-0-16-6-4E

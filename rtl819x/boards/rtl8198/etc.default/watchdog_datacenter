@@ -1,0 +1,25 @@
+#!/bin/sh
+
+while sleep 10
+do
+DataCenterCHECK=`ps -aux | grep data_center | wc -l`
+
+if  [ $DataCenterCHECK -le 1 ] ; then
+    echo "data_center not running." 
+	killall dropbear
+	killall udhcpc
+	killall nmbd
+	killall mDNSResponderPosix
+	killall zconf.sh
+	killall zero_conf_vz
+	killall zero_conf_telus
+	killall wget
+	rm -f /tmp/get_parameters.telus.xml
+	rm -f /tmp/upgrade_url.xml
+	killall clinkd
+	killall cli 
+	data_center &
+fi
+done
+
+

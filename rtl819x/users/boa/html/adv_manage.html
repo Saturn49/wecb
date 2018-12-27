@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Advanced Setup - Management</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var manage_from;
+var id_command;
+var id_ip, id_subnet, id_gateway;
+var reboot_btn, apply_btn;
+
+function doLoad()
+{
+	manage_from = document.getElementById("manage_from");
+	id_command = document.getElementById("id_command");
+
+	id_ip = document.getElementById("id_ip");
+	id_subnet = document.getElementById("id_subnet");
+    id_gateway = document.getElementById("id_gateway");
+	
+	reboot_btn = document.getElementById("reboot_btn");
+	apply_btn = document.getElementById("apply_btn");
+
+	reboot_btn.onclick = doReboot;
+	apply_btn.onclick = doApply;
+
+	doGetIP();
+}
+
+function doGetIP()
+{
+	var params = "&command=getvalue";		
+	ajaxPost("advmanage.cgi", params, resGetValue);
+}
+
+function resGetValue(message)
+{
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{
+			var index = 0;
+			var advArray = messageArray[i].split("|");
+			var ip = changeString(advArray[index++]);
+			var subnet = changeString(advArray[index++]);
+			var gateway = changeString(advArray[index++]);
+
+			id_ip.value = ip;
+		    id_subnet.value = subnet;
+		    id_gateway.value = gateway;
+		}
+	}
+}
+
+function doReboot()
+{
+	pop_up('Do you really want to reboot?', 1, formSubmit);
+}
+
+function formSubmit()
+{
+	id_command.value = "reboot";
+    manage_from.submit();
+}
+
+function doApply()
+{
+	if(trim(id_ip.value) == "")
+	{
+		pop_up("IP Address is null");
+		id_ip.focus();
+		return;
+	}
+	else if(!isValidIpAddress(id_ip.value))
+	{
+		pop_up("IP Address is invalid");
+		id_ip.focus();
+		return;
+	}
+
+	if(trim(id_subnet.value) == "")
+	{
+		pop_up("Subnet Mask is null");
+		id_subnet.focus();
+		return;
+	}
+	else if(!isValidSubnetMask(id_subnet.value))
+	{
+		pop_up("Subnet Mask is invalid");
+		id_subnet.focus();
+		return;
+	}
+
+	if((id_gateway.value!="")&&(id_gateway.value!="0.0.0.0"))
+	{
+		 if(!checkGwIP(id_gateway.value))
+		{		
+			id_gateway.focus();
+			return;
+		}
+	}
+	
+		
+    id_command.value = "apply";
+    manage_from.submit();
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_adv.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Management</h1>
+
+	        	<form id="manage_from" method="post" action="advmanage.cgi">
+		        <input type="hidden" name="command" id="id_command" value="apply" />
+				<input type="hidden" name="mypage" value="/adv_manage.html" />
+		       
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><label for="id_ip">Bridge Configuration IP Address:</label></td>
+						<td>
+							<input name="ip" id="id_ip" type="text" size="25" maxlength="32" style="height: 16px"/> 
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_subnet">Subnet Mask:</label></td>
+						<td>
+							<input name="subnet" id="id_subnet" type="text" size="25" maxlength="32" style="height: 16px"/> 
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_gateway">Default Gateway:</label></td>
+						<td>
+							<input name="gateway" id="id_gateway" type="text" size="25" maxlength="32" style="height: 16px"/> 
+						</td>
+					</tr>
+					<tr>
+						<td>Reboot:</td>
+						<td>
+							<a href="###" class="btn" id="reboot_btn"></a>
+						</td>
+					</tr>
+				</table>
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="###" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+				
+	        	<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

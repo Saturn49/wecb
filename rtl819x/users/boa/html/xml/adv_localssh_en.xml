@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Local SSH</t>
+		<t>Enable</t>
+		<t>Disable</t>
+		<t>Username</t>
+		<t>Password</t>
+		<t>SSH Port</t>
+<!--6-10-->
+		<t>Idle Disconnect After</t>
+		<t>Apply</t>
+		<t>Seconds</t>
+		<t>12 Hours</t>
+		<t>1 Day</t>
+<!--11-15-->
+		<t>7 Days</t>
+		<t>Custom</t>
+		
+<!-- 0-5 -->	
+		<a>Username is invalid</a>
+		<a>Password is invalid</a>
+		<a>SSH Port should between 1 and 65535</a>
+		<a>The SSH Port is in use</a>
+		<a>Idle timeout is invalid</a>
+	</page>
+</pages>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Sans fil - Statut</t>
+		<t>Sans fil - Bande</t>
+		<t>Sans fil - Radio</t>	
+		<t>Sans fil - SSID</t>
+		<t>Sans fil - Sécurité</t>
+		<t>Sans fil - Chaîne</t>
+<!-- 6-10 -->	
+		<t>Sans fil - MAC</t>	
+		<t>Clients associés</t>
+		<t>MoCA - Statut coax</t>
+		<t>MoCA - Canal</t>
+		<t>MoCA - Confidentialité</t>
+<!-- 11-15 -->	
+		<t>MoCA - MAC</t>	
+		<t>Stations réseau</t>
+		<t>Information produit</t>
+		<t>Numéro de modèle</t>
+		<t>Version du micrologiciel</t>
+<!-- 16-20 -->	
+		<t>Heure du système</t>	
+		<t>Adresse IP</t>
+		<t>Masque de sous-réseau</t>
+		<t>Passerelle par défaut</t>
+		
+<!-- 0-4 -->	
+		<a>Le champ du nom d'utilisateur est vide</a>
+		<a>Le champ du mot de passe est vide</a>
+		<a>Nom d'utilisateur ou mot de passe incorrect</a> 
+		<a>Utiliser un autre compte pour accéder à cette page</a> 
+		<a>Le système n'est pas compatible avec le WiFi</a>
+	</page>
+</pages>

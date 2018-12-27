@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Thank You!</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="JavaScript">
+
+function doLoad()
+{
+    setTimeout("do_retry()", 3000);
+}
+
+function do_replace()
+{
+    location.href= "<%getInfo("currentPage")%>";
+    setTimeout("do_retry()", 3000);
+}
+
+function do_retry()
+{
+    do_replace();
+}
+
+</script>
+</head>
+<body>
+<div id="wrapper">
+	<%actInclude("top_nav.html")%>
+  	<!-- END SIDE NAV -->
+
+	<div id="content_right">
+		<div id="content_right_header"></div>
+		<div id="content_right_contentarea">
+			<h1 class="thankyou">Thank You! </h1>
+			<form>
+				<p>Please wait while we apply the new settings to your device.</p>
+				<p>After new settings are applied successfully, we'll take you back to the page where the selection was made. </p>
+			</form>
+		</div>
+		<div id="content_right_footer"></div>
+	</div>
+	<div class="clear_left"></div>
+	<%actInclude("wcb_footer.html")%>
+</div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Advanced Setup - Firmware Upgrade</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var id_binary;
+var upgrade_btn;
+var upgrade_form;
+
+var MWJ_progBar = 0;
+var time = 0;
+var delay_time = 1000;
+var loop_num = 0;
+var popup_flag = 1;
+
+function doLoad()
+{
+	id_binary = document.getElementById("id_binary");
+	upgrade_btn = document.getElementById("upgrade_btn");
+	upgrade_form = document.getElementById("upgrade_form");
+
+	upgrade_btn.onclick = doUpgrade;
+
+	if((navigator.userAgent).indexOf("Firefox") != -1)
+	{
+		id_binary.className = "filehidden_firefox";
+	}
+	else
+	{
+		id_binary.className = "filehidden";
+	}	
+}
+
+function doUpgrade()
+{
+	if(trim(id_binary.value) == ""){
+      	id_binary.focus();
+
+		if(popup_flag)
+		{
+			popup_flag = 0;
+  			pop_up("File name can not be empty !");
+		}
+  		return;
+    }
+	
+    upgrade_form.submit();	
+	show_div(true, "progress_div");   
+   	progress();	
+}
+
+function progress()
+{
+  if (loop_num == 20) {  	
+	time = 0;		
+	clearTimeout("progress()");
+	show_div(false, "progress_div");  	
+	return;
+  }
+  
+  if (time < 1) 
+	time = time + 0.033;
+  else {
+	time = 0;
+	loop_num++;
+  }
+  setTimeout('progress()', delay_time);  
+  myProgBar.setBar(time); 
+}
+
+function getRefToDivNest(divID, oDoc) 
+{
+  if( !oDoc ) { oDoc = document; }
+  if( document.layers ) {
+	if( oDoc.layers[divID] ) { return oDoc.layers[divID]; } else {
+	for( var x = 0, y; !y && x < oDoc.layers.length; x++ ) {
+		y = getRefToDivNest(divID,oDoc.layers[x].document); }
+	return y; } }
+  if( document.getElementById ) { return document.getElementById(divID); }
+  if( document.all ) { return document.all[divID]; }
+  return document[divID];
+}
+
+function progressBar( oBt, oBc, oBg, oBa, oWi, oHi, oDr ) 
+{
+  MWJ_progBar++; this.id = 'MWJ_progBar' + MWJ_progBar; this.dir = oDr; this.width = oWi; this.height = oHi; this.amt = 0;
+  //write the bar as a layer in an ilayer in two tables giving the border
+  document.write( '<span id = "progress_div" class = "off" > <table border="0" cellspacing="0" cellpadding="'+oBt+'">'+
+	//'<tr><td>Please wait...</td></tr><tr><td bgcolor="'+oBc+'">'+
+	'<tr><td><strong>Please wait...</strong></td></tr><tr><td>'+
+		'<table border="0" cellspacing="0" cellpadding="0"><tr><td height="'+oHi+'" width="'+oWi+'" bgcolor="'+oBg+'">' );
+  if( document.layers ) {
+	document.write( '<ilayer height="'+oHi+'" width="'+oWi+'"><layer bgcolor="'+oBa+'" name="MWJ_progBar'+MWJ_progBar+'"></layer></ilayer>' );
+  } else {
+	document.write( '<div style="position:relative;top:0px;left:0px;height:'+oHi+'px;width:'+oWi+';">'+
+			'<div style="position:absolute;top:0px;left:0px;height:0px;width:0;font-size:1px;background-color:'+oBa+';" id="MWJ_progBar'+MWJ_progBar+'"></div></div>' );
+  }
+  document.write( '</td></tr></table></td></tr></table></span>\n' );
+  this.setBar = resetBar; //doing this inline causes unexpected bugs in early NS4
+  this.setCol = setColour;
+}
+
+function resetBar( a, b ) 
+{
+  //work out the required size and use various methods to enforce it
+  this.amt = ( typeof( b ) == 'undefined' ) ? a : b ? ( this.amt + a ) : ( this.amt - a );
+  if( isNaN( this.amt ) ) { this.amt = 0; } if( this.amt > 1 ) { this.amt = 1; } if( this.amt < 0 ) { this.amt = 0; }
+  var theWidth = Math.round( this.width * ( ( this.dir % 2 ) ? this.amt : 1 ) );
+  var theHeight = Math.round( this.height * ( ( this.dir % 2 ) ? 1 : this.amt ) );
+  var theDiv = getRefToDivNest( this.id ); if( !theDiv ) { window.status = 'Progress: ' + Math.round( 100 * this.amt ) + '%'; return; }
+  if( theDiv.style ) { theDiv = theDiv.style; theDiv.clip = 'rect(0px '+theWidth+'px '+theHeight+'px 0px)'; }
+  var oPix = document.childNodes ? 'px' : 0;
+  theDiv.width = theWidth + oPix; theDiv.pixelWidth = theWidth; theDiv.height = theHeight + oPix; theDiv.pixelHeight = theHeight;
+  if( theDiv.resizeTo ) { theDiv.resizeTo( theWidth, theHeight ); }
+  theDiv.left = ( ( this.dir != 3 ) ? 0 : this.width - theWidth ) + oPix; theDiv.top = ( ( this.dir != 4 ) ? 0 : this.height - theHeight ) + oPix;
+}
+
+function setColour( a ) 
+{
+  //change all the different colour styles
+  var theDiv = getRefToDivNest( this.id ); if( theDiv.style ) { theDiv = theDiv.style; }
+  theDiv.bgColor = a; theDiv.backgroundColor = a; theDiv.background = a;
+}
+
+function getuploadfile(filename)
+{
+    document.getElementById("fileshow").value = filename;
+}
+
+function browseOver()
+{
+    document.getElementById("browse_btn").src = "images/btn_browse_over.png";
+}
+function browseDown()
+{
+    document.getElementById("browse_btn").src = "images/btn_browse_down.png";
+}
+function browseOut()
+{
+    document.getElementById("browse_btn").src = "images/btn_browse_static.png";
+}
+
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_adv.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Firmware Upgrade</h1>
+
+				<form id="upgrade_form" method="post" enctype="multipart/form-data" action="formUpload.cgi">				
+				
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><strong>Current Firmware Version:</strong></td>
+						<td><% getInfo("fwVersion"); %></td>
+					</tr>
+					<!--<tr>
+						<td><strong>Current Firmware Date:</strong></td>
+						<td></td>
+					</tr>-->
+					<tr>
+						<td colspan="2"><strong>Firmware upgrade: please select a file to upgrade the firmware:</strong></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<!--<input name='binary' id="id_binary" type="file" size="30" style="height: 24px; width: 300px" />-->
+							<div class="fileinputs">
+								<input size="4" name='binary' id="id_binary" type="file" class="filehidden" onchange="getuploadfile(this.value)" onmouseup="browseOver()" onmouseover="browseOver()" onmouseout="browseOut()" onmousedown="browseDown()" />
+								<div class="fakefile">
+									<input id="fileshow" name="fileshow" class="fakeinput" />
+									<div class="fakebtn">
+										<img src="images/btn_browse_static.png" class="fakebrowse" id="browse_btn" onmouseup="browseOver()" onmouseover="browseOver()" onmouseout="browseOut()" onmousedown="browseDown()">
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+				<input type="hidden" name="submit-url" value="/adv_upgrade.html" />
+				</form>
+
+				<br><br>
+				<table cellpadding="0" cellspacing="2" border="0">
+		         <tr>
+		         	<td width="200px"></td>
+		            <td colspan="2">
+		            	<div id="upgrade_btn"><a class="button" href="#" onclick="doUpgrade()"><span>Start to Upgrade</span></a></div>
+		            </td>
+		         </tr>
+		        </table>
+
+
+<script type="text/javascript" language="javascript1.2">
+	var myProgBar = new progressBar(
+			0,         //border thickness
+			'#ffffff', //border colour
+			'#ffffff', //background colour
+			'#043db2', //bar colour
+			300,       //width of bar (excluding border)
+			15,        //height of bar (excluding border)
+			1          //direction of progress: 1 = right, 2 = down, 3 = left, 4 = up
+		);
+</script>
+
+				<br><br>
+	        	<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

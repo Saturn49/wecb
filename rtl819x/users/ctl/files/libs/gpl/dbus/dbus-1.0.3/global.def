@@ -1,0 +1,7 @@
+CC=mipsel-linux-gcc
+AR=mipsel-linux-ar
+CFLAGS= -Wall -D_LINUX -DSUPPORT_PK5000 -O2 -mabicalls
+INSTALL=/home/uni/git/PK5000/ctl_layer/dbus-1.0.3/target/pk5000
+IFLAGS= -I./ -I/usr/local/mipsel-toolchain/toolchain_mipsel/include -I/home/uni/git/PK5000/ctl_layer/dbus-1.0.3/include -I/home/uni/git/PK5000/ctl_layer/dbus-1.0.3/../include -I/home/uni/git/PK5000/ctl_layer/dbus-1.0.3/include/libxml2
+LFLAGS= -L/home/uni/git/PK5000/ctl_layer/dbus-1.0.3/target/pk5000/lib -L/home/uni/git/PK5000/ctl_layer/dbus-1.0.3/../lib -lm
+TARGET_PLATFORM=PK5000

@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wireless Advanced Settings</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var wl_freq, wl_gi, wl_protection, wl_block, wl_stbc, wl_aggregation;
+var id_mssididx, id_beacon;
+var apply_btn;
+var adv_form;
+
+function doLoad()
+{	
+	wl_freq = document.getElementsByName("wl_freq");	
+	wl_gi = document.getElementsByName("wl_gi");
+	wl_protection = document.getElementsByName("wl_protection");
+	wl_block = document.getElementsByName("wl_block");
+	wl_stbc = document.getElementsByName("wl_stbc");
+	wl_aggregation = document.getElementsByName("wl_aggregation");
+
+	id_mssididx = document.getElementById("id_mssididx");
+	id_beacon = document.getElementById("id_beacon");
+	
+	apply_btn = document.getElementById("apply_btn");
+	adv_form = document.getElementById("adv_form");
+	
+	apply_btn.onclick = doApply;	
+
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		wl_freq[i].onclick = doWlFreq;
+
+		if( ((wl_freq[i].value == "10") && (wlan_idx == 1)) 
+			|| ((wl_freq[i].value == "11") && (wlan_idx == 0)))
+		{
+			wl_freq[i].checked = true;
+		}
+	}
+	
+	id_mssididx.onchange = doWlFreq;
+	id_mssididx.value = curr_ssid;
+	
+	doWlFreq();
+}
+
+function doWlFreq()
+{
+	var params = "";
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		if(wl_freq[i].checked)
+		{	
+			params += "&wl_freq=" + wl_freq[i].value; 				
+			break;
+		}
+	}	
+	params += "&wl_mssididx=" + id_mssididx.value;
+	params += "&command=getvalue";	
+
+	ajaxPost("wladv.cgi", params, resGetValue);
+}
+
+function doApply()
+{
+	if(trim(id_beacon.value) == "")
+	{
+		pop_up("Beacon Interval is null");
+		id_beacon.focus();
+		return;
+	}
+	else if(!isNumber(id_beacon.value))
+	{
+		pop_up("Beacon Interval is invalid");
+		id_beacon.focus();
+		return;
+	}
+	else
+	{
+		if(parseInt(id_beacon.value) < 20 || parseInt(id_beacon.value) > 1024)
+		{
+			pop_up("Beacon Interval is invalid");
+			id_beacon.focus();
+			return;
+		}
+	}
+	
+	adv_form.submit();
+}
+
+function resGetValue(message)
+{		
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{
+			var index = 0;	
+			var basicArray = messageArray[i].split("|");			
+			var gi = basicArray[index++];
+			var beacon = basicArray[index++];
+			var protection = basicArray[index++];
+			var block = basicArray[index++];
+			var stbc = basicArray[index++];
+			var aggregation = basicArray[index++];			
+			
+			for(var j = 0; j < wl_gi.length; j++)
+			{
+				if(wl_gi[j].value == gi)
+				{	
+					wl_gi[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_protection.length; j++)
+			{
+				if(wl_protection[j].value == protection)
+				{	
+					wl_protection[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_block.length; j++)
+			{
+				if(wl_block[j].value == block)
+				{	
+					wl_block[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_stbc.length; j++)
+			{
+				if(wl_stbc[j].value == stbc)
+				{	
+					wl_stbc[j].checked = true;
+				}
+			}
+
+			for(var j = 0; j < wl_aggregation.length; j++)
+			{
+				if(wl_aggregation[j].value == aggregation)
+				{	
+					wl_aggregation[j].checked = true;
+				}
+			}
+
+			id_beacon.value = beacon;
+		}
+	}
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_wl.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Wireless Advanced Settings</h1>
+
+				<form id="adv_form" method="POST" action="wladv.cgi">
+				<input type="hidden" name="command" value="apply" />
+		 	    <input type="hidden" name="mypage" value="/wl_adv.html" />
+		 	    
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><label for="id_freq2">Wireless Operation Frequency:</label></td>
+						<td>
+							<input name="wl_freq" id="id_freq2" type="radio" value="10" checked="checked"/> 
+				  			<label for="id_freq2">2.4GHz</label>             
+             				<input name="wl_freq" id="id_freq5" type="radio" value="11" />
+              	  			<label for="id_freq5">5GHz</label>               	  			
+              			</td>
+					</tr>
+					<tr>
+						<td><label for="id_mssididx">Multiple SSID:</label></td>
+						<td>
+							<select name="wl_mssididx" id="id_mssididx">								
+					            <option value="1" selected>SSID1&nbsp;</option>
+					            <option value="2">SSID2&nbsp;</option>
+					            <option value="3">SSID3&nbsp;</option>
+					            <option value="4">SSID4&nbsp;</option>
+					        </select>
+						</td>
+					</tr>	
+					<tr>
+						<td><label for="id_protectionon">Protection:</label></td>
+						<td>
+							<input name="wl_protection" id="id_protectionon" type="radio" value="0" checked="checked"/> 
+              	  			<label for="id_protectionon">Enable</label>  
+             	 			<input name="wl_protection" id="id_protectionoff" type="radio" value="1" />
+              	  			<label for="id_protectionoff">Disable</label> 
+						</td>
+					</tr> 
+					<tr>
+						<td><label for="id_blockon">Auto Block Ack:</label></td>
+						<td>
+							<input name="wl_block" id="id_blockon" type="radio" value="1" checked="checked"/> 
+              	  			<label for="id_blockon">Enable</label>  
+             	 			<input name="wl_block" id="id_blockoff" type="radio" value="0" />
+              	  			<label for="id_blockoff">Disable</label> 
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_stbcon">STBC:</label></td>
+						<td>
+							<input name="wl_stbc" id="id_stbcon" type="radio" value="1" checked="checked"/> 
+              	  			<label for="id_stbcon">Enable</label>  
+             	 			<input name="wl_stbc" id="id_stbcoff" type="radio" value="0" />
+              	  			<label for="id_stbcoff">Disable</label> 
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_aggregationon">Aggregation MSDU(A-MSDU):</label></td>
+						<td>
+							<input name="wl_aggregation" id="id_aggregationon" type="radio" value="2" checked="checked"/> 
+              	  			<label for="id_aggregationon">Enable</label>  
+             	 			<input name="wl_aggregation" id="id_aggregationoff" type="radio" value="0" />
+              	  			<label for="id_aggregationoff">Disable</label> 
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_gion">Short GI:</label></td>
+						<td>
+							<input name="wl_gi" id="id_gion" type="radio" value="1" checked="checked"/> 
+              	  			<label for="id_gion">Enable</label>  
+             	 			<input name="wl_gi" id="id_gioff" type="radio" value="0" />
+              	  			<label for="id_gioff">Disable</label> 
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_beacon">Beacon Interval:</label></td>
+						<td>
+							<input name="wl_beacon" id="id_beacon" type="text" size="10" maxlength="4" style="height: 16px"/> (20-1024 ms)
+						</td>
+					</tr>
+				</table>
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="#" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+
+				<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

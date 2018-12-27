@@ -1,0 +1,83 @@
+HOW TO BUILD A FIRMWARE FOR THE ACTIONTEC WECB3000
+
+* How to install the WECB source code onto the Linux workstation
+* How to build the image file that can be loaded on to a Actiontec WECB
+
+NOTE: The following procedures are known to work with recent version of 
+Ubuntu 12.04 LTS Desktop.  
+
+The Actiontec WECB Source Code can be obtained from the Actiontec 
+support website at http://opensource.actiontec.com.
+
+1.(Install clean OS Ubuntu 12.04 LTS Desktop.)
+
+2.(Download source code.)
+
+ WECB-0.16.8.4-GPL.tgz
+  
+3.(Copy or Move the source code to your working directory.)
+
+$ cp WECB-0.16.8.4-GPL.tgz  /<working directory>
+
+4.(Install required packages. Please make sure you have installed necessary lib for compile the project)
+
+$ sudo apt-get -y install gcc g++ m4 binutils patch bzip2 flex bison make autoconf gettext texinfo unzip sharutils subversion build-essential libncurses5-dev ncurses-term zlib1g-dev
+$ sudo apt-get -y install linux-headers-`uname -r` libnewt-dev curl sox libssl-dev
+$ sudo apt-get -y install gawk mtd-utils util-linux
+
+5.(Extract the GPL source code and toolchain to your working directory. Make sure your
+   working directory path does not contain spaces.)
+
+$ tar xvfz WECB-0.16.8.4-GPL.tgz 
+
+IMPORTANT: Extracting the source code creates the directory "WECB-0.16.8.4-GPL" 
+
+6.(Change to the WECB-0.16.8.4-GPL directory)
+
+$ cd <working directory>/WECB-0.16.8.4-GPL/rtl819x
+
+7. run
+$./do_act_build 0.16.8.4 WCB3000
+
+Notes: If there are some syntax errors occured (Maybe in Ubuntu system), make sure that your /bin/sh is linked to the bash not the dash
+$ sudo rm /bin/sh
+$ sudo ln -s /bin/bash /bin/sh
+
+8.(Binary will be under. <working directory>/WECB-0.16.8.4-GPL/rtl819x/image/0.16.8.4-WCB3000-?-act.bin)
+
+
+PLEASE NOTE: The machine-readable software source code provided here is for 
+programmers who may wish to alter or customize the code, and typically will 
+not be of use to the vast majority of consumers. The software source code 
+provided here is subject to Version 2 of the GPL or other GPL or LGPL licenses 
+which are all included in the download and are available below and also at 
+"http://www.gnu.org/licenses/" and as such, the software source code is 
+distributed WITHOUT ANY WARRANTY and subject to the copyrights of the authors. 
+Compiling errors due to lack of public libraries/tools in the customer's 
+specific platform/OS are the responsibility of the user of this GPL source code.
+
+STANDARD WEB INTERFACE UPGRADE METHOD
+
+1. Use a Web browser to access the 0.16.8.4 WCB3000 at it's LAN IP Address
+
+2. Navigate to the "Firmware Upgrade" page
+
+3. Use the Browse button to locate the newly created image file
+       (It will be in the <working directory>/WECB-0.16.8.4-GPL/rtl819x/image/0.16.8.4-WCB3000-?-act.bin)
+
+4. Click the button to upgrade the Firmware
+
+5. The device will reboot using the new firmware image 
+
+6. To access the new firmware interface, use the (static ) IP address, 192.168.99.254 or DHCP use the (dynamic ) IP address
+(You may need to renew the IP address of the workstation, to reach 192.168.99.254 or dynamic ip address
+
+PLEASE NOTE: The machine-readable software source code provided here is for 
+Programmers who may wish to alter or customize the code, and typically will not 
+be of use to the vast majority of consumers. The software source code provided 
+here is subject to Version 2 of the GPL or other GPL or LGPL licenses which 
+are all included in the download and are available below and also at 
+"http://www.gnu.org/licenses/" and as such, the software source code is 
+distributed WITHOUT ANY WARRANTY and subject to the copyrights of the authors. 
+Compiling errors due to lack of public libraries/tools in the customer's 
+specific platform/OS are the responsibility of the user of this GPL source code.

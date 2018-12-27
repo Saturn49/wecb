@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>MoCA Coax Status</t>
+		<t>NOTE:Only advanced technical users should use this feature, all rates are Mbps</t>
+		<t>The Devices represent the Network Coordinator</t>	
+		<t>Channel</t>
+		<t>Privacy</t>
+		<t>Password</t>
+<!-- 6-10 -->	
+
+
+<!-- 0-5 -->	
+		<a>Password is null</a>
+	</page>
+</pages>

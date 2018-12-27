@@ -1,0 +1,6 @@
+wl_basic:1
+wl_basic:2
+wl_ssid:1
+wl_ssid:2
+wl_adv:1
+wl_adv:2

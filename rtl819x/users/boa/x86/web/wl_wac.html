@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wireless Access Control</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var wl_freq;
+var id_freq0, id_command, id_delete_index;
+var id_mssididx, id_macenabled, id_mac, id_maccomment;
+var maclist_span;
+var macselect;
+var wac_form;
+var apply_btn, delete_btn, deleteall_btn;
+
+function doLoad()
+{
+	wl_freq = document.getElementsByName("wl_freq");
+	macselect = document.getElementsByName("macselect");
+	
+	id_freq0 = document.getElementById("id_freq0");
+	id_mssididx = document.getElementById("id_mssididx");
+	id_macenabled = document.getElementById("id_macenabled");
+	id_mac = document.getElementById("id_mac");
+	id_maccomment = document.getElementById("id_maccomment");
+	maclist_span = document.getElementById("maclist_span");
+
+	id_command = document.getElementById("id_command");
+	id_delete_index = document.getElementById("id_delete_index");
+	wac_form = document.getElementById("wac_form");
+	
+	apply_btn = document.getElementById("apply_btn");
+	delete_btn = document.getElementById("delete_btn");
+	deleteall_btn = document.getElementById("deleteall_btn");
+	
+	apply_btn.onclick = doApply;
+	delete_btn.onclick = doDeleteSelected;
+	deleteall_btn.onclick = doDeleteAll;
+
+	delete_btn.style.display = "none";
+	deleteall_btn.style.display = "none";
+
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		wl_freq[i].onclick = doWlFreq;
+
+		if( ((wl_freq[i].value == "10") && (wlan_idx == 1)) 
+			|| ((wl_freq[i].value == "11") && (wlan_idx == 0)))
+		{
+			wl_freq[i].checked = true;
+		}
+	}
+
+	if(both_freq == 1)
+		id_freq0.checked = true;
+
+	id_mssididx.onchange = doWlFreq;
+	id_mssididx.value = curr_ssid;
+
+	doWlFreq();
+}
+
+function doApply()
+{	
+	if(trim(id_mac.value) != "")
+	{	
+		if(!isValidMacAddress(id_mac.value))
+		{
+			pop_up("MAC Address is invalid");
+			id_mac.focus();
+			return;
+		}
+	}
+
+	if(trim(id_maccomment.value) != "")
+	{
+		if(trim(id_maccomment.value).indexOf("|") != -1)
+		{
+			pop_up("Comment is invalid");
+			id_maccomment.focus();
+			return;
+		}
+		if((id_maccomment.value).length > 20)
+		{
+			pop_up("Comment's length is too long");
+			id_maccomment.focus();
+			return;
+		}
+	}
+	
+	id_command.value = "apply";
+	wac_form.submit();
+}
+
+function doDeleteSelected()
+{
+	var wl_freq_value = "";
+
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		if(wl_freq[i].checked)
+		{	
+			wl_freq_value = wl_freq[i].value; 				
+			break;
+		}
+	}
+		
+	for(var i = 0; i < macselect.length; i++)
+	{
+		if(macselect[i].checked)
+		{			
+			var idArray = (macselect[i].id).split("_");
+			if(idArray.length == 3)
+			{
+				var index = idArray[1];
+				var freq = idArray[2];
+
+				if(freq == "0")
+					freq = wl_freq_value;				
+
+				id_delete_index.value = index + "_" + freq + ";"; 	
+			}
+		}
+	}
+
+	if(id_delete_index.value == "")
+	{
+		pop_up("Please select mac entry to delete!");	
+		return;
+	}
+
+	pop_up('Do you really want to delete the selected entry?', 1, function(){
+		
+		id_command.value = "delete";
+		wac_form.submit();
+	});
+}
+
+function doDeleteAll()
+{		
+	pop_up('Do you really want to delete the all entries?', 1, function(){
+
+		id_command.value = "deleteall";
+		wac_form.submit();
+	});
+}
+
+function doWlFreq()
+{	
+	var params = "";
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		if(wl_freq[i].checked)
+		{	
+			params += "&wl_freq=" + wl_freq[i].value; 				
+			break;
+		}
+	}	
+
+	params += "&wl_mssididx=" + id_mssididx.value;
+	params += "&command=getlist";	
+
+	ajaxPost("wlwac.cgi", params, resGetList);
+}
+
+function createMacList()
+{
+	var tr = "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\" width=\"440px\">";
+	
+	tr += "<tr><td colspan=\"4\"><strong>Current Access Control List:</strong></td></tr>";
+	tr += "<tr>";
+	
+	if(id_freq0.checked)
+		tr += "<td align=\"center\" width=\"10%\" bgcolor=\"#808080\"><strong>Frequency</strong></td>";
+	
+	tr += "<td align=\"center\" width=\"40%\" bgcolor=\"#808080\"><strong>MAC Address</strong></td>";
+	tr += "<td align=\"center\" width=\"30%\" bgcolor=\"#808080\"><strong>Comment</strong></td>";
+	tr += "<td align=\"center\" width=\"20%\" bgcolor=\"#808080\"><strong>Select</strong></td>";
+	tr += "</tr>";
+
+	return tr;
+}
+
+function resGetList(message)
+{
+	var mac;
+	var comment;
+	var freq;
+	var index;
+	var tr = createMacList();
+
+	var array = message.split(";");
+	if(array.length == 2)
+	{
+		if(array[0] != "0")
+		{
+			var messageArray = array[0].split("||");
+			if(messageArray.length > 1)
+			{			
+				delete_btn.style.display = "block";
+				deleteall_btn.style.display = "block";
+				
+				for(var i = 0; i < messageArray.length - 1; i++)
+				{
+					var wacArray = messageArray[i].split("|");
+
+					if(wacArray[0])
+						mac = wacArray[0];
+					else
+						mac = "";
+					
+					if(wacArray[1])
+						comment = wacArray[1];	
+					else
+						comment = "";
+
+					if(comment == "NULL")
+						comment = "";
+
+					if(wacArray[2])
+						freq = wacArray[2];
+					else
+						freq = "0";
+
+					if(wacArray[3])
+						index = wacArray[3];
+					else
+						index = "1";
+					
+					
+					tr += "<tr>";
+
+					if(id_freq0.checked)
+					{
+						if(freq != "" && freq != "0")
+						{
+							tr += "	<td align=\"center\" width=\"10%\" bgcolor=\"#C0C0C0\">";
+
+							if(freq == "10")
+								tr += "2.4G";
+							else if(freq == "11")
+								tr += "5G";
+
+							tr += "</td>";
+						}	
+					}
+					
+					tr += "	<td align=\"center\" width=\"40%\" bgcolor=\"#C0C0C0\">" + mac + "</td>";
+					tr += "	<td align=\"center\" width=\"30%\" bgcolor=\"#C0C0C0\">" + comment + "</td>";
+					tr += "	<td align=\"center\" width=\"20%\" bgcolor=\"#C0C0C0\">";
+					tr += "		<input type=\"checkbox\" name=\"macselect\" id=\"select_" + index + "_" + freq + "\" value=\"ON\"></td>";
+					tr += "</tr>";			
+				}				
+			}				
+		}
+		id_macenabled.value = array[1];
+	}
+
+	tr += "</table>";
+	maclist_span.innerHTML = tr;	
+	
+	id_mac.value = "";
+	id_maccomment.value = "";
+	id_mac.focus();	
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_wl.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Wireless Access Control</h1>
+
+				<form id="wac_form" method="POST" action="wlwac.cgi">
+				<input type="hidden" name="command" id="id_command" value="apply" />
+		 	    <input type="hidden" name="mypage" value="/wl_wac.html" />
+				<input type="hidden" name="delete_index" id="id_delete_index" />
+		 	    
+		 	    
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><label for="id_freq2">Wireless Operation Frequency:</label></td>
+						<td>
+							<input name="wl_freq" id="id_freq2" type="radio" value="10" checked="checked"/> 
+				  			<label for="id_freq2">2.4GHz</label>             
+             				<input name="wl_freq" id="id_freq5" type="radio" value="11" />
+              	  			<label for="id_freq5">5GHz</label> 
+              	  			<input name="wl_freq" id="id_freq0" type="radio" value="0" />
+              	  			<label for="id_freq0">Both</label>
+              			</td>
+					</tr>
+					<tr>
+						<td><label for="id_mssididx">Multiple SSID:</label></td>
+						<td>
+							<select name="wl_mssididx" id="id_mssididx">								
+					            <option value="1" selected>SSID1&nbsp;</option>
+					            <option value="2">SSID2&nbsp;</option>
+					            <option value="3">SSID3&nbsp;</option>
+					            <option value="4">SSID4&nbsp;</option>
+					        </select>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="id_macenabled">Wireless Access Control Mode:</label></td>
+						<td>
+							<select size="1" name="wl_macenabled" id="id_macenabled">
+					          <option value="0">Disable&nbsp;</option>
+					          <option value="1" selected >Allow Listed&nbsp;</option>
+					          <option value="2">Deny Listed&nbsp;</option>
+					        </select>
+					    </td>
+					</tr>
+					<tr>
+						<td><label for="id_mac">MAC Address:</label></td>
+						<td><input type="text" name="wl_mac" id="id_mac" size="20" maxlength="17" style="height: 16px"/></td>
+					</tr>
+					<tr>
+						<td><label for="id_maccomment">Comment:</label></td>
+						<td><input type="text" name="wl_maccomment" id="id_maccomment" size="20" maxlength="20" style="height: 16px"/></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<a href="#" class="btn" id="apply_btn"></a>   
+						</td>
+					</tr>
+				</table>
+
+				<span id="maclist_span">
+					<table cellpadding="0" cellspacing="1" border="0" width="440px">
+					  <tr><td><strong>Current Access Control List:</strong></td></tr>
+					  <tr>
+					  	<td align="center" width="45%" bgcolor="#808080"><strong>MAC Address</strong></td>
+					  	<td align="center" width="35%" bgcolor="#808080"><strong>Comment</strong></td>
+					  	<td align="center" width="20%" bgcolor="#808080"><strong>Select</strong></td>
+					  </tr>				  				  
+					</table>
+				</span>
+				</form>
+				
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td>
+							<a href="#" class="btn" id="delete_btn">Delete Selected</a> 
+						</td>
+						<td>
+							<a href="#" class="btn" id="deleteall_btn">Delete All</a>
+						</td>
+					</tr>
+				</table>
+				
+	        	<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

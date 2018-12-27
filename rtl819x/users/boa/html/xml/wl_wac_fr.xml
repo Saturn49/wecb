@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Contrôle de l'accès au réseau sans fil</t>
+		<t>Fréquence de fonctionnement du réseau sans fil</t>
+		<t>Les deux</t>	
+		<t>SSID multiples</t>
+		<t>Mode contrôle de l'accès sans-fil</t>
+		<t>Désactivé</t>
+<!-- 6-10 -->	
+		<t>Liste d'autorisation</t>	
+		<t>Liste de refus</t>
+		<t>Adresse MAC</t>
+		<t>Commentaire</t>
+		<t>Sélectionner</t>
+<!-- 11-15 -->	
+		<t>Supprimer éléments sélectionnés</t>	
+		<t>Supprimer tout</t>
+		<t>Liste de contrôle de l'accès actuelle</t>
+		<t>Fréquence</t>
+		<t>Appliquer</t>
+
+<!-- 0-5 -->	
+		<a>Adresse MAC invalide</a>
+		<a>Commentaire invalide</a>
+		<a>Commentaire trop long</a>
+		<a>Veuillez sélectionner l'entrée MAC à supprimer!</a>
+		<a>Voulez-vous vraiment supprimer l'entrée sélectionnée?</a>
+		<a>Voulez-vous vraiment supprimer les entrées?</a>
+<!--6-10-->
+		<a>Voulez-vous vraiment supprimer tous les appareils autorisés du ssid1? Tous les clients sans fil ne pourront pas se connecter à ce ssid!</a>
+		<a>Voulez-vous vraiment supprimer tous les appareils autorisés du ssid2? Tous les clients sans fil ne pourront pas se connecter à ce ssid!</a>
+		<a>Voulez-vous vraiment supprimer tous les appareils autorisés du ssid1? Tous les clients sans fil ne pourront pas se connecter au ssid1!</a>
+		<a>Voulez-vous vraiment supprimer tous les appareils autorisés du ssid2? Tous les clients sans fil ne pourront pas se connecter au ssid2!</a>
+	</page>
+</pages>

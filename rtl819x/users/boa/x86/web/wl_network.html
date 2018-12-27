@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wireless Network List</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var private_span, public_span;
+
+function doLoad()
+{
+	private_span = document.getElementById("private_span");
+	public_span = document.getElementById("public_span");
+	
+	var params = "&command=getvalue";	
+	ajaxPost("wlnetwork.cgi", params, resGetValue);
+}
+
+function createNetworkList(private)
+{
+	var tr = "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\" width=\"550px\">";
+
+	if(private)
+		tr += "<tr><td colspan=\"5\"><strong>Private WiFi Network:</strong></td></tr>";
+	else
+		tr += "<tr><td colspan=\"5\"><strong>Public WiFi Network:</strong></td></tr>";
+	
+	tr += "<tr>";	
+	tr += "<td align=\"center\" width=\"20%\" bgcolor=\"#808080\"><strong>Name</strong></td>";	
+	tr += "<td align=\"center\" width=\"20%\" bgcolor=\"#808080\"><strong>Frequency</strong></td>";
+
+	if(auth_level == 3)
+	{
+		tr += "<td align=\"center\" width=\"20%\" bgcolor=\"#808080\"><strong>MAC Address</strong></td>";
+	}
+	else 
+	{
+		tr += "<td align=\"center\" width=\"20%\" bgcolor=\"#808080\"><strong>Band</strong></td>";
+	}
+	
+	tr += "<td align=\"center\" width=\"30%\" bgcolor=\"#808080\"><strong>Security Mode</strong></td>";
+	tr += "<td align=\"center\" width=\"10%\" bgcolor=\"#808080\"><strong></strong></td>";
+	tr += "</tr>";
+
+	return tr;
+}
+
+function jumpSecurity(wlan, vwlan)
+{
+	window.location.href = "/wl_security.html?wlan=" + wlan + "&vwlan=" + vwlan;
+}
+
+function resGetValue(message)
+{	
+	var tr_private = createNetworkList(1);
+	var tr_public = createNetworkList(0);	
+	var messageArray = message.split("||");
+
+	var public_flag = 0;
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{
+			var index = 0;
+			var basicArray = messageArray[i].split("|");
+			var wlan_idx = basicArray[index++];
+			var vwlan_idx = basicArray[index++];
+			var band = basicArray[index++];
+			var ssid_name = htmlDecodeStr(basicArray[index++]);
+			var mac_address = changeString(basicArray[index++]);
+			var security_mode = changeString(basicArray[index++]);
+
+			var band_value = "";
+			var tr = "<tr>";			
+			tr += "<td align=\"center\" width=\"20%\" bgcolor=\"#C0C0C0\">" + ssid_name + "</td>";
+			tr += "<td align=\"center\" width=\"20%\" bgcolor=\"#C0C0C0\">";				
+							
+			if(wlan_idx == "1")
+			{
+				tr += "2.4 GHz";
+
+				if(band == "0")
+					band_value = "B";
+				else if(band == "1")
+					band_value = "G";
+				else if(band == "7")
+					band_value = "N";
+				else if(band == "2")
+					band_value = "B,G";
+				else if(band == "9")
+					band_value = "G,N";
+				else if(band == "10")
+					band_value = "B,G,N";
+			}
+			else if(wlan_idx == "0")
+			{
+				tr += "5 GHz";
+
+				if(band == "3")
+					band_value = "A";
+				else if(band == "7")
+					band_value = "N";
+				else if(band == "11")
+					band_value = "A,N";
+			}
+			tr += "</td>";
+
+			tr += "<td align=\"center\" width=\"20%\" bgcolor=\"#C0C0C0\">";
+			if(auth_level == 3)
+			{
+				tr += mac_address;
+			}
+			else 
+			{
+				tr += band_value;
+			}
+			tr += "</td>";
+			
+			tr += "<td align=\"center\" width=\"30%\" bgcolor=\"#C0C0C0\">" + security_mode + "</td>";
+			tr += "<td align=\"center\" width=\"10%\" bgcolor=\"#C0C0C0\"><a href=\"#\" id=\"edit_" 
+				+ wlan_idx + "_" + vwlan_idx + "\" onclick=\"javascript:jumpSecurity('"+wlan_idx+"', '"+vwlan_idx+"')\">Edit</a></td>";
+			tr += "</tr>";				
+
+			if(vwlan_idx == "1")
+				tr_private += tr;
+			else if(vwlan_idx == "3")
+			{
+				public_flag = 1;
+				tr_public += tr;
+			}
+		}
+	}
+
+	tr_private += "</table>";
+	tr_public += "</table>";
+	
+	private_span.innerHTML = tr_private;	
+
+	if(public_flag && (auth_level == 3))
+	{
+		public_span.innerHTML = tr_public;
+		public_span.style.display = "block";
+	}
+	else
+		public_span.style.display = "none";
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_wl.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Wireless Network List</h1>	        	
+
+				<span id="private_span">
+					<table cellpadding="0" cellspacing="1" border="0" width="550px">
+					  <tr><td colspan="5"><strong>Private WiFi Network:</strong></td></tr>
+					  <tr>
+					  	<td align="center" width="20%" bgcolor="#808080"><strong>Name</strong></td>
+					  	<td align="center" width="20%" bgcolor="#808080"><strong>Frequency</strong></td>
+					  	<td align="center" width="20%" bgcolor="#808080"><strong>MAC Address</strong></td>
+					  	<td align="center" width="30%" bgcolor="#808080"><strong>Security Mode</strong></td>
+					  	<td align="center" width="10%" bgcolor="#808080"><strong></strong></td>
+					  </tr>				  				  
+					</table>
+				</span>
+
+				<span id="public_span">
+					<table cellpadding="0" cellspacing="1" border="0" width="550px">
+					  <tr><td colspan="5"><strong>Public WiFi Network:</strong></td></tr>
+					  <tr>
+					  	<td align="center" width="20%" bgcolor="#808080"><strong>Name</strong></td>
+					  	<td align="center" width="20%" bgcolor="#808080"><strong>Frequency</strong></td>
+					  	<td align="center" width="20%" bgcolor="#808080"><strong>MAC Address</strong></td>
+					  	<td align="center" width="30%" bgcolor="#808080"><strong>Security Mode</strong></td>
+					  	<td align="center" width="10%" bgcolor="#808080"><strong></strong></td>
+					  </tr>				  				  
+					</table>
+				</span>
+				
+	        	<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

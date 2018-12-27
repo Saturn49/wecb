@@ -1,0 +1,4 @@
+[D-BUS Service]
+Exec=/home/lennart/git/dbus/test/test-service
+User=anyrandomuser
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>MoCA - Statut coax</t>
+		<t>REMARQUE : Seuls les utilisateurs possédant des compétences techniques avancées doivent utiliser cette fonction. Tous les nombres sont en mbps.</t>
+		<t>Les appareils représentent le coordonnateur du réseau</t>	
+		<t>Canal</t>
+		<t>Confidentialité</t>
+		<t>Mot de passe</t>
+<!-- 6-10 -->	
+
+
+<!-- 0-5 -->	
+		<a>Password is null</a>
+	</page>
+</pages>

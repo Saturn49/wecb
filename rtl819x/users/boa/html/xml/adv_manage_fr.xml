@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Gestion</t>
+		<t>Configuration de la passerelle - Adresse IP</t>
+		<t>Masque de sous-réseau</t>	
+		<t>Passerelle par défaut</t>
+		<t>Configuration automatique</t>
+		<t>Redémarrer</t>
+<!-- 6-10 -->
+		<t>Appliquer</t>
+
+
+<!-- 0-5 -->	
+		<a>Voulez-vous vraiment redémarrer?</a>
+		<a>Le champ de l'adresse IP est vide</a>
+		<a>Adresse IP invalide</a>
+		<a>Le champ du masque de sous-réseau est vide</a>
+		<a>Masque de sous-réseau invalide</a>
+	</page>
+</pages>

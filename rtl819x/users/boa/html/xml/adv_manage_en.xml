@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Management</t>
+		<t>Bridge Configuration IP Address</t>
+		<t>Subnet Mask</t>	
+		<t>Default Gateway</t>
+		<t>Auto Configure</t>
+		<t>Reboot</t>
+<!-- 6-10 -->
+		<t>Apply</t>
+
+
+<!-- 0-5 -->	
+		<a>Do you really want to reboot?</a>
+		<a>IP Address is null</a>
+		<a>IP Address is invalid</a>
+		<a>Subnet Mask is null</a>
+		<a>Subnet Mask is invalid</a>
+	</page>
+</pages>

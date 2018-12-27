@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wireless setting - WPS</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="Javascript">
+
+var apmode="";
+var apsecmode="";
+var apwps=<% getIndex("wscDisable"); %>;
+var wscpin="<% getInfo("wscLoocalPin"); %>";
+var wscname="<% getInfo("device_name"); %>";  
+var mode = <% getVirtualIndex("encrypt", "0") %>;
+var apenrollee="";
+
+var wlan_num = <% getIndex("wlan_num"); %>;
+var isNewMeshUI =  <% getIndex("isNewMeshUI"); %>;
+var wlanMode = new Array();
+var wlanDisabled = new Array();
+var networkType = new Array();
+var wep = new Array();
+var wdsEncrypt = new Array();
+var meshEncrypt = new Array();
+
+if (wlan_num > 0)
+{
+	wlanMode[0] = <%getIndex("wlanMode");%>;
+	wlanDisabled[0] = <%getIndex("wlanDisabled");%>;
+	networkType[0] = <%getIndex("networkType");%>;
+	wep[0] ='<%getInfo("wep");%>';
+	wdsEncrypt[0] ='<%getInfo("wdsEncrypt");%>';
+	
+	if (<%getIndex("isMeshDefined");%> == 1)
+		meshEncrypt[0] ='<%getInfo("meshEncrypt");%>';
+	else
+		meshEncrypt[0] ='';
+}
+
+if (wlan_num > 1)
+{
+	wlanMode[1] = <%getIndex("wlanMode");%>;
+	wlanDisabled[1] = <%getIndex("wlanDisabled");%>;
+	networkType[1] = <%getIndex("networkType");%>;
+	wep[1] ='<%getInfo("wep");%>';
+	wdsEncrypt[1] ='<%getInfo("wdsEncrypt");%>';
+
+	if (<%getIndex("isMeshDefined");%> == 1)
+		meshEncrypt[1] ='<%getInfo("meshEncrypt");%>';
+	else
+		meshEncrypt[1] ='';
+}
+
+for(var i = 0; i < wlan_num; i++)
+{
+	if(wlanDisabled[i] == 1)
+		continue;
+
+	/* Wireless Mode */
+	if(wlanMode[i] == 0)
+		apmode = "AP";
+		
+	if (wlanMode[i] == 1) 
+	{
+		if (networkType[0] == 0)
+			apmode = "Infrastructure Client";
+		else
+			apmode = "Ad-hoc Client";
+	}
+
+	if ( wlanMode[i] == 2)
+		apmode = "WDS";
+	if ( wlanMode[i] == 3)
+		apmode = "AP+WDS";
+
+	/*#ifdef CONFIG_NEW_MESH_UI*/
+	if( isNewMeshUI == 1)
+	{
+		if ( wlanMode[i] == 4)
+			apmode = "AP+MESH";  	
+		if ( wlanMode[i] == 5)
+			apmode = "MESH";
+	}
+	else
+	{
+		if ( wlanMode[i] == 4)
+			apmode = "AP+MPP";  	
+		if ( wlanMode[i] == 5)
+			apmode = "MPP";
+		if ( wlanMode[i] == 6)
+			apmode = "MAP";	
+		if ( wlanMode[i] == 7)
+			apmode = "MP";  
+	} 		
+
+	/* Wireless Security */ 
+   	if (wlanMode[i] == 0 || wlanMode[i] == 1)
+    	apsecmode = wep[i];
+	else if (wlanMode[i] == 2)
+    	apsecmode = wdsEncrypt[i];
+	else if (wlanMode[i] == 3)
+    	apsecmode = wep[i] + '(AP),  ' + wdsEncrypt[i] + '(WDS)';
+	else if (wlanMode[i] == 4 || wlanMode[i] == 6)
+    	apsecmode = wep[i] + '(AP),  ' + meshEncrypt[i] + '(Mesh)';    	
+    else if (wlanMode[i] == 5|| wlanMode[i] == 7)
+    	apsecmode = meshEncrypt[i] + '(Mesh)';
+
+}
+
+
+function doLoad()
+{	
+   if ((apmode == "AP") && (apwps == 0) && (mode >= 2)) 
+     document.getElementById("id_on").checked = true;
+   else if (apmode.indexOf("Client") != -1 && apwps == 0 ) 
+     document.getElementById("id_on").checked = true;
+   else 
+     document.getElementById("id_off").checked = true;
+  
+   document.getElementById("id_WSC_PIN").value = wscpin;
+   document.getElementById("id_WSC_NAME").value = wscname;
+   document.getElementById("id_AP_ENROLLEE").value = apenrollee;
+}
+
+function doCheck()
+{
+   if ((apmode == "AP") && (mode < 2)) {
+      if (document.getElementById("id_on").checked) {
+        pop_up("Only when AP is on WPA mode, WPS is allowed to set enable.", 0);
+        return 0;
+      }
+   }
+
+   var id_WSC_PIN = document.getElementById("id_WSC_PIN");   
+   if(setPinClicked(id_WSC_PIN))
+   	 return 1;
+   else
+   	 return 0;
+}
+
+function dostartpinmethod()
+{
+    var form= document.myform;
+ 
+    with (form) {
+        command.disabled = false;
+        command.value = "pinmethod";
+    }
+
+	var id_AP_ENROLLEE = document.getElementById("id_AP_ENROLLEE");
+	if(setPinClicked(id_AP_ENROLLEE))
+    	form.submit();
+}
+
+
+function dostartpbc()
+{
+    var form= document.myform;
+ 
+    with (form) {
+        command.disabled = false;
+        command.value = "pbc";
+    }
+    form.submit();
+}
+
+function doApply()
+{
+    var form= document.myform;
+
+    if (doCheck()==0)
+     return;
+ 
+    with (form) {
+        command.disabled = false;
+        command.value = "apply";
+    }
+    form.submit();
+}
+
+function validate_pin_code(code)
+{
+	var accum=0;
+
+	accum += 3 * (parseInt(code / 10000000) % 10); 
+	accum += 1 * (parseInt(code / 1000000) % 10); 
+	accum += 3 * (parseInt(code / 100000) % 10); 
+	accum += 1 * (parseInt(code / 10000) % 10);
+	accum += 3 * (parseInt(code / 1000) % 10);
+	accum += 1 * (parseInt(code / 100) % 10);
+	accum += 3 * (parseInt(code / 10) % 10); 
+	accum += 1 * (parseInt(code / 1) % 10);
+	return (0 == (accum % 10));	
+}
+
+function check_pin_code(str)
+{
+	var i;
+	var code_len;
+	code_len = str.length;
+
+	var codestr="";		
+
+	for (i=0; i<str.length; i++) {
+
+		if ((str.charAt(i) == ' ') || (str.charAt(i) == '-')){
+			code_len --;
+			continue ;
+		}else{
+			codestr += str.charAt(i);
+		}
+					
+		if ((str.charAt(i) < '0') || (str.charAt(i) > '9'))
+			return 2;			
+	}
+	
+	if (code_len != 8 && code_len != 4)
+		return 1;
+		
+	if (code_len == 8) {
+		var code = parseInt(codestr, 10);
+		if (!validate_pin_code(code))
+			return 3;
+		else
+			return 0;
+	}
+	else
+		return 0;
+}
+
+function setPinClicked(pin_code)
+{	
+	var ret;	
+	var pin_str = "";
+	ret = check_pin_code(pin_code.value);
+
+	if(pin_code.id == "id_AP_ENROLLEE")
+	{
+		pin_str = "Enrollee's PIN";
+	}
+	else if(pin_code.id == "id_WSC_PIN")
+	{
+		pin_str = "AP PIN";
+	}
+	
+	if (ret == 1) {
+		pop_up('Invalid ' + pin_str + ' length! The device PIN is usually four or eight digits long.', 0);
+		pin_code.focus();		
+		return false;
+	}
+	else if (ret == 2) {
+		pop_up('Invalid ' + pin_str + '! ' + pin_str + ' must be numeric digits.', 0);
+		pin_code.focus();		
+		return false;
+	}
+	else if (ret == 3) {
+		if ( !confirm('Checksum failed! Use PIN anyway?')) {
+			pin_code.focus();
+			return false;
+  		}
+	}	
+	
+	return true;
+}
+
+
+</script>
+</head>
+
+<body>
+<div id="wrapper">
+    <!-- TOP NAV -->
+    <%actInclude("top_nav.html")%>
+    <!-- END TOP NAV -->
+    <!-- SIDE NAV -->
+    <%actInclude("left_wl.html")%>
+    <!-- END SIDE NAV -->
+
+    <!-- MAIN CONTENT AREA -->
+    <div id="content_right">
+      <div id="content_right_header"></div>
+      <div id="content_right_contentarea">
+      <h1>WiFi Protected Setup (WPS)</h1>
+       <form name="myform" method="POST" action="wlwps.cgi" onSubmit="return doApply();">
+        <!--0--><input type="hidden" name="command" value="" disabled />
+		<!--1--><input type="hidden" name="mypage" value="/wl_wps.html"/>
+        <!--2--><input type="hidden" name="wait" value="1" />
+
+       <table>
+           <tr>
+             <td width="250">
+             <strong>WPS:</strong>
+             </td>
+             <td><input name="WPS" id="id_on" type="radio" value="0"  checked="checked"/>
+             	 <label for="id_on">Enable</label>
+             </td>
+             <td><input name="WPS" id="id_off" type="radio" value="1" /> 
+				 <label for="id_off">Disable</label>
+             </td>
+           </tr>
+        </table>
+
+       <table>
+          <tr>
+           <td width="250">
+	   		<strong>AP PIN:</strong>
+           </td>
+           <td>
+           <input name="WSC_PIN" id="id_WSC_PIN" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" /> 
+           </td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+           <td width="250">
+	   		<strong>AP Device Name:</strong>
+           </td>
+           <td>
+           <input name="WSC_NAME" id="id_WSC_NAME" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" /> 
+           </td>
+           </tr>
+        </table>
+
+        <table>
+          <tr>
+            <td width="250">
+	    		<strong>Enrollee Configuration:</strong>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </table>
+
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+          <td width="20">
+          <strong></strong>
+          </td>
+           <td width="230">
+           <strong>Enrollee's PIN:</strong>
+           </td>
+           <td>
+           <input name="AP_ENROLLEE" id="id_AP_ENROLLEE" type="text" size="25" maxlength="32" style="margin:auto auto auto auto; line-height:12px;" /> 
+           </td>
+           <td>
+				<div id="upgrade_btn"><a class="button" href="#" onclick="dostartpinmethod()"><span>StartPINMethod</span></a></div>
+           </td>
+          </tr>
+        </table>
+
+        <table>
+        <tr>
+          <td width="20">
+          <strong></strong>
+          </td>
+          <td width="230">
+          <strong>Soft Push Button:</strong>
+          </td>
+          <td>
+ 				<div id="upgrade_btn"><a class="button" href="#" onclick="dostartpbc()"><span>StartPBC</span></a></div>
+          </td>
+        </tr>
+        </table>
+
+        <table>
+         <tr>
+            <td width="50">
+            <strong></strong>
+            </td>
+            <td>
+            <a href="#" class="btn" id="apply_btn" onClick="doApply();"></a>          
+            </td>
+         </tr>
+        </table>
+
+       </form>
+       <div class="clear_left"></div>
+     </div>
+     <div id="content_right_footer"></div>
+   </div>
+   <div class="clear_left"></div>
+   <%actInclude("wcb_footer.html")%>
+</div>
+</body>
+</html>

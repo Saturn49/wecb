@@ -1,0 +1,7 @@
+  <protocol>DEVICE_PROTOCOL_DSLFTR069v1</protocol>
+	<manufacturer>Actiontec</manufacturer>
+	<manufacturerOUI>109FA9</manufacturerOUI>
+	<productClass>WECB</productClass>
+	<modelName>WECB</modelName>
+	<softwareVersion>1.0.1</softwareVersion>
+	<type>Device:2</type>

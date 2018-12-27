@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Restaurer micrologiciel</t>
+		<t>Micrologiciel actif - Version</t>
+		<t>Micrologiciel de secours - Version</t>
+		<t>Permutation du micrologiciel</t>
+		<t>Permutation du micrologiciel - Réglages</t>
+
+<!-- 0-5 -->	
+		<a>Voulez-vous réellement permuter le micrologiciel actuel?</a>
+	</page>
+</pages>

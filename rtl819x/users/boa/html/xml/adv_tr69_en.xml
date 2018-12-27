@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>ACS URL</t>
+		<t>Username</t>
+		<t>Password</t>
+		<t>ACS_PeriodicInformEnable</t>
+		<t>Enable</t>
+		<t>Disable</t>
+<!--6-10-->
+		<t>ACS_PeriodicInformInterval</t>
+		<t>ACS_BackoffInterval</t>
+		<t>ACS_PeriodicInformTime</t>
+		<t>ACS_ConnectionRequestURL</t>
+		<t>ACS_ConnectionRequestUsername</t>
+<!--11-15-->
+		<t>ACS_ConnectionRequestPassword</t>
+		<t>Apply</t>
+
+<!-- 0-5 -->	
+		<a>url is invalid</a>
+		<a>Username is invalid</a>
+		<a>Password is invalid</a>
+		<a>ACS_ConnectionRequestUsername is invalid</a>
+		<a>ACS_ConnectionRequestPassword is invalid</a>
+		<a>ACS_PeriodicInformInterval is invalid</a>
+	</page>
+</pages>

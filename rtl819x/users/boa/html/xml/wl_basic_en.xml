@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>Basic Setup</t>
+		<t>Wireless Operation Frequency</t>
+		<t>Both</t>	
+		<t>Wireless Band</t>
+		<t>Wireless radio</t>
+		<t>Wireless Data Rate</t>
+<!-- 6-10 -->	
+		<t>Wireless Network Name</t>	
+		<t>Wireless Channel Width</t>
+		<t>Wireless Channel Number</t>
+		<t>Transmit Power</t>
+		<t>Wireless Security Type</t>
+<!-- 11-15 -->
+		<t>Password Phrase</t>
+		<t>Enable</t>
+		<t>Disable</t>
+		<t>Apply</t>
+
+
+<!-- 0-5 -->	
+		<a>Wireless 2.4G Network Name is null</a>
+		<a>Wireless 2.4G Network Name is too long</a>
+		<a>Wireless 2.4G Password Phrase is null</a>
+		<a>Wireless 2.4G Password Phrase is invalid</a>
+		<a>Wireless 2.4G Password Phrase's length should be 10 or 26</a>
+		<a>Wireless 2.4G Password Phrase's length shouldn't be less than 8</a>
+<!-- 6-10 -->
+		<a>Wireless 5G Network Name is null</a>
+		<a>Wireless 5G Network Name is too long</a>
+		<a>Wireless 5G Password Phrase is null</a>
+		<a>Wireless 5G Password Phrase is invalid</a>
+		<a>Wireless 5G Password Phrase's length should be 10 or 26</a>
+<!-- 11-15 -->	
+		<a>Wireless 5G Password Phrase's length shouldn't be less than 8</a>
+		<a>if Wireless 2.4G encryption is none, WPS2.0 will be disabled</a>
+		<a>if Wireless 5G encryption is none, WPS2.0 will be disabled</a>
+		<a>if Wireless 2.4G/5G encryption is none, WPS2.0 will be disabled</a>
+		<a>if Wireless 2.4G WEP is turn on, WPS2.0 will be disabled</a>
+<!--16-20-->
+		<a>if Wireless 5G WEP is turn on, WPS2.0 will be disabled</a>
+		<a>if Wireless 2.4G/5G WEP is turn on, WPS2.0 will be disabled</a>
+		<a>Wireless 2.4G under WPA only or TKIP only, WPS2.0 will be disabled</a>
+		<a>Wireless 5G under WPA only or TKIP only, WPS2.0 will be disabled</a>
+		<a>Wireless 2.4G/5G under WPA only or TKIP only, WPS2.0 will be disabled</a>
+	</page>
+</pages>

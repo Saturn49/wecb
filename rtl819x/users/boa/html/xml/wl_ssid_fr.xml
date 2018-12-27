@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>SSID Multiples</t>
+		<t>Fréquence de fonctionnement du réseau sans fil</t>
+		<t>SSID1 - État</t>	
+		<t>Activer</t>
+		<t>Désactiver</t>
+		<t>SSID 1 - Nom du réseau</t>
+<!-- 6-10 -->	
+		<t>SSID2 - État</t>	
+		<t>SSID 2 - Nom du réseau</t>
+		<t>Appliquer</t>
+
+<!-- 0-5 -->	
+		<a>SSID 1 - Le champ du nom du réseau est vide</a>
+		<a>SSID 2 - Le champ du nom du réseau est vide</a>
+		<a>SSID 1 - Le champ du nom du réseau est invalide</a>
+		<a>SSID 2 - Le champ du nom du réseau est invalide</a>
+	</page>
+</pages>

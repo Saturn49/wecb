@@ -1,0 +1,58 @@
+ <div id="left_column">
+	<div id="left_column_header"></div>
+	<div id="left_column_content">
+		<ul id="subnav">
+			<li><a href="###" class="link">Advanced Setup</a></li>
+			<ul>
+				<li><a href="###" id="left_manage" class="link" onClick="return goThere('adv_manage.html');">Management</a></li>
+				<li><a href="###" id="left_password" class="link" onClick="return goThere('adv_password.html');">Change Password</a></li>
+				<li><a href="###" id="left_factory" class="link" onClick="return goThere('adv_default.html');">Factory Default</a></li>
+				<li><a href="###" id="left_restore" class="link" onClick="return goThere('adv_swap.html');">Firmware Restore</a></li>
+				<li><a href="###" id="left_auto_upgrade" class="link" onClick="return goThere('adv_auto_upgrade.html');">Firmware Auto Upgrade</a></li>				
+				<li><a href="###" id="left_upgrade" class="link" onClick="return goThere('adv_upgrade.html');">Firmware Upgrade</a></li>
+				<li><a href="###" id="left_logout" class="link" onClick="javascript:logout();">Log out</a></li>
+			</ul>
+		</ul>
+	</div>
+	<div id="left_column_footer"></div>
+</div>
+
+<script type="text/javascript">
+var UpgradesManaged = "<% getInfo("UpgradesManaged"); %>";
+
+
+if (document.all){
+  window.attachEvent('onload',initAdvanced)// IE
+}
+else{
+  window.addEventListener('load',initAdvanced,false);//firefox
+}
+
+function initAdvanced(){
+	if (UpgradesManaged == "1"){
+		var left_upgrade = document.getElementById("left_upgrade");
+		if (left_upgrade != null){
+			left_upgrade.style.display = "none";
+		}		
+
+		var left_auto_upgrade = document.getElementById("left_auto_upgrade");
+		if (left_auto_upgrade != null){
+			left_auto_upgrade.style.display = "none";
+		}		
+	}
+}
+
+//admin(2): only show primarry ssid
+//return 0: not need hide second ssid.    1:need hide second ssid
+function checkUserHideSSID(index_ssid){
+  if (hascheckUserHideSSID == 0)  return 0;
+
+  var i_userlevel = parseInt(user_level);
+  if (i_userlevel == 2 && !(index_ssid == 1 || index_ssid == 5)){
+      return 1;
+  }
+  
+  return 0;
+}
+
+</script>

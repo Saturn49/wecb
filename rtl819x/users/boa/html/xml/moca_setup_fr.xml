@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-5 -->	
+		<t>MoCA - Configuration coax</t>
+		<t>Statut</t>
+		<t>Canal</t>	
+		<t>Réduction de la puissance de la balise (dB)</t>
+		<t>Contrôleur réseau</t>
+		<t>Activé</t>
+<!-- 6-10 -->	
+		<t>Désactivé</t>	
+		<t>MoCA - Confidentialité</t>
+		<t>Mot de passe réseau</t>
+		<t>Minimum 12 caractères, maximum 17 caractères</t>
+		<t>Afficher mot de passe réseau</t>
+<!-- 11-15 -->	
+		<t>Contrôle réseau MAC</t>	
+		<t>Statut lien MoCA</t>
+		<t>Afficher</t>
+		<t>Appliquer</t>
+
+<!-- 0-5 -->	
+		<a>Le champ du mot de passe est vide</a>
+		<a>La longueur du mot de passe doit être comprise entre 12 et 17 caractères</a>
+		<a>Le mot de passe doit être numérique</a>
+		<a>Mot de passe invalide</a>
+	</page>
+</pages>

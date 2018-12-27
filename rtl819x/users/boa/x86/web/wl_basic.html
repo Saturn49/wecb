@@ -1,0 +1,955 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wireless Basic Settings</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var wl_freq;
+var w24_span;
+var w5_span;
+var id2_on, id2_off, id5_on, id5_off;
+var id2_ssid, id2_chanwidth, id2_channel, id2_security, id2_psk;
+var id5_ssid, id5_chanwidth, id5_channel, id5_security, id5_psk;
+var password2_tr, password5_tr;
+var apply_btn;
+var basic_form;
+var id_freq0;
+var id2_band, id5_band;
+var id2_security_value, id5_security_value;
+var id2_band_value, id5_band_value;
+var id2_rate, id5_rate;
+var tmp2_rate_enabled, tmp5_rate_enabled, tmp2_rate_value, tmp5_rate_value;
+var id2_transmit, id5_transmit;
+
+function doLoad()
+{	
+	wl_freq = document.getElementsByName("wl_freq");	
+	w24_span = document.getElementById("w24_span");
+	w5_span = document.getElementById("w5_span");
+	id2_on = document.getElementById("id2_on");
+	id2_off = document.getElementById("id2_off");
+	id5_on = document.getElementById("id5_on");
+	id5_off = document.getElementById("id5_off");
+
+	id2_band = document.getElementById("id2_band");
+	id5_band = document.getElementById("id5_band");
+	id_freq0 = document.getElementById("id_freq0");
+	id2_ssid = document.getElementById("id2_ssid");
+	id2_chanwidth = document.getElementById("id2_chanwidth");
+	id2_channel = document.getElementById("id2_channel");
+	id2_security = document.getElementById("id2_security");
+	id2_psk = document.getElementById("id2_psk");
+
+	id5_ssid = document.getElementById("id5_ssid");
+	id5_chanwidth = document.getElementById("id5_chanwidth");
+	id5_channel = document.getElementById("id5_channel");
+	id5_security = document.getElementById("id5_security");
+	id5_psk = document.getElementById("id5_psk");
+
+	id2_rate = document.getElementById("id2_rate");
+	id5_rate = document.getElementById("id5_rate");	
+	id2_transmit = document.getElementById("id2_transmit");	
+	id5_transmit = document.getElementById("id5_transmit");	
+
+	password2_tr = document.getElementById("password2_tr");
+	password5_tr = document.getElementById("password5_tr");	
+	
+	apply_btn = document.getElementById("apply_btn");
+	basic_form = document.getElementById("basic_form");
+
+	apply_btn.onclick = doApply;
+	
+	w5_span.style.display = "none";	
+
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		wl_freq[i].onclick = doWlFreq;		
+
+		if( ((wl_freq[i].value == "10") && (wlan_idx == 1)) 
+			|| ((wl_freq[i].value == "11") && (wlan_idx == 0)))
+		{
+			wl_freq[i].checked = true;
+		}
+	}
+
+	if(both_freq == 1)
+		id_freq0.checked = true;
+
+	id2_security.onchange = doWl2Security;
+	id5_security.onchange = doWl5Security;
+
+	id2_band.onchange = doWl2Band;
+	id5_band.onchange = doWl5Band;
+
+	doWlFreq();
+
+	if(wifi_certificated)
+	{
+		id2_chanwidth.options.length = 0;
+		id2_chanwidth.options[0] = new Option("20MHz ", "0");
+	}
+}
+
+function doApply()
+{
+	var wl_freq_value = "";
+	var wl2_open = 0;
+	var wl5_open = 0;
+	var wl2_wep = 0;
+	var wl5_wep = 0;
+	var wl2_wpa = 0;
+	var wl5_wpa = 0;
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		if(wl_freq[i].checked)
+		{	
+			wl_freq_value = wl_freq[i].value; 					
+			break;
+		}
+	}	
+
+	if(wl_freq_value == "10" || wl_freq_value == "0")
+	{		
+		if(trim(id2_ssid.value) == "")
+		{
+			pop_up("Wireless 2.4G Network Name is null");
+			id2_ssid.focus();
+			return;
+		}
+		/*
+		else if(trim(id2_ssid.value).indexOf("|") != -1)
+		{
+			pop_up("Wireless 2.4G Network Name is invalid");
+			id2_ssid.focus();
+			return;
+		}
+		*/
+		else if(trim(id2_ssid.value).length >= 500)
+		{
+			pop_up("Wireless 2.4G Network Name is too long");
+			id2_ssid.focus();
+			return;
+		}
+
+		id2_ssid.value = trim(id2_ssid.value);
+	
+		if(id2_security.value != "0")
+		{
+			if(id2_security.value == "1")
+			{
+				wl2_wep = 1;
+			}
+			else if(id2_security.value == "2")
+			{
+				wl2_wpa = 1;
+			}
+			
+			if(trim(id2_psk.value) == "")
+			{
+				pop_up("Wireless 2.4G Password Phrase is null");
+				id2_psk.focus();
+				return;
+			}	
+			else if(trim(id2_psk.value).indexOf("|") != -1)
+			{
+				pop_up("Wireless 2.4G Password Phrase is invalid");
+				id2_psk.focus();
+				return;
+			}
+
+			if(wl2_wep)
+			{
+				if(trim(id2_psk.value).length != 10 && trim(id2_psk.value).length != 26)
+				{
+					pop_up("Wireless 2.4G Password Phrase's length should be 10 or 26");
+					id2_psk.focus();
+					return;
+				}
+			}
+			else if(wl2_wpa)
+			{
+				if(trim(id2_psk.value).length < 10)
+				{
+					pop_up("Wireless 2.4G Password Phrase is invalid");
+					id2_psk.focus();
+					return;
+				}
+			}	
+		}
+		else
+		{
+			wl2_open = 1;
+		}
+	}
+
+	if(wl_freq_value == "11" || wl_freq_value == "0")
+	{
+		if(trim(id5_ssid.value) == "")
+		{
+			pop_up("Wireless 5G Network Name is null");
+			id5_ssid.focus();
+			return;
+		}
+		/*
+		else if(trim(id5_ssid.value).indexOf("|") != -1)
+		{
+			pop_up("Wireless 5G Network Name is invalid");
+			id5_ssid.focus();
+			return;
+		}
+		*/
+		else if(trim(id5_ssid.value).length >= 500)
+		{
+			pop_up("Wireless 5G Network Name is too long");
+			id5_ssid.focus();
+			return;
+		}
+
+		id5_ssid.value = trim(id5_ssid.value);
+		
+		if(id5_security.value != "0")
+		{
+			if(id5_security.value == "1")
+			{
+				wl5_wep = 1;
+			}
+			else if(id5_security.value == "2")
+			{
+				wl5_wpa = 1;
+			}
+			
+			if(trim(id5_psk.value) == "")
+			{
+				pop_up("Wireless 5G Password Phrase is null");
+				id5_psk.focus();
+				return;
+			}
+			else if(trim(id5_psk.value).indexOf("|") != -1)
+			{
+				pop_up("Wireless 5G Password Phrase is invalid");
+				id5_psk.focus();
+				return;
+			}
+			
+			if(wl5_wep)
+			{
+				if(trim(id5_psk.value).length != 10 && trim(id5_psk.value).length != 26)
+				{
+					pop_up("Wireless 5G Password Phrase's length should be 10 or 26");
+					id5_psk.focus();
+					return;
+				}
+			}
+			else if(wl5_wpa)
+			{
+				if(trim(id5_psk.value).length < 10)
+				{
+					pop_up("Wireless 5G Password Phrase is invalid");
+					id5_psk.focus();
+					return;
+				}
+			}	
+		}
+		else
+		{
+			wl5_open = 1;
+		}
+	}
+	
+	if(wl2_open || wl5_open)
+	{
+		pop_up("Wireless 2.4G or 5G encryption is none now", 1, formSubmit);
+		return;
+	}
+	else if(wl2_wep || wl5_wep)
+	{
+		pop_up("if WEP is turn on, WPS2.0 will be disabled", 1, formSubmit);
+		return;	
+	}	
+	else if(wl2_wpa || wl5_wpa)
+	{		
+		pop_up("under WPA only or TKIP only, WPS2 daemon will be disabled", 1, formSubmit);
+		return;
+	}
+	else 
+	{
+		formSubmit();	
+	}
+}
+
+function formSubmit()
+{
+	basic_form.submit();
+}
+
+function doWl2Security()
+{
+	if(id2_security.value == "0")
+		password2_tr.style.display = "none";
+	else
+		password2_tr.style.display = "block";
+
+	changeBand("1", id2_security.value, "1");
+}
+
+function doWl5Security()
+{
+	if(id5_security.value == "0")
+		password5_tr.style.display = "none";
+	else
+		password5_tr.style.display = "block";
+
+	changeBand("0", id5_security.value, "1");
+}
+
+function doWlFreq()
+{
+	var params = "";
+	
+	for(var i = 0; i < wl_freq.length; i++)
+	{
+		if(wl_freq[i].checked)
+		{	
+			if(wl_freq[i].value == "10")
+			{
+				w24_span.style.display = "block";
+				w5_span.style.display = "none";
+			}
+			else if(wl_freq[i].value == "11")
+			{
+				w24_span.style.display = "none";
+				w5_span.style.display = "block";
+			}
+			else if(wl_freq[i].value == "0")
+			{
+				w24_span.style.display = "block";
+				w5_span.style.display = "block";
+			}
+			
+			params += "&wl_freq=" + wl_freq[i].value; 			
+			break;
+		}
+	}	
+	
+	params += "&command=getvalue";		
+
+	ajaxPost("wlbasic.cgi", params, resGetValue);
+}
+
+function changeSecurity(wlan_idx, band)
+{
+	if(wlan_idx == "1")
+	{
+		if(band == "7" || band == "9" || band == "10")
+		{
+			id2_security.options.length = 0;	
+			id2_security.options[0] = new Option("Open ", "0");
+			id2_security.options[1] = new Option("WPA ", "2");
+			id2_security.options[2] = new Option("WPA2 ", "4");
+			id2_security.options[3] = new Option("WPA/WPA2 Mixed ", "6");
+		}
+		else
+		{
+			id2_security.options.length = 0;	
+			id2_security.options[0] = new Option("Open ", "0");
+			id2_security.options[1] = new Option("WEP ", "1");
+			id2_security.options[2] = new Option("WPA ", "2");
+			id2_security.options[3] = new Option("WPA2 ", "4");
+			id2_security.options[4] = new Option("WPA/WPA2 Mixed ", "6");
+		}
+
+		id2_security.value = id2_security_value;
+
+		if(id2_security.value == "0")
+			password2_tr.style.display = "none";
+		else
+			password2_tr.style.display = "block";
+	}
+	else if(wlan_idx == "0")
+	{
+		if(band == "7" || band == "11")
+		{
+			id5_security.options.length = 0;	
+			id5_security.options[0] = new Option("Open ", "0");
+			id5_security.options[1] = new Option("WPA ", "2");
+			id5_security.options[2] = new Option("WPA2 ", "4");
+			id5_security.options[3] = new Option("WPA/WPA2 Mixed ", "6");
+		}
+		else
+		{
+			id5_security.options.length = 0;	
+			id5_security.options[0] = new Option("Open ", "0");
+			id5_security.options[1] = new Option("WEP ", "1");
+			id5_security.options[2] = new Option("WPA ", "2");
+			id5_security.options[3] = new Option("WPA2 ", "4");
+			id5_security.options[4] = new Option("WPA/WPA2 Mixed ", "6");
+		}
+
+		id5_security.value = id5_security_value;
+
+		if(id5_security.value == "0")
+			password5_tr.style.display = "none";
+		else
+			password5_tr.style.display = "block";
+	}
+}
+
+function changeRate(rate_id, band, rate_enabled, rate)
+{
+	var w_b = 0;
+	var w_g = 0;
+	var w_n = 0;
+	var w_a = 0;
+	var index = 1;
+
+	rate_id.options.length = 0;
+	rate_id.options[0] = new Option("Auto ", "0");
+
+	switch(band)
+	{
+		case "0":
+			w_b = 1;
+			break;
+		case "1":
+			w_g = 1;
+			break;
+		case "7":
+			w_n = 1;
+			break;
+		case "2":
+			w_b = 1;
+			w_g = 1;
+			break;
+		case "9":
+			w_g = 1;
+			w_n = 1;
+			break;
+		case "10":
+			w_b = 1;
+			w_g = 1;
+			w_n = 1;
+			break;
+		case "3":
+			w_a = 1;
+			break;
+		case "11":
+			w_a = 1;
+			w_n = 1;
+			break;
+		default:
+			break;
+	}
+	
+	
+	if(w_b)
+	{
+		rate_id.options[index++] = new Option("1M ", "1");
+		rate_id.options[index++] = new Option("2M ", "2");
+		rate_id.options[index++] = new Option("5.5M ", "3");
+		rate_id.options[index++] = new Option("11M ", "4");		
+	}
+	
+	if(w_g)
+	{
+		rate_id.options[index++] = new Option("6M ", "5");
+		rate_id.options[index++] = new Option("9M ", "6");
+		rate_id.options[index++] = new Option("12M ", "7");
+		rate_id.options[index++] = new Option("18M ", "8");
+		rate_id.options[index++] = new Option("24M ", "9");
+		rate_id.options[index++] = new Option("36M ", "10");
+		rate_id.options[index++] = new Option("48M ", "11");
+		rate_id.options[index++] = new Option("54M ", "12");
+	}
+	
+	if(w_a)
+	{
+		rate_id.options[index++] = new Option("6M ", "5");
+		rate_id.options[index++] = new Option("12M ", "7");
+		rate_id.options[index++] = new Option("24M ", "9");
+		rate_id.options[index++] = new Option("54M ", "12");
+	}
+	
+	if(w_n)
+	{
+		rate_id.options[index++] = new Option("MCS0 ", "13");
+		rate_id.options[index++] = new Option("MCS1 ", "14");
+		rate_id.options[index++] = new Option("MCS2 ", "15");
+		rate_id.options[index++] = new Option("MCS3 ", "16");
+		rate_id.options[index++] = new Option("MCS4 ", "17");
+		rate_id.options[index++] = new Option("MCS5 ", "18");
+		rate_id.options[index++] = new Option("MCS6 ", "19");
+		rate_id.options[index++] = new Option("MCS7 ", "20");
+		rate_id.options[index++] = new Option("MCS8 ", "21");
+		rate_id.options[index++] = new Option("MCS9 ", "22");
+		rate_id.options[index++] = new Option("MCS10 ", "23");
+		rate_id.options[index++] = new Option("MCS11 ", "24");
+		rate_id.options[index++] = new Option("MCS12 ", "25");
+		rate_id.options[index++] = new Option("MCS13 ", "26");
+		rate_id.options[index++] = new Option("MCS14 ", "27");
+		rate_id.options[index++] = new Option("MCS15 ", "28");	
+	}
+
+	if(rate_enabled != undefined && rate != undefined)
+	{
+		if(rate_enabled == "1")
+		{
+			rate_id.value == "0";
+		}
+		else if(rate_enabled == "0")
+		{
+			for(var j = 1; j < rate_id.options.length; j++)
+			{						
+				var t = 1 << (parseInt(rate_id.options[j].value, 10) - 1);			
+				if(t == rate)
+				{
+					rate_id.options[j].selected = true;
+				}
+			}
+		}
+	}
+}
+
+function doWl2Band()
+{
+	changeSecurity("1", id2_band.value);
+	changeRate(id2_rate, id2_band.value, tmp2_rate_enabled, tmp2_rate_value);
+}
+
+function doWl5Band()
+{
+	changeSecurity("0", id5_band.value);
+	changeRate(id5_rate, id5_band.value, tmp5_rate_enabled, tmp5_rate_value);
+}
+
+function changeBand(wlan_idx, encrypt, wpa_cipher)
+{
+	if(wlan_idx == "1")
+	{
+		if((encrypt == "1") || (encrypt == "2" && wpa_cipher == "1"))
+		{
+			id2_band.options.length = 0;	
+			id2_band.options[0] = new Option("2.4 GHz (B) ", "0");
+			id2_band.options[1] = new Option("2.4 GHz (G) ", "1");
+			id2_band.options[2] = new Option("2.4 GHz (B+G) ", "2");
+		}
+		else
+		{
+			id2_band.options.length = 0;	
+			id2_band.options[0] = new Option("2.4 GHz (B) ", "0");
+			id2_band.options[1] = new Option("2.4 GHz (G) ", "1");
+			id2_band.options[2] = new Option("2.4 GHz (N) ", "7");
+			id2_band.options[3] = new Option("2.4 GHz (B+G) ", "2");
+			id2_band.options[4] = new Option("2.4 GHz (G+N) ", "9");
+			id2_band.options[5] = new Option("2.4 GHz (B+G+N) ", "10");			
+		}
+		id2_band.value = id2_band_value;
+	}
+	else if(wlan_idx == "0")
+	{
+		if((encrypt == "1") || (encrypt == "2" && wpa_cipher == "1"))
+		{
+			id5_band.options.length = 0;	
+			id5_band.options[0] = new Option("5 GHz (A) ", "3");			
+		}
+		else
+		{
+			id5_band.options.length = 0;	
+			id5_band.options[0] = new Option("5 GHz (A) ", "3");
+			id5_band.options[1] = new Option("5 GHz (N) ", "7");
+			id5_band.options[2] = new Option("5 GHz (A+N) ", "11");
+		}
+		id5_band.value = id5_band_value;
+	}
+}
+
+function resGetValue(message)
+{
+	var messageArray = message.split("||");
+	
+	if(messageArray.length > 1)
+	{			
+		for(var i = 0; i < messageArray.length - 1; i++)
+		{
+			var index = 0;
+			var basicArray = messageArray[i].split("|");
+			var wlan_idx = basicArray[index++];
+			var disabled = basicArray[index++];
+			var chanwidth = basicArray[index++];
+			var coexist = basicArray[index++];
+			var channumber = basicArray[index++];
+			var encrypt = basicArray[index++];	
+			var band = basicArray[index++];
+			var wpa_cipher = basicArray[index++];
+			var rate_enabled = basicArray[index++];
+			var rate = basicArray[index++];
+			var transmit = basicArray[index++];
+			var ssid = htmlDecodeStr(basicArray[index++]);
+			var wep_key = changeString(basicArray[index++]);			
+			var wpa_psk = changeString(basicArray[index++]);	
+
+			if(wlan_idx == "1")
+			{
+				if(disabled == "1")
+					id2_off.checked = true;
+				
+				id2_ssid.value = ssid;
+				id2_band.value = band;
+				id2_band_value = band;
+
+				tmp2_rate_enabled = rate_enabled;
+				tmp2_rate_value = rate;
+				changeRate(id2_rate, id2_band.value, rate_enabled, rate);
+
+				id2_transmit.value = transmit;
+
+				if(wifi_certificated)
+				{
+					id2_chanwidth.value = "0";
+				}
+				else 
+				{
+					if(coexist == "1")
+						id2_chanwidth.value = "2";
+					else	
+						id2_chanwidth.value = chanwidth;
+				}
+
+				id2_channel.value = channumber;
+				id2_security.value = encrypt;
+				id2_security_value = encrypt;
+
+				if(encrypt == "0")
+				{
+					password2_tr.style.display = "none";
+					id2_psk.value = "";
+				}
+				else if(encrypt == "1")				
+					id2_psk.value = wep_key;					
+				else if(encrypt == "2")
+					id2_psk.value = wpa_psk;
+				else if(encrypt == "4")
+					id2_psk.value = wpa_psk;
+				else if(encrypt == "6")
+					id2_psk.value = wpa_psk;
+
+				if(encrypt != "0")
+					password2_tr.style.display = "block";				
+			}
+			else if(wlan_idx == "0")
+			{
+				if(disabled == "1")
+					id5_off.checked = true;
+				
+				id5_ssid.value = ssid;
+				id5_band.value = band;		
+				id5_band_value = band;
+
+				tmp5_rate_enabled = rate_enabled;
+				tmp5_rate_value = rate;
+				changeRate(id5_rate, id5_band.value, rate_enabled, rate);
+
+				id5_transmit.value = transmit;
+
+				if(coexist == "1")
+					id5_chanwidth.value = "2";
+				else	
+					id5_chanwidth.value = chanwidth;
+
+				id5_channel.value = channumber;
+				id5_security.value = encrypt;
+				id5_security_value = encrypt;
+				
+				if(encrypt == "0")
+				{
+					password5_tr.style.display = "none";
+					id5_psk.value = "";
+				}
+				else if(encrypt == "1")				
+					id5_psk.value = wep_key;					
+				else if(encrypt == "2")
+					id5_psk.value = wpa_psk;
+				else if(encrypt == "4")
+					id5_psk.value = wpa_psk;
+				else if(encrypt == "6")
+					id5_psk.value = wpa_psk;
+
+				if(encrypt != "0")
+					password5_tr.style.display = "block";				
+			}
+
+			changeSecurity(wlan_idx, band);
+			changeBand(wlan_idx, encrypt, wpa_cipher);
+		}
+	}
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_wl.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>Wireless Basic Settings</h1>
+
+				<form id="basic_form" method="POST" action="wlbasic.cgi">
+				<input type="hidden" name="command" value="apply" />
+		 	    <input type="hidden" name="mypage" value="/wl_basic.html" />
+		
+	        	<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="250"><label for="id_freq2">Wireless Operation Frequency:</label></td>
+						<td>
+							<input name="wl_freq" id="id_freq2" type="radio" value="10" checked="checked"/> 
+				  			<label for="id_freq2">2.4GHz</label>             
+             				<input name="wl_freq" id="id_freq5" type="radio" value="11" />
+              	  			<label for="id_freq5">5GHz</label> 
+              	  			<input name="wl_freq" id="id_freq0" type="radio" value="0" />
+              	  			<label for="id_freq0">Both</label>
+              			</td>
+					</tr>					
+				</table>
+
+				<span id="w24_span">				
+					<table cellpadding="0" cellspacing="2" border="0">
+						<tr>
+							<td colspan="2"><strong>Wireless Band: 2.4G<strong></td>							
+						</tr>
+						<tr>
+							<td width="250"><label for="id2_on">Wireless radio:</label></td>
+							<td>
+								<input name="wl2_enb" id="id2_on" type="radio" value="0" checked="checked"/>
+             	 				<label for="id2_on">Enable</label>
+             	 				<input name="wl2_enb" id="id2_off" type="radio" value="1" /> 
+				 				<label for="id2_off">Disable</label>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id2_band">Wireless Band:</label></td>
+							<td>
+								<select name="wl2_band" id="id2_band">
+				                 <option value="0">2.4 GHz (B)&nbsp;</option>
+				                 <option value="1">2.4 GHz (G)&nbsp;</option>
+				                 <option value="7">2.4 GHz (N)&nbsp;</option> 
+				                 <option value="2">2.4 GHz (B+G)&nbsp;</option> 
+				                 <option value="9">2.4 GHz (G+N)&nbsp;</option> 
+				                 <option value="10">2.4 GHz (B+G+N)&nbsp;</option> 				                 
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id2_rate">Wireless Data Rate:</label></td>
+							<td>
+								<select name="wl2_rate" id="id2_rate">				                			                 
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id2_ssid">Wireless Network Name:</label></td>
+							<td>
+								<input name="wl2_ssid" id="id2_ssid" type="text" size="25" maxlength="32" style="height: 16px"/>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id2_chanwidth">Wireless Channel Width:</label></td>
+							<td>
+								<select name="wl2_chanwidth" id="id2_chanwidth">
+				                 <option value="0">20MHz&nbsp;</option>
+				                 <option value="1">40MHz&nbsp;</option>
+				                 <option value="2">Auto&nbsp;</option>                 
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id2_channel">Wireless Channel Number:</label></td>
+							<td>
+								<select name="wl2_channel" id="id2_channel" >
+				                 <option value="0">Automatic&nbsp;</option>
+				                 <option value="1">1</option>
+				                 <option value="2">2</option>
+				                 <option value="3">3</option>
+				                 <option value="4">4</option>
+				                 <option value="5">5</option>
+				                 <option value="6">6</option>
+				                 <option value="7">7</option>
+				                 <option value="8">8</option>
+				                 <option value="9">9</option>
+				                 <option value="10">10</option>
+				                 <option value="11">11</option>
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id2_transmit">Transmit Power:</label></td>
+							<td>
+								<select name="wl2_transmit" id="id2_transmit" >
+				                 <option value="0">100%&nbsp;</option>
+				                 <option value="1">70%&nbsp;</option>
+				                 <option value="2">50%&nbsp;</option>
+				                 <option value="3">35%&nbsp;</option>
+				                 <option value="4">15%&nbsp;</option>				                
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id2_security">Wireless Security Type:</label></td>
+							<td>
+								<select name="wl2_security" id="id2_security">
+				                 <option value="0">Open&nbsp;</option>
+				                 <option value="1">WEP&nbsp;</option>
+				                 <option value="2">WPA PSK&nbsp;</option>
+				                 <option value="4">WPA2 PSK&nbsp;</option>
+				                 <option value="6">WPA/WPA2 Mixed&nbsp;</option>
+				              </select>
+							</td>
+						</tr>						
+					</table>
+					<span id="password2_tr">
+						<table cellpadding="0" cellspacing="2" border="0">
+							<tr>
+								<td width="250"><label for="id2_psk">Password Phrase:</label></td>
+								<td>
+									<input name="wl2_psk" id="id2_psk" type="text" size="25" maxlength="64" style="height: 16px"/>
+								</td>
+							</tr>
+						</table>
+					</span>
+				</span>
+
+				<span id="w5_span">				
+					<table cellpadding="0" cellspacing="2" border="0">
+						<tr>
+							<td colspan="2"><strong>Wireless Band: 5G<strong></td>							
+						</tr>
+						<tr>
+							<td width="250"><label for="id5_on">Wireless radio:</label></td>
+							<td>
+								<input name="wl5_enb" id="id5_on" type="radio" value="0" checked="checked"/>
+             	 				<label for="id5_on">Enable</label>
+             	 				<input name="wl5_enb" id="id5_off" type="radio" value="1" /> 
+				 				<label for="id5_off">Disable</label>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id5_band">Wireless Band:</label></td>
+							<td>
+								<select name="wl5_band" id="id5_band">
+				                 <option value="3">5 GHz (A)&nbsp;</option>
+				                 <option value="7">5 GHz (N)&nbsp;</option>
+				                 <option value="11">5 GHz (A+N)&nbsp;</option> 				                 		                 
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id5_rate">Wireless Data Rate:</label></td>
+							<td>
+								<select name="wl5_rate" id="id5_rate">				                			                 
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id5_ssid">Wireless Network Name:</label></td>
+							<td>
+								<input name="wl5_ssid" id="id5_ssid" type="text" size="25" maxlength="32" style="height: 16px"/>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id5_chanwidth">Wireless Channel Width:</label></td>
+							<td>
+								<select name="wl5_chanwidth" id="id5_chanwidth">
+				                 <option value="0">20MHz&nbsp;</option>
+				                 <option value="1">40MHz&nbsp;</option>
+				                 <option value="2">Auto&nbsp;</option>                 
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id5_channel">Wireless Channel Number:</label></td>
+							<td>
+								<select name="wl5_channel" id="id5_channel" >
+				                 <option value="0">Automatic&nbsp;</option>
+				                 <option value="36">36</option>
+				                 <option value="40">40</option>
+				                 <option value="44">44</option>
+				                 <option value="48">48</option>
+				                 <option value="52">52</option>
+				                 <option value="56">56</option>
+				                 <option value="60">60</option>
+				                 <option value="64">64</option>
+				                 <option value="100">100</option>
+				                 <option value="104">104</option>
+				                 <option value="108">108</option>
+				                 <option value="112">112</option>
+				                 <option value="116">116</option>
+				                 <option value="120">120</option>
+				                 <option value="124">124</option>
+				                 <option value="128">128</option>
+				                 <option value="132">132</option>
+				                 <option value="136">136</option>
+				                 <option value="140">140</option>
+				                 <option value="149">149</option>
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id5_transmit">Transmit Power:</label></td>
+							<td>
+								<select name="wl5_transmit" id="id5_transmit" >
+				                 <option value="0">100%&nbsp;</option>
+				                 <option value="1">70%&nbsp;</option>
+				                 <option value="2">50%&nbsp;</option>
+				                 <option value="3">35%&nbsp;</option>
+				                 <option value="4">15%&nbsp;</option>				                
+				                </select>
+							</td>
+						</tr>
+						<tr>
+							<td><label for="id5_security">Wireless Security Type:</label></td>
+							<td>
+								<select name="wl5_security" id="id5_security">
+				                 <option value="0">Open&nbsp;</option>
+				                 <option value="1">WEP&nbsp;</option>
+				                 <option value="2">WPA PSK&nbsp;</option>
+				                 <option value="4">WPA2 PSK&nbsp;</option>
+				                 <option value="6">WPA/WPA2 Mixed&nbsp;</option>
+				              </select>
+							</td>
+						</tr>						
+					</table>
+					<span id="password5_tr">
+						<table cellpadding="0" cellspacing="2" border="0">
+							<tr>
+								<td width="250"><label for="id5_psk">Password Phrase:</label></td>
+								<td>
+									<input name="wl5_psk" id="id5_psk" type="text" size="25" maxlength="64" style="height: 16px"/>
+								</td>
+							</tr>
+						</table>
+					</span>
+				</span>
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="#" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+				
+				<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>

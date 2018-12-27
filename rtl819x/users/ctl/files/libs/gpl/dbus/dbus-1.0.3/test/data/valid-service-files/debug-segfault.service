@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.DBus.TestSuiteSegfaultService
+Exec=/home/uni/git/ctl_layer/dbus-1.0.3/test/test-segfault
+

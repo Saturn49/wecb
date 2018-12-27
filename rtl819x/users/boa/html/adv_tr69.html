@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Advanced Setup - Management</title>
+<%actInclude("wcb_common.html")%>
+
+<script language="javascript">
+
+var tr69_form;
+var glb_id_command;
+var glb_tr69_url,glb_tr69_username,glb_tr69_password;
+var glb_tr69_informenable,glb_tr69_informdisable,glb_tr69_informinterval;
+var glb_tr69_informtime,glb_tr69_connection_url,glb_tr69_connection_username,glb_tr69_connection_password;
+var reboot_btn, apply_btn;
+var g_tr69info;
+
+function doLoad()
+{
+	tr69_form = document.getElementById("tr69_form");
+	glb_id_command = document.getElementById("id_command");
+
+	glb_tr69_url = document.getElementById("advanced_tr69_url");
+	glb_tr69_username = document.getElementById("advanced_tr69_username");
+	glb_tr69_password = document.getElementById("advanced_tr69_password");
+	glb_tr69_informenable = document.getElementById("advanced_tr69_informenable");
+	glb_tr69_informdisable = document.getElementById("advanced_tr69_informdisable");
+	glb_tr69_informinterval = document.getElementById("advanced_tr69_informinterval");
+	glb_tr69_informtime = document.getElementById("advanced_tr69_informtime");
+	glb_tr69_connection_url = document.getElementById("advanced_tr69_connection_url");
+	glb_tr69_connection_username = document.getElementById("advanced_tr69_connection_username");
+       glb_tr69_connection_password = document.getElementById("advanced_tr69_connection_password");
+	  
+	apply_btn = document.getElementById("apply_btn");
+	apply_btn.onclick = doApply;
+
+	doGetTr69Info();
+}
+
+function doGetTr69Info()
+{
+	var params = "&command=getvalue";		
+	ajaxPost("advtr69.cgi", params, resGetValue);
+}
+
+function resGetValue(message)
+{
+	g_tr69info = message;
+	//alert(message);	
+	var index = 0;
+	var advArray = message.split("|");
+	var tr69url = changeString(advArray[index++]);
+	var tr69username = changeString(advArray[index++]);
+	var tr69password = changeString(advArray[index++]);
+	var tr69informenable = changeString(advArray[index++]);
+	var tr69informinterval = changeString(advArray[index++]);
+	var tr69informtime = changeString(advArray[index++]);
+	var tr69conusrname = changeString(advArray[index++]);
+	var tr69conusrpasd = changeString(advArray[index++]);
+	index++;
+	var tr69conurl= changeString(advArray[index++]);
+	var tr69enable= changeString(advArray[index++]);
+	
+
+	glb_tr69_url.value = tr69url;
+	glb_tr69_username.value = tr69username;
+	glb_tr69_password.value = tr69password;
+	glb_tr69_informinterval.value = tr69informinterval;
+	glb_tr69_informtime.value = tr69informtime;
+	glb_tr69_connection_username.value = tr69conusrname;
+	glb_tr69_connection_password.value = tr69conusrpasd;
+	glb_tr69_connection_url.value = tr69conurl;
+	glb_tr69_connection_url.disabled = true;
+
+	if(tr69informenable==1)
+          glb_tr69_informenable.checked = true;
+	else
+	  glb_tr69_informdisable.checked = true;
+				
+	 glb_tr69_informtime.disabled = true;
+
+	 if(tr69enable==1)
+		document.getElementById("advanced_tr69_enable").checked = true;
+	else
+		document.getElementById("advanced_tr69_disable").checked = true;
+}
+
+function doApply()
+{	
+	if(glb_tr69_url.value.indexOf("|")>=0)
+	{
+		alert("url is invalid");
+		return;
+	}
+	
+	if(glb_tr69_username.value.indexOf("|")>=0||glb_tr69_username.value.indexOf(" ")>=0||glb_tr69_username.value.indexOf(":")>=0)
+	{
+		alert("Username is invalid");
+		return;
+	}
+	if(glb_tr69_password.value.indexOf("|")>=0||glb_tr69_password.value.indexOf(" ")>=0)
+	{
+		alert("Password is invalid");
+		return;
+	}
+
+	if(glb_tr69_connection_username.value.indexOf("|")>=0||glb_tr69_connection_username.value.indexOf(" ")>=0)
+	{
+		alert("ACS_ConnectionRequestUsername is invalid");
+		return;
+	}
+	if(glb_tr69_connection_password.value.indexOf("|")>=0||glb_tr69_connection_password.value.indexOf(" ")>=0)
+	{
+		alert("ACS_ConnectionRequestPasswordis invalid");
+		return;
+	}
+
+	if(isNaN(parseInt(glb_tr69_informinterval.value,10)))
+	{
+		alert("ACS_PeriodicInformInterval is invalid");
+		return;
+	}
+
+	var tr69_list = g_tr69info.split("|");
+    var _enable = (document.getElementById("advanced_tr69_enable").checked) ? 1 : 0;
+    if (_enable == 1 && (document.getElementById("advanced_tr69_url").value != tr69_list[0] ||
+        document.getElementById("advanced_tr69_username").value != tr69_list[1] ||
+        document.getElementById("advanced_tr69_password").value != tr69_list[2] ||
+        document.getElementById("advanced_tr69_connection_username").value != tr69_list[6] ||
+        document.getElementById("advanced_tr69_connection_password").value != tr69_list[7] ||
+        _enable != tr69_list[10])){
+        
+        if(!confirm("changed TR-069 enable or ACS URL or Username or Password or ACS_ConnectionRequestUsername or ACS_ConnectionRequestPassword. must reboot DUT, are you sure?"))
+            return;
+
+        document.getElementById("advanced_tr69_reboot").value = 1;
+    }
+
+       glb_id_command.value = "apply";
+       tr69_form.submit();
+}
+
+</script>
+</head>
+
+<body>
+	<div id="wrapper">    
+		<%actInclude("top_nav.html")%>    
+		<%actInclude("left_adv.html")%>
+		
+		<div id="content_right">
+		    <div id="content_right_header"></div>
+		    <div id="content_right_contentarea">
+	        	<h1>TR-069 Settings</h1>
+
+	        	<form id="tr69_form" method="post" action="advtr69.cgi">
+		        <input type="hidden" name="command" id="id_command" value="apply" />
+				<input type="hidden" name="mypage" value="/adv_tr69.html" />
+				<input type="hidden" id="advanced_tr69_reboot" name="advanced_tr69_reboot" value="0"/>
+		       
+				<table cellpadding="0" cellspacing="2" border="0">					
+					<tr>
+						<td>
+							<B>TR-069</B>:
+						</td>
+						<td>			
+							<input type="radio" id="advanced_tr69_enable" name="advanced_tr69_enable" value="1" size=30 maxlength=63 checked>
+							Enable
+							<input type="radio" id="advanced_tr69_disable" name="advanced_tr69_enable" value="0" size=30 maxlength=63>
+							Disable
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<B>ACS URL</B>:
+						</td>
+						<td>
+							<input type="text" id="advanced_tr69_url" name="advanced_tr69_url" value="" size=30 maxlength=256>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<B>Username</B>:
+						</td>
+						<td>
+							<input type="text" id="advanced_tr69_username" name="advanced_tr69_username" value="" size=30 maxlength=256>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<B>Password</B>:
+						</td>
+						<td>
+							<input type=password id="advanced_tr69_password" name="advanced_tr69_password" value="" size=30 maxlength=256>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<B>ACS_PeriodicInformEnable</B>:
+						</td>
+						<td>			
+							<input type="radio" id="advanced_tr69_informenable" name="advanced_tr69_informenable" value="1" size=30 maxlength=63 checked>
+							Enable
+							<input type="radio" id="advanced_tr69_informdisable" name="advanced_tr69_informenable" value="0" size=30 maxlength=63>
+							Disable
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<B>ACS_PeriodicInformInterval</B>:
+						</td>
+						<td>
+							<input type="text" id="advanced_tr69_informinterval" name="advanced_tr69_informinterval" value="" size=30 maxlength=63>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<B>ACS_PeriodicInformTime</B>:
+						</td>
+						<td>
+							<input type="text" id="advanced_tr69_informtime" name="advanced_tr69_informtime" value="" size=30 maxlength=63>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<B>ACS_ConnectionRequestURL</B>:
+						</td>
+						<td>
+							<input type="text" id="advanced_tr69_connection_url" name="advanced_tr69_connection_url" value="" size=30 maxlength=63>
+						</td>
+					</tr>			
+					<tr>
+						<td>
+							<B>ACS_ConnectionRequestUsername</B>:
+						</td>
+						<td>
+							<input type="text" id="advanced_tr69_connection_username" name="advanced_tr69_connection_username" value="" size=30 maxlength=256>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<B>ACS_ConnectionRequestPassword</B>:
+						</td>
+						<td>
+							<input type="password" id="advanced_tr69_connection_password" name="advanced_tr69_connection_password" value="" size=30 maxlength=256>
+						</td>
+					</tr>
+				</table>
+				</form>
+
+				<table cellpadding="0" cellspacing="2" border="0">
+					<tr>
+						<td width="300" align="right">
+							<a href="###" class="btn" id="apply_btn"></a> 							
+						</td>
+					</tr>
+				</table>
+				
+	        	<div class="clear_left"></div>
+	        </div>
+	        <div id="content_right_footer"></div>
+		</div>
+        <div class="clear_left"></div>
+   		<%actInclude("wcb_footer.html")%>
+	</div>
+</body>
+</html>
+

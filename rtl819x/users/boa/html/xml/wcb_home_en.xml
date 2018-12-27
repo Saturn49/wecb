@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<pages>
+	<page> 
+<!-- 0-4 -->	
+		<t>Login</t>
+		<t>User Name</t>
+		<t>Password</t>	
+		<t>Login</t>
+		<t>Forgot Password</t>
+<!-- 5-8 -->
+		<t>Language</t>
+		<t>Auto-detect</t>	
+		<t>English</t>
+		<t>French</t>
+
+<!-- 0-4 -->	
+		<a>User Name is null</a>
+		<a>Password is null</a>
+		<a>Username or Password is not correct</a> 
+		<a>Use another account to access this page</a> 
+		<a>This system not support WiFi</a>
+	</page>
+</pages>
+
